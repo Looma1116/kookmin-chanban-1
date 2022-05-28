@@ -5,7 +5,7 @@ import React from "react";
 import { getApps, initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import "styles/globals.scss";
+// import "styles/globals.scss";
 
 const Chanbanne = ({ Component, pageProps }) => {
   if (getApps.length === 0) {
