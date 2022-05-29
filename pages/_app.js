@@ -8,6 +8,7 @@ import { getAnalytics } from "firebase/analytics";
 import "../styles/globals.css";
 import { RecoilRoot } from "recoil";
 
+
 const Chanbanne = ({ Component, pageProps }) => {
   if (getApps.length === 0) {
     initializeApp({
