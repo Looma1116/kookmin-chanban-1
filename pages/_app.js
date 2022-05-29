@@ -5,7 +5,9 @@ import React from "react";
 import { getApps, initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-// import "styles/globals.scss";
+import "../styles/globals.css";
+import { RecoilRoot } from "recoil";
+
 
 const Chanbanne = ({ Component, pageProps }) => {
   if (getApps.length === 0) {
@@ -24,7 +26,11 @@ const Chanbanne = ({ Component, pageProps }) => {
     }
   }
 
-  return <Component {...pageProps} />;
+  return (
+    <RecoilRoot>
+      <Component {...pageProps} />
+    </RecoilRoot>
+  );
 };
 
 export default Chanbanne;
