@@ -10,16 +10,27 @@ import {
 import { useEffect } from "react";
 
 const community = () => {
-  useEffect(async () => {
-    const db = getFirestore();
-    const wroteAgendaRef = await doc(db, "user", "wroteAgenda");
-    const q = query(wroteAgendaRef);
-    console.log(wroteAgendaRef);
-    const docSnapshot = await getDoc(q);
+  const db = getFirestore();
 
-    // docSnapshot.forEach((document)=> console.log(document.data()));
-    console.log(docSnapshot.data());
+  useEffect(() => {
+    dataFetch();
   }, []);
+
+  const dataFetch = async () => {
+    const wroteAgendaRef = doc(db, "user", "wroteAgenda");
+
+    const querySnapshot = await getDocs(collection(db, "user"));
+    querySnapshot.forEach((doc) => {
+      console.log(`doc => ${JSON.stringify(doc.data())}`);
+    });
+    const q = query(wroteAgendaRef);
+    const docSnapshot = await getDocs(wroteAgendaRef);
+    docSnapshot.forEach((doc) => {
+      console.log(doc.data());
+    });
+    console.log(docSnapshot);
+  };
+  
   return <div></div>;
 };
 
