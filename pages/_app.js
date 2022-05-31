@@ -4,13 +4,9 @@ import React from "react";
 
 import { getApps, initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-
-<<<<<<< HEAD
-=======
 import "../styles/globals.css";
 import { RecoilRoot } from "recoil";
 
->>>>>>> 0a29f20efc7989cb26748c55b49a9ac533bec7e1
 
 const Chanbanne = ({ Component, pageProps }) => {
   if (getApps.length === 0) {
