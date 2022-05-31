@@ -17,20 +17,19 @@ const community = () => {
   }, []);
 
   const dataFetch = async () => {
-    const wroteAgendaRef = doc(db, "user", "wroteAgenda");
+    const wroteAgendaRef = collection(
+      db,
+      "user",
+      "WhkbHVjRPWdpzS6JKxp4DEs1yyD3",
+      "wroteAgenda"
+    );
 
-    const querySnapshot = await getDocs(collection(db, "user"));
-    querySnapshot.forEach((doc) => {
-      console.log(`doc => ${JSON.stringify(doc.data())}`);
-    });
-    const q = query(wroteAgendaRef);
-    const docSnapshot = await getDocs(wroteAgendaRef);
-    docSnapshot.forEach((doc) => {
+    const testSnapshot = await getDocs(wroteAgendaRef);
+
+    testSnapshot.forEach((doc) => {
       console.log(doc.data());
     });
-    console.log(docSnapshot);
   };
-  
   return <div></div>;
 };
 
