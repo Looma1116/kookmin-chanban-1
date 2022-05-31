@@ -4,7 +4,6 @@ import React from "react";
 
 import { getApps, initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-
 import "../styles/globals.css";
 import { RecoilRoot } from "recoil";
 
