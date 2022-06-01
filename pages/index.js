@@ -9,7 +9,7 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
+import { getApps, initializeApp } from "firebase/app";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -71,21 +71,56 @@ export default function Home() {
       <main className={styles.main}>
         <h1>Welcome to Kookmin-Chanban!</h1>
         <div className={styles.cardSection}>
-          {isLoaded
-            ? agendas.map((data, i) => {
-                return (
-                  <div key={i}>
-                    <Link href={`/agenda/${data.id}`}>
-                      <a>
-                        <AgendaCard props={data} />
-                      </a>
-                    </Link>
-                  </div>
-                );
-              })
-            : null}
+          {agendas.map((data, i) => {
+            return (
+              <div key={i}>
+                <Link href={`/agenda/${data.id}`}>
+                  <a>
+                    <AgendaCard props={data} />
+                  </a>
+                </Link>
+              </div>
+            );
+          })}
         </div>
       </main>
     </div>
   );
 }
+
+/*
+export async function getStaticProps() {
+  // 투표수 상위 10개 내림차순
+  const agendaRef = query(collection(db, "agenda"));
+  const q = query(agendaRef, orderBy("numVote", "desc"), limit(10));
+  const agendaSnapshot = await getDocs(q);
+  console.log("agendaSnapshot done!");
+
+  let voteData = {};
+  let agendas = [];
+
+  agendaSnapshot.forEach(async (document) => {
+    const voteRef = collection(db, "agenda", document.id, "vote");
+    console.log("voteRef done!");
+
+    const voteSnapshot = await getDocs(voteRef);
+    voteSnapshot.forEach((voteDoc) => {
+      voteData = voteDoc.data();
+    });
+    agendas.concat({
+      id: document.id,
+      ...document.data(),
+      numAgree: voteData.numAgree,
+      numAlternative: voteData.numAlternative,
+      numDisagree: voteData.numDisagree,
+    });
+    console.log(agendas);
+  });
+
+  return {
+    props: {
+      agendas,
+    },
+  };
+}
+*/
