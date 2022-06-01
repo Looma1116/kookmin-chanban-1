@@ -7,7 +7,7 @@ import { MdQueue, MdAccountBalance, MdAccountCircle } from "react-icons/md";
 const Nav = () => {
   const router = useRouter();
   return (
-    <div>
+    <nav>
       <div className={styles.bar}>
         <Link href="/community">
           <a className={router.pathname === "/community" ? styles.active : ""}>
@@ -27,7 +27,16 @@ const Nav = () => {
           </a>
         </Link>
       </div>
-    </div>
+      <style jsx>
+        {`
+          a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+        `}
+      </style>
+    </nav>
   );
 };
 

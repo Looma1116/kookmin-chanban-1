@@ -1,5 +1,4 @@
 .bar {
-  border: 1px solid black;
   display: flex;
   flex-direction: row;
   position: fixed;
@@ -11,6 +10,8 @@
   color: gray;
   font-weight: bolder;
   justify-content: space-evenly;
+  padding-top: 4px;
+  box-shadow: 2px -2px 5px 5px rgb(194, 194, 194);
 }
 
 .active {
