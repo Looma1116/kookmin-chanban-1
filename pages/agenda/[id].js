@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import Article from "../../components/article";
 import { agendaState } from "../../components/recoil/recoil";
+import Title from "../../components/title";
+import BestComment from "../../components/bestComment";
 // HpwvymAsOmqwAPEuTrIs
 const Agenda = () => {
   const router = useRouter();
@@ -40,8 +42,15 @@ const Agenda = () => {
 
   return (
     <div>
-      agenda
-      {isFetched ? <Article /> : <div>Loading...</div>}
+      {isFetched ? (
+        <>
+          <Title />
+          <Article />
+          <BestComment />
+        </>
+      ) : (
+        <div>Loading...</div>
+      )}
     </div>
   );
 };

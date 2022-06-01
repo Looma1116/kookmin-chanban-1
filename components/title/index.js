@@ -1,13 +1,14 @@
 import { useRecoilValue } from "recoil";
 import { agendaState } from "../recoil/recoil";
 
-const Article = () => {
+const Title = () => {
   const article = useRecoilValue(agendaState);
   return (
     <div>
-      <p>{article[0]?.article}</p>
+      <h1>{article[0]?.title}!</h1>
+      <h3>국민 여러분의 생각은? 지금 바로 참여하세요!</h3>
     </div>
   );
 };
 
-export default Article;
+export default Title;
