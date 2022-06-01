@@ -7,6 +7,7 @@ import { getAnalytics } from "firebase/analytics";
 import "../styles/globals.css";
 import { RecoilRoot } from "recoil";
 
+import Layout from "../components/layout/index";
 
 const Chanbanne = ({ Component, pageProps }) => {
   if (getApps.length === 0) {
@@ -27,7 +28,9 @@ const Chanbanne = ({ Component, pageProps }) => {
 
   return (
     <RecoilRoot>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </RecoilRoot>
   );
 };
