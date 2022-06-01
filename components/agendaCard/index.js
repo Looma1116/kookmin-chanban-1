@@ -9,11 +9,18 @@ const AgendaCard = ({ props }) => {
   const percentDisagree = (parseInt(props.numDisagree) / totalNumVote) * 100;
   console.log(props);
   return (
-    <div className={styles.card} style={{ background: `url(${props.image})` }}>
+    <div
+      style={{
+        backgroundImage: `url(${props.imageUrl})`,
+        backgroundSize: "cover",
+        backgroundPositionY: "25%",
+      }}
+      className={styles.card}
+    >
       <div className={styles.info}>
         <span className={styles.title}>{props.title}</span>
         <span>{props.subTitle}</span>
-        <span>{props.numVote}명 투표</span>
+        <span>{props.numVote}명 참여중</span>
       </div>
       <div className={styles.graph}>
         <span
