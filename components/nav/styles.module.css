@@ -1,0 +1,19 @@
+.bar {
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  bottom: 0ch;
+  width: 100%;
+  height: 3rem;
+  justify-content: center;
+  background-color: white;
+  color: gray;
+  font-weight: bolder;
+  justify-content: space-evenly;
+  padding-top: 4px;
+  box-shadow: 2px -2px 5px 5px rgb(194, 194, 194);
+}
+
+.active {
+  color: black;
+}
