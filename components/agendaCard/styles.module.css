@@ -1,0 +1,52 @@
+.card {
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px 0px rgb(194, 194, 194);
+  overflow: hidden;
+  height: 6rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.info * {
+  margin-top: 0.45rem;
+  font-size: 0.8rem;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.graph {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
+.graph * {
+  position: relative;
+  bottom: 0px;
+  margin: 0px;
+  padding: 0px;
+  height: 0.3rem;
+}
+
+.agree {
+  background-color: #0051ca;
+}
+
+.alternative {
+  background-color: #ffc700;
+}
+
+.disagree {
+  background-color: #e10000;
+}
