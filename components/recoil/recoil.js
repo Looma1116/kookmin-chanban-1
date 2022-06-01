@@ -4,6 +4,11 @@ export const loginState = atom({
   default: false,
 });
 export const categoryState = atom({
-  key: 'categoryState',
+  key: "categoryState",
   default: "전체",
-})
+});
+
+export const agendaState = atom({
+  key: "agenda",
+  default: [],
+});
