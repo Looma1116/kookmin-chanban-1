@@ -28,28 +28,20 @@ export default function Home() {
 
   useEffect(() => {
     fetchData();
-  }, [isLoaded]);
+  }, []);
 
   const fetchData = async () => {
     const agendaSnapshot = await getDocs(q);
     console.log("agendaSnapshot done!");
     const voteData = {};
     agendaSnapshot.forEach(async (document) => {
-      const voteRef = collection(db, "agenda", document.id, "vote");
+      //const voteRef = collection(db, "agenda", document.id, "vote");
       console.log("voteRef done!");
-
-      const voteSnapshot = await getDocs(voteRef);
-      voteSnapshot.forEach((voteDoc) => {
-        voteData = voteDoc.data();
-      });
 
       setAgendas(
         agendas.concat({
           id: document.id,
           ...document.data(),
-          numAgree: voteData.numAgree,
-          numAlternative: voteData.numAlternative,
-          numDisagree: voteData.numDisagree,
         })
       );
     });
