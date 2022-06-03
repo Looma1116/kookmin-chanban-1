@@ -63,9 +63,9 @@ export default function Home() {
       <main className={styles.main}>
         <h1>Welcome to Kookmin-Chanban!</h1>
         <div className={styles.cardSection}>
-          {agendas.map((data, i) => {
+          {agendas.map((data) => {
             return (
-              <div key={i}>
+              <div key={data.id}>
                 <Link href={`/agenda/${data.id}`}>
                   <a>
                     <AgendaCard props={data} />
