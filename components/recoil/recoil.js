@@ -12,3 +12,8 @@ export const agendaState = atom({
   key: "agenda",
   default: [],
 });
+
+export const sortState = atom({
+  key:"sortState",
+  default: 7,
+})
