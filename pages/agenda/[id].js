@@ -13,6 +13,9 @@ import Article from "../../components/article";
 import { agendaState } from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
+import AgreeBtn from "../../ui/button/agreeBtn";
+import AlternativeBtn from "../../ui/button/alternativeBtn";
+import DisagreeBtn from "../../ui/button/disagreeBtn";
 // HpwvymAsOmqwAPEuTrIs
 const Agenda = () => {
   const router = useRouter();
@@ -39,7 +42,7 @@ const Agenda = () => {
       setIsFetched(true);
     }
   };
-
+  console.log(agenda);
   return (
     <div>
       {isFetched ? (
@@ -47,10 +50,19 @@ const Agenda = () => {
           <Title />
           <Article />
           <BestComment />
+          <AgreeBtn />
+          <AlternativeBtn />
+          <DisagreeBtn />
+
+          <form>
+            <input
+              type="text"
+              placeholder="이승준님, 성숙한 사회를 만들어주셔서 고맙습니다!"
+            />
+            <button>게시</button>
+          </form>
         </>
-      ) : (
-        <div>Loading...</div>
-      )}
+      ) : null}
     </div>
   );
 };

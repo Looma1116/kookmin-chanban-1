@@ -2,10 +2,10 @@ import { useRecoilValue } from "recoil";
 import { agendaState } from "../recoil/recoil";
 
 const Article = () => {
-  const article = useRecoilValue(agendaState);
+  const agenda = useRecoilValue(agendaState);
   return (
     <div>
-      <p>{article[0]?.article}</p>
+      <p>{agenda[0]?.article}</p>
     </div>
   );
 };
