@@ -1,0 +1,36 @@
+.main {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-family: 'Roboto';
+}
+
+.main .title {
+  font-style: normal;
+  font-weight: 3rem;
+  font-size: 3rem;
+  line-height: 3rem;
+  text-align: center;
+  margin-top: 10rem;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.main .level {
+  font-size: 1.5rem;
+}
+
+.main .progress {
+  width: 50%;
+  padding: 1rem;
+  margin: 1rem;
+}
