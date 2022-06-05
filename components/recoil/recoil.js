@@ -17,3 +17,15 @@ export const sortState = atom({
   key:"sortState",
   default: 7,
 })
+export const searchState = atom({
+  key : "searchState",
+  default : "",
+});
+export const searchIsClicked = atom({
+  key: 'serachIsClicked',
+  default : false,
+});
+export const submitState = atom({
+  key: "submitState",
+  default : false,
+})

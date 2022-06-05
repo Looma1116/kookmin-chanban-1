@@ -7,7 +7,12 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore";
-import { categoryState, sortState } from "../recoil/recoil";
+import {
+  categoryState,
+  sortState,
+  submitState,
+  searchState,
+} from "../recoil/recoil";
 import { useRecoilValue } from "recoil";
 import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
@@ -19,6 +24,8 @@ const FetchData = () => {
   let [agenda, setAgenda] = useState([]);
   const category = useRecoilValue(categoryState);
   const sort = useRecoilValue(sortState);
+  const submit = useRecoilValue(submitState);
+  const search = useRecoilValue(searchState);
   const [isFeched, setIsFetched] = useState(false);
 
   useEffect(() => {
@@ -26,11 +33,11 @@ const FetchData = () => {
     setIsFetched(false);
     dataFetch();
     console.log("데이터 패치함!");
-  }, [category, sort]);
+  }, [category, sort, submit]);
 
   const dataFetch = async () => {
-      setAgenda([]);
-      const wroteAgendaRef = "";
+    setAgenda([]);
+    const wroteAgendaRef = "";
     if (category == "전체") {
       wroteAgendaRef = query(collection(db, "userAgenda"));
     } else {
@@ -50,13 +57,25 @@ const FetchData = () => {
       const diffDate = timeStamp.getTime() - doc.data().created.seconds * 1000;
       const dateDays = parseInt(Math.abs(diffDate / (1000 * 3600 * 24))); // 차이 일수 계산
       if (dateDays <= sort) {
-        setAgenda(
-          agenda.concat({
-            id: doc.id,
-            ...doc.data(),
-          })
-        );
-        setIsFetched(true);
+        if (search === null || search === "") {
+          setAgenda(
+            agenda.concat({
+              id: doc.id,
+              ...doc.data(),
+            })
+          );
+          setIsFetched(true);
+        } else {
+          if (doc.data().title.includes(search)) {
+            setAgenda(
+              agenda.concat({
+                id: doc.id,
+                ...doc.data(),
+              })
+            );
+            setIsFetched(true);
+          }
+        }
       }
     });
   };
