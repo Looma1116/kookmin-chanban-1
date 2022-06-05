@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import styles from "../../../styles/Modal.module.css";
+import styles from "./ModalInfo.module.css";
 
 const Modal = ({ show, onClose, children }) => {
   const [isBrowser, setIsBrowser] = useState(false);
@@ -8,7 +8,7 @@ const Modal = ({ show, onClose, children }) => {
     setIsBrowser(true);
   }, []);
   const modalContent = show ? (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal}>
         <div className={styles.body}>{children}</div>
       </div>
@@ -17,7 +17,7 @@ const Modal = ({ show, onClose, children }) => {
   if (isBrowser) {
     return ReactDOM.createPortal(
       modalContent,
-      document.getElementById("modal-wroteAgenda")
+      document.getElementById("modal-userInfo")
     );
   } else return null;
 };
