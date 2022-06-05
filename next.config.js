@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   env: {
     apiKey: "AIzaSyCU0DvFIUOAcHa-2J0AMg3CYblmn7pj3RM",
     authDomain: "peoplevoice-fcea9.firebaseapp.com",

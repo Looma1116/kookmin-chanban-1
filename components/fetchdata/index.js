@@ -24,11 +24,12 @@ const FetchData = () => {
   useEffect(() => {
     agenda = [];
     setIsFetched(false);
-    console.log(agenda);
     dataFetch();
+    console.log("데이터 패치함!");
   }, [category, sort]);
 
   const dataFetch = async () => {
+      setAgenda([]);
       const wroteAgendaRef = "";
     if (category == "전체") {
       wroteAgendaRef = query(collection(db, "userAgenda"));
@@ -81,17 +82,6 @@ const FetchData = () => {
           ) : (
             <div />
           )}
-          {agenda.map((data) => {
-            return (
-              <div key={data.id}>
-                <Link href={`/agenda/${data.id}`}>
-                  <a>
-                    <AgendaCard props={data} />
-                  </a>
-                </Link>
-              </div>
-            );
-          })}
         </div>
       </main>
     </div>
