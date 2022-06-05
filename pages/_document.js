@@ -9,6 +9,11 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
+        <div id="modal-login"></div>
+        <div id="modal-joinedAgenda"></div>
+        <div id="modal-wroteAgenda"></div>
+        <div id="modal-wroteComment"></div>
+        <div id="modal-userInfo"></div>
       </body>
     </Html>
   );
