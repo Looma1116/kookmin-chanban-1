@@ -29,8 +29,8 @@ const FetchData = () => {
   }, [category, sort]);
 
   const dataFetch = async () => {
-      setAgenda([]);
-      const wroteAgendaRef = "";
+    setAgenda([]);
+    const wroteAgendaRef = "";
     if (category == "전체") {
       wroteAgendaRef = query(collection(db, "userAgenda"));
     } else {
