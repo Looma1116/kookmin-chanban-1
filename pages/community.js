@@ -1,41 +1,26 @@
-import {
-  getFirestore,
-  collection,
-  query,
-  doc,
-  where,
-  getDocs,
-  getDoc,
-} from "firebase/firestore";
-import { categoryState } from "../components/recoil/recoil";
-import {useRecoilValue} from "recoil";
-import { useEffect } from "react";
+import { searchIsClicked } from "../components/recoil/recoil";
 import Category from "../components/dropdown/category";
+import Sort from "../components/dropdown/sort";
+import styles from "../styles/Home.module.css";
+import FetchData from "../components/fetchdata";
+import Search from "../components/search";
+import SearchIcon from "../components/search/searchIcon";
+import { useRecoilValue } from "recoil";
 
 const community = () => {
-  const db = getFirestore();
-  const category = useRecoilValue(categoryState);
+  console.log("community");
+  const isClicked = useRecoilValue(searchIsClicked);
 
-  useEffect(() => {
-    dataFetch();
-  }, [category]);
-
-  const dataFetch = async () => {
-    const wroteAgendaRef = query(
-      collection(db, "user", "WhkbHVjRPWdpzS6JKxp4DEs1yyD3", "wroteAgenda"),
-      where("category", "==", category)
-    );
-
-    const testSnapshot = await getDocs(
-      wroteAgendaRef
-    );
-    console.log(category);
-
-    testSnapshot.forEach((doc) => {
-      console.log(doc.data());
-    });
-  };
-  return <div><Category/></div>;
+  return (
+    <div>
+      <h1 className={styles.title}>시민 찬반</h1>
+      <Category />
+      <Sort />
+      <SearchIcon/>
+      {isClicked?<Search/>:<div/>}
+      <FetchData/>
+    </div>
+  );
 };
 
 export default community;
