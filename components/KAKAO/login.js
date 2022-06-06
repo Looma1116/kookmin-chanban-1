@@ -8,6 +8,7 @@ import { useState } from "react";
 import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
 import axios from "axios";
 import { getFirestore, setDoc, doc } from "firebase/firestore";
+import styles from "./Login.module.css";
 const KakaoLogin = () => {
   const [login, setLogin] = useRecoilState(loginState);
   const [email, setEmail] = useState("");
@@ -53,7 +54,8 @@ const KakaoLogin = () => {
     });
   };
   return (
-    <div>
+    <div className={styles.main}>
+      <div className={styles.write}>1초만에 카카오 로그인 하기</div>
       <a id="custom-login-btn" onClick={loginWithKakao}>
         <Image src={Images} />
       </a>
