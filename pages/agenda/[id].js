@@ -16,16 +16,28 @@ import BestComment from "../../components/bestComment";
 import AgreeBtn from "../../ui/button/agreeBtn";
 import AlternativeBtn from "../../ui/button/alternativeBtn";
 import DisagreeBtn from "../../ui/button/disagreeBtn";
+import News from "../../components/modal/news";
+import Modal from "react-modal";
+
 // HpwvymAsOmqwAPEuTrIs
+
 const Agenda = () => {
   const router = useRouter();
   const db = getFirestore();
   const [agenda, setAgenda] = useRecoilState(agendaState);
   const [isFetched, setIsFetched] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, [isFetched]);
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   const fetchData = async () => {
     const q = query(
@@ -42,18 +54,17 @@ const Agenda = () => {
       setIsFetched(true);
     }
   };
-  console.log(agenda);
   return (
-    <div>
+    <div id="root">
       {isFetched ? (
-        <>
+        <div>
           <Title />
           <Article />
+          <News />
           <BestComment />
           <AgreeBtn />
           <AlternativeBtn />
           <DisagreeBtn />
-
           <form>
             <input
               type="text"
@@ -61,10 +72,12 @@ const Agenda = () => {
             />
             <button>게시</button>
           </form>
-        </>
+        </div>
       ) : null}
     </div>
   );
 };
+
+Modal.setAppElement("#root");
 
 export default Agenda;
