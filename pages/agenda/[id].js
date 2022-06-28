@@ -28,6 +28,8 @@ const Agenda = () => {
   const [isFetched, setIsFetched] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
+  Modal.setAppElement("#root");
+
   useEffect(() => {
     fetchData();
   }, [isFetched]);
@@ -78,6 +80,5 @@ const Agenda = () => {
   );
 };
 
-Modal.setAppElement("#root");
 
 export default Agenda;
