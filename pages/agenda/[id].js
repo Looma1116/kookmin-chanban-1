@@ -18,6 +18,8 @@ import AlternativeBtn from "../../ui/button/alternativeBtn";
 import DisagreeBtn from "../../ui/button/disagreeBtn";
 import News from "../../components/modal/news";
 import Modal from "react-modal";
+import CommentSec from "../../components/comment/commentSec";
+import Comment from "../../components/comment/comment";
 
 // HpwvymAsOmqwAPEuTrIs
 
@@ -27,8 +29,6 @@ const Agenda = () => {
   const [agenda, setAgenda] = useRecoilState(agendaState);
   const [isFetched, setIsFetched] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-
-  Modal.setAppElement("#root");
 
   useEffect(() => {
     fetchData();
@@ -67,6 +67,7 @@ const Agenda = () => {
           <AgreeBtn />
           <AlternativeBtn />
           <DisagreeBtn />
+          <CommentSec />
           <form>
             <input
               type="text"
@@ -74,11 +75,13 @@ const Agenda = () => {
             />
             <button>게시</button>
           </form>
+          <Comment />
         </div>
       ) : null}
     </div>
   );
 };
 
+Modal.setAppElement("#root");
 
 export default Agenda;
