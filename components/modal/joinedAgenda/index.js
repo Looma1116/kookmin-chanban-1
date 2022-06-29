@@ -5,12 +5,13 @@ import { loadGetInitialProps } from "next/dist/shared/lib/utils";
 import Image from "next/image";
 import Images from "../../../public/joined.png";
 import styles from "./JoinedAgenda.module.css";
+import { MdOutlineHowToVote } from "react-icons/md";
 const JoinedAgenda = ({ joinedAgenda }) => {
   const [showModal, setShowModal] = useState(false);
   return (
     <div>
       <div className={styles.out} onClick={() => setShowModal(true)}>
-        <Image src={Images} />
+        <MdOutlineHowToVote size="2.5rem" color="#2373EB" />
         <div className={styles.name}>참여한 찬반</div>
       </div>
       <Modal show={showModal}>
