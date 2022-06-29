@@ -9,6 +9,8 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState, useRef } from "react";
 import { loginState } from "../components/recoil/recoil";
@@ -23,9 +25,10 @@ export default function User() {
   const [loading, setLoading] = useState(true);
   const [login, setLogin] = useRecoilState(loginState);
   const [nickname, setNickname] = useState("");
-  const [level, setLevel] = useState("");
+  const [level, setLevel] = useState(0);
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
+  const [exp, setExp] = useState(0);
   const [joinedAgenda, setJoinedAgenda] = useState([]);
   const [wroteAgenda, setWroteAgenda] = useState([]);
   const [wroteComment, setWroteComment] = useState([]);
@@ -37,6 +40,7 @@ export default function User() {
   useEffect(() => {
     const authUnsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log(user);
+
       if (user === null) {
         setLogin(false);
         setLoading(false);
@@ -49,6 +53,16 @@ export default function User() {
           setLevel(d.data().level);
           setAge(d.data().age);
           setGender(d.data().gender);
+          setExp(d.data().exp);
+          console.log(nickname);
+          if (exp >= 100) {
+            setLevel(level + 1);
+            setExp(exp - 100);
+            await updateDoc(doc(db, "user", auth.currentUser.uid), {
+              level: level,
+              exp: exp,
+            });
+          }
           const joinedAgendaRef = collection(
             db,
             "user",
@@ -113,7 +127,7 @@ export default function User() {
             }
           );
           setLoading(false);
-        }, 1000);
+        }, 0);
       }
     });
   }, []);
@@ -123,12 +137,13 @@ export default function User() {
   };
   if (loading) return <div>loading</div>;
   console.log(joinedAgenda);
-  if (!login) return <KakaoLogin />;
+  if (!login) return <KakaoLogin Exp={level} />;
   return (
     <div className={styles.main}>
       <h1 className={styles.title}>{`${nickname}님`}</h1>
       <h3 className={styles.level}>{`레벨 ${level}`}</h3>
-      <progress className={styles.progress} value="64" max="100"></progress>
+      {console.log(exp)}
+      <progress className={styles.progress} value={exp} max="100"></progress>
       <JoinedAgenda joinedAgenda={joinedAgenda} />
 
       <WroteAgenda wroteAgenda={wroteAgenda} />
