@@ -29,3 +29,11 @@ export const submitState = atom({
   key: "submitState",
   default : false,
 })
+export const commentState = atom({
+  key : "commentState",
+  default : "alternativeComment",
+})
+export const commentDataState = atom({
+  key : "commentDataState",
+  default : [],
+})
