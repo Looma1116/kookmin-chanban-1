@@ -7,9 +7,9 @@ import { loginState } from "../recoil/recoil";
 import { useState } from "react";
 import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
 import axios from "axios";
-import { getFirestore, setDoc, doc } from "firebase/firestore";
+import { getFirestore, setDoc, doc, getDoc } from "firebase/firestore";
 import styles from "./Login.module.css";
-const KakaoLogin = () => {
+const KakaoLogin = (props) => {
   const [login, setLogin] = useRecoilState(loginState);
   const [email, setEmail] = useState("");
   const auth = getAuth();
@@ -20,17 +20,17 @@ const KakaoLogin = () => {
       // 중복 initialization 방지
       if (!kakao.isInitialized()) {
         // 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
-        kakao.init("a037bc35849cd0c97e081c92b790fb7c");
+        kakao.init("18647889c10275cb15e3718a64e04b7f");
       }
     }
   }, []);
   const loginWithKakao = () => {
+    const db = getFirestore();
     const apiServer =
       "https://asia-northeast1-peoplevoice-fcea9.cloudfunctions.net/app";
     const { Kakao } = window;
     console.log(Kakao);
     Kakao.Auth.login({
-      scope: "account_email,gender",
       success: async function (authObj) {
         console.log(authObj);
         const data = {
@@ -39,11 +39,21 @@ const KakaoLogin = () => {
         console.log(data);
         const comunication = await axios.post(apiServer, data);
         await signInWithCustomToken(auth, comunication.data.firebase_token);
+        const d = await getDoc(doc(db, "user", auth.currentUser.uid));
+        let level = d.data().level;
+        let exp = d.data().exp;
+        level ? level : (level = 1);
+        exp ? exp : (exp = 0);
+        if (exp >= 100) {
+          level = level + 1;
+          exp = exp - 100;
+        }
         await setDoc(doc(db, "user", auth.currentUser.uid), {
           gender: comunication.data.gender,
           age: `${comunication.data.age.substr(0, 2)}대`,
           nickname: auth.currentUser.displayName,
-          level: "1",
+          level: level,
+          exp: exp,
         });
 
         setLogin(true);
