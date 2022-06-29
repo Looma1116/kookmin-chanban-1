@@ -29,13 +29,7 @@ export default function User() {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [exp, setExp] = useState(0);
-  const [joinedAgenda, setJoinedAgenda] = useState([]);
-  const [wroteAgenda, setWroteAgenda] = useState([]);
-  const [wroteComment, setWroteComment] = useState([]);
   const text = useRecoilValue(loginState);
-  const joinedAgendaUnsubsribe = useRef([]);
-  const wroteAgendaUnsubscribe = useRef([]);
-  const wroteCommentUnsubsribe = useRef([]);
   const auth = getAuth();
   useEffect(() => {
     const authUnsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -63,69 +57,6 @@ export default function User() {
               exp: exp,
             });
           }
-          const joinedAgendaRef = collection(
-            db,
-            "user",
-            user.uid,
-            "joinedAgenda"
-          );
-          const wroteAgendaRef = collection(
-            db,
-            "user",
-            user.uid,
-            "wroteAgenda"
-          );
-          const wroteCommentRef = collection(
-            db,
-            "user",
-            user.uid,
-            "wroteComment"
-          );
-          const joinedAgendaQuery = query(
-            joinedAgendaRef,
-            orderBy("joined"),
-            limit(10)
-          );
-          const wroteAgendaQuery = query(
-            wroteAgendaRef,
-            orderBy("wrote"),
-            limit(10)
-          );
-          const wroteCommentQuery = query(
-            wroteCommentRef,
-            orderBy("wrote"),
-            limit(10)
-          );
-          joinedAgendaUnsubsribe.current = await onSnapshot(
-            joinedAgendaQuery,
-            (snapshot) => {
-              const { length } = snapshot.docs;
-              console.log(length);
-              if (length > 0) {
-                setJoinedAgenda(snapshot.docs.map((str) => str.data()));
-              }
-            }
-          );
-          wroteAgendaUnsubscribe.current = await onSnapshot(
-            wroteAgendaQuery,
-            (snapshot) => {
-              const { length } = snapshot.docs;
-              console.log(length);
-              if (length > 0) {
-                setWroteAgenda(snapshot.docs.map((str) => str.data()));
-              }
-            }
-          );
-          wroteCommentUnsubsribe.current = await onSnapshot(
-            wroteCommentQuery,
-            (snapshot) => {
-              const { length } = snapshot.docs;
-              console.log(length);
-              if (length > 0) {
-                setWroteComment(snapshot.docs.map((str) => str.data()));
-              }
-            }
-          );
           setLoading(false);
         }, 0);
       }
@@ -136,7 +67,6 @@ export default function User() {
     setLogin(false);
   };
   if (loading) return <div>loading</div>;
-  console.log(joinedAgenda);
   if (!login) return <KakaoLogin Exp={level} />;
   return (
     <div className={styles.main}>
@@ -144,11 +74,11 @@ export default function User() {
       <h3 className={styles.level}>{`레벨 ${level}`}</h3>
       {console.log(exp)}
       <progress className={styles.progress} value={exp} max="100"></progress>
-      <JoinedAgenda joinedAgenda={joinedAgenda} />
+      <JoinedAgenda user={auth.currentUser} />
 
-      <WroteAgenda wroteAgenda={wroteAgenda} />
+      <WroteAgenda user={auth.currentUser} />
 
-      <WroteComment wroteComment={wroteComment} />
+      <WroteComment user={auth.currentUser} />
 
       <UserInfo
         nickname={nickname}

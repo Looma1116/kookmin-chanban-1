@@ -1,12 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Modal from "./agendaCard";
 import Card from "../../../ui/Card/Card";
 import { loadGetInitialProps } from "next/dist/shared/lib/utils";
 import Image from "next/image";
 import Images from "../../../public/wrote.png";
 import styles from "../joinedAgenda/JoinedAgenda.module.css";
-const WroteAgenda = ({ wroteAgenda }) => {
+import {
+  collection,
+  doc,
+  getDoc,
+  getFirestore,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+const WroteAgenda = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
+  const [wroteAgenda, setWroteAgenda] = useState([]);
+  const wroteAgendaUnsubscribe = useRef([]);
+  useEffect(async () => {
+    const db = getFirestore();
+    const wroteAgendaRef = collection(db, "user", user.uid, "wroteAgenda");
+    const wroteAgendaQuery = query(wroteAgendaRef, orderBy("wrote"), limit(10));
+    wroteAgendaUnsubscribe.current = await onSnapshot(
+      wroteAgendaQuery,
+      (snapshot) => {
+        const { length } = snapshot.docs;
+        console.log(length);
+        if (length > 0) {
+          setWroteAgenda(snapshot.docs.map((str) => str.data()));
+        }
+      }
+    );
+  }, []);
   return (
     <div>
       <div className={styles.out} onClick={() => setShowModal(true)}>
