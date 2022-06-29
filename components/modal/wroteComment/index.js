@@ -1,12 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Modal from "./comment";
 import Card from "../../../ui/Card/Card";
 import { loadGetInitialProps } from "next/dist/shared/lib/utils";
 import Image from "next/image";
 import Images from "../../../public/comment.png";
 import styles from "./WroteComment.module.css";
-const WroteComment = ({ wroteComment }) => {
+import {
+  collection,
+  doc,
+  getDoc,
+  getFirestore,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+const WroteComment = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
+  const [wroteComment, setWroteComment] = useState([]);
+  const wroteCommentUnsubsribe = useRef([]);
+  useEffect(async () => {
+    const db = getFirestore();
+    const wroteCommentRef = collection(db, "user", user.uid, "wroteComment");
+    const wroteCommentQuery = query(
+      wroteCommentRef,
+      orderBy("wrote"),
+      limit(10)
+    );
+    wroteCommentUnsubsribe.current = await onSnapshot(
+      wroteCommentQuery,
+      (snapshot) => {
+        const { length } = snapshot.docs;
+        console.log(length);
+        if (length > 0) {
+          setWroteComment(snapshot.docs.map((str) => str.data()));
+        }
+      }
+    );
+  }, []);
   return (
     <div>
       <div className={styles.out} onClick={() => setShowModal(true)}>
