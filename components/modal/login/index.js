@@ -8,16 +8,16 @@ const Login = () => {
    const [modalIsOpen, setModalIsOpen] = useState(true);
    const [clickCount, setClickCount] = useRecoilState(clickCountState);
 
-  const clickHandler = ()=>{
+  const outHandler = ()=>{
     setModalIsOpen(false);
     setClickCount(false);
   }
 
    return (
      <>
-       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
+       <Modal isOpen={modalIsOpen} onRequestClose={outHandler}>
          <LogIn/>
-         <button onClick={clickHandler}>닫기</button>
+         <button onClick={outHandler}>닫기</button>
        </Modal>
      </>
    );
