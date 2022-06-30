@@ -52,7 +52,7 @@ const comment = () => {
         return (
           <div key={data.id}>
             <span>{data.authorName} </span>
-            <span>{data.authorLevel}       </span>
+            <span>{data.authorLevel}</span>
             <span>{data.like}</span>
             <div>{data.article}</div>
           </div>

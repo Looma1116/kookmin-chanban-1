@@ -6,7 +6,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { loginState, userState } from "../recoil/recoil";
+import { clickCountState, loginState, userState } from "../recoil/recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
 import LogInModal from "../modal/login";
 import { useEffect, useState } from "react";
@@ -14,11 +14,11 @@ import CommentSec from "./commentSec";
 import CommentPart from "./commentPart";
 
 const Comment = () => {
-  const [clickCount, setClickCount] = useState(false);
   const auth = getAuth();
   const db = getFirestore();
   const logIn = useRecoilValue(loginState);
   const [user, setUser] = useRecoilState(userState);
+  const [clickCount, setClickCount] = useRecoilState(clickCountState);
 
   useEffect(() => {
     // userFetch();
@@ -26,7 +26,7 @@ const Comment = () => {
     console.log(auth.currentUser);
   }, []);
   const clickHandler = () => {
-    if (logIn) {
+    if (!logIn) {
       setClickCount(true);
     }
   };
