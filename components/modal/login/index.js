@@ -1,25 +1,26 @@
-import Modal from "./modal";
+import Modal from "react-modal";
 import LogIn from "../../KAKAO/login";
 import { useState } from "react";
+import { clickCountState } from "../../recoil/recoil";
+import { useRecoilState } from "recoil";
 
 const Login = () => {
-  const [modalOpen, setModalOpen] = useState(false);
+   const [modalIsOpen, setModalIsOpen] = useState(true);
+   const [clickCount, setClickCount] = useRecoilState(clickCountState);
 
-  const openModal = () => {
-    setModalOpen(true);
-  };
-  const closeModal = () => {
-    setModalOpen(false);
-  };
+  const clickHandler = ()=>{
+    setModalIsOpen(false);
+    setClickCount(false);
+  }
 
-  return (
-    <div>
-      <button onClick={openModal}>모달팝업</button>
-      <Modal open={modalOpen} close={closeModal} header="Modal heading">
-        <LogIn />
-      </Modal>
-    </div>
-  );
+   return (
+     <>
+       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
+         <LogIn/>
+         <button onClick={clickHandler}>닫기</button>
+       </Modal>
+     </>
+   );
 };
 
 export default Login;
