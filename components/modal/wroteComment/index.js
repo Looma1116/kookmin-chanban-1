@@ -21,7 +21,7 @@ const WroteComment = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
   const [wroteComment, setWroteComment] = useState([]);
   const wroteCommentUnsubsribe = useRef([]);
-  useEffect(async () => {
+  const fetchData = async () => {
     const db = getFirestore();
     const wroteCommentRef = collection(db, "user", user.uid, "wroteComment");
     const wroteCommentQuery = query(
@@ -39,6 +39,9 @@ const WroteComment = ({ user }) => {
         }
       }
     );
+  };
+  useEffect(() => {
+    fetchData();
   }, []);
   return (
     <div>

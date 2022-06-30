@@ -34,7 +34,6 @@ export default function User() {
   useEffect(() => {
     const authUnsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log(user);
-
       if (user === null) {
         setLogin(false);
         setLoading(false);
@@ -58,7 +57,7 @@ export default function User() {
             });
           }
           setLoading(false);
-        }, 0);
+        }, 100);
       }
     });
   }, []);
@@ -75,11 +74,8 @@ export default function User() {
       {console.log(exp)}
       <progress className={styles.progress} value={exp} max="100"></progress>
       <JoinedAgenda user={auth.currentUser} />
-
       <WroteAgenda user={auth.currentUser} />
-
       <WroteComment user={auth.currentUser} />
-
       <UserInfo
         nickname={nickname}
         gender={gender}
