@@ -2,25 +2,27 @@ import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import styles from "../../../styles/Modal.module.css";
 
-const Modal = ({ show, onClose, children }) => {
+const Modal = ({ show, fetchData, joinedAgenda, children }) => {
   const [isBrowser, setIsBrowser] = useState(false);
-  // const handleScroll = () => {
-  //   const scrollHeight = document.documentElement.scrollHeight;
-  //   const scrollTop = document.documentElement.scrollTop;
-  //   const clientHeight = document.documentElement.clientHeight;
-  //   if (scrollTop + clientHeight >= scrollHeight && fetching === false) {
-  //     // 페이지 끝에 도달하면 추가 데이터를 받아온다
-  //     fetchMoreInstaFeeds();
-  //   }
-  // };
-  // useEffect(() => {
-  //   // scroll event listener 등록
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     // scroll event listener 해제
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // });
+  const handleScroll = async () => {
+    console.log(document.documentElement.scrollHeight);
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight) {
+      // 페이지 끝에 도달하면 추가 데이터를 받아온다
+      await fetchData(joinedAgenda);
+      console.log("hi");
+    }
+  };
+  useEffect(() => {
+    // scroll event listener 등록
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      // scroll event listener 해제
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   useEffect(() => {
     setIsBrowser(true);
   }, []);

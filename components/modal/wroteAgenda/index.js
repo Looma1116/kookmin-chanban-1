@@ -21,7 +21,7 @@ const WroteAgenda = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
   const [wroteAgenda, setWroteAgenda] = useState([]);
   const wroteAgendaUnsubscribe = useRef([]);
-  useEffect(async () => {
+  const fetchData = async () => {
     const db = getFirestore();
     const wroteAgendaRef = collection(db, "user", user.uid, "wroteAgenda");
     const wroteAgendaQuery = query(wroteAgendaRef, orderBy("wrote"), limit(10));
@@ -35,6 +35,9 @@ const WroteAgenda = ({ user }) => {
         }
       }
     );
+  };
+  useEffect(() => {
+    fetchData();
   }, []);
   return (
     <div>

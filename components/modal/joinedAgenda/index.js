@@ -17,29 +17,37 @@ import {
   query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 const JoinedAgenda = ({ user }) => {
   const [joinedAgenda, setJoinedAgenda] = useState([]);
   const joinedAgendaUnsubsribe = useRef([]);
   const [showModal, setShowModal] = useState(false);
-  useEffect(async () => {
+  let cnt = 0;
+  const fetchData = async (time) => {
+    if (time == null) time = new Date();
     const db = getFirestore();
     const joinedAgendaRef = collection(db, "user", user.uid, "joinedAgenda");
     const joinedAgendaQuery = query(
       joinedAgendaRef,
-      orderBy("joined"),
-      limit(10)
+      orderBy("joined", "desc"),
+      where("joined", "<=", time),
+      limit(5)
     );
     joinedAgendaUnsubsribe.current = await onSnapshot(
       joinedAgendaQuery,
       (snapshot) => {
         const { length } = snapshot.docs;
         console.log(length);
+        cnt = length - 1;
         if (length > 0) {
           setJoinedAgenda(snapshot.docs.map((str) => str.data()));
         }
       }
     );
+  };
+  useEffect(() => {
+    fetchData();
   }, []);
   return (
     <div>
@@ -47,7 +55,11 @@ const JoinedAgenda = ({ user }) => {
         <MdOutlineHowToVote size="2.5rem" color="#2373EB" />
         <div className={styles.name}>참여한 찬반</div>
       </div>
-      <Modal show={showModal}>
+      <Modal
+        show={showModal}
+        fetchData={fetchData}
+        joinedAgenda={joinedAgenda[cnt]?.joined}
+      >
         <button
           className={styles.btn}
           type="button"
