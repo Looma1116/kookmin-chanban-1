@@ -56,7 +56,7 @@ const Agenda = () => {
     }
   };
   return (
-    <div id="root">
+    <div>
       {isFetched ? (
         <div>
           <Title />
