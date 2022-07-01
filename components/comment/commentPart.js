@@ -32,7 +32,7 @@ const comment = () => {
     let snapShot = await getDocs(commentQuery);
 
     const a = snapShot.docs.map(doc=>({
-      id : doc.id, 
+      id : doc.id,
       ...doc.data(),
     }))
     setComment(a);
@@ -44,14 +44,14 @@ const comment = () => {
     //     })
     //   );
     // });
-    console.log(comment);
+    console.log(comment);[]
   };
   return(
     <div>
       {comment.map((data)=>{
         return (
-          <div>
-            <span>{data.authorName}</span>
+          <div key={data.id}>
+            <span>{data.authorName} </span>
             <span>{data.authorLevel}</span>
             <span>{data.like}</span>
             <div>{data.article}</div>

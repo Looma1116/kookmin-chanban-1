@@ -18,8 +18,7 @@ import AlternativeBtn from "../../ui/button/alternativeBtn";
 import DisagreeBtn from "../../ui/button/disagreeBtn";
 import News from "../../components/modal/news";
 import Modal from "react-modal";
-import CommentSec from "../../components/comment/commentSec";
-import Comment from "../../components/comment/comment";
+import Comment from "../../components/comment";
 
 // HpwvymAsOmqwAPEuTrIs
 
@@ -67,14 +66,6 @@ const Agenda = () => {
           <AgreeBtn />
           <AlternativeBtn />
           <DisagreeBtn />
-          <CommentSec />
-          <form>
-            <input
-              type="text"
-              placeholder="이승준님, 성숙한 사회를 만들어주셔서 고맙습니다!"
-            />
-            <button>게시</button>
-          </form>
           <Comment />
         </div>
       ) : null}

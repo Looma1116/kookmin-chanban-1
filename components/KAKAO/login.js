@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Images from "../../public/1.png";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
-import { loginState } from "../recoil/recoil";
+import { clickCountState, loginState } from "../recoil/recoil";
 import { useState } from "react";
 import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
 import axios from "axios";
@@ -13,6 +13,7 @@ const KakaoLogin = (props) => {
   const [login, setLogin] = useRecoilState(loginState);
   const [email, setEmail] = useState("");
   const auth = getAuth();
+  const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const db = getFirestore();
   useEffect(() => {
     if (window.Kakao) {
@@ -40,6 +41,7 @@ const KakaoLogin = (props) => {
         const comunication = await axios.post(apiServer, data);
         await signInWithCustomToken(auth, comunication.data.firebase_token);
         const d = await getDoc(doc(db, "user", auth.currentUser.uid));
+        setClickCount(false);
         let level = d.data().level;
         let exp = d.data().exp;
         level ? level : (level = 1);
