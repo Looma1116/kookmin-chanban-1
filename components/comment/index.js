@@ -15,6 +15,7 @@ import {
   commentState,
   loginState,
   userState,
+  voteState
 } from "../recoil/recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
 import LogInModal from "../modal/login";
@@ -32,6 +33,7 @@ const Comment = () => {
   const logIn = useRecoilValue(loginState);
   const [user, setUser] = useRecoilState(userState);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
+  const vote = useRecoilValue(voteState);
 
   useEffect(() => {
     if (logIn) {
@@ -106,6 +108,7 @@ const Comment = () => {
           value={comment}
           onKeyUp={onKeyPress}
           onFocus={clickHandler}
+          disabled = {(logIn)?(vote=="")?false:(vote===commentSort)?false:true:false}
         />
         <button>게시</button>
       </form>
