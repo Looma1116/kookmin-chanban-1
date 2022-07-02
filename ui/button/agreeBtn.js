@@ -1,6 +1,13 @@
+import { useRecoilState } from "recoil";
+import { voteState } from "../../components/recoil/recoil";
 import styles from "./styles.module.css";
 const AgreeBtn = () => {
-  // return <button className={styles.agree}>O</button>;
+  const[vote,setVote] = useRecoilState(voteState);
+
+  const clickHandler = ()=>{
+    setVote("agreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
+    console.log("찬성 투표!");
+  }
   return (
     <svg
       width="109"
@@ -8,6 +15,7 @@ const AgreeBtn = () => {
       viewBox="0 0 109 110"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      onClick={clickHandler}
     >
       <g filter="url(#filter0_d_319_270)">
         <g filter="url(#filter1_d_319_270)">

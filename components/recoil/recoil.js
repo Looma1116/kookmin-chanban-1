@@ -45,3 +45,7 @@ export const clickCountState = atom({
   key : "clickCountState",
   default : false,
 })
+export const voteState = atom({
+  key : "voteState",
+  default : "",
+})
