@@ -66,7 +66,7 @@ const FetchData = () => {
           );
           setIsFetched(true);
         } else {
-          if (doc.data().title.includes(search)) {
+          if (doc.data().title.replace(/ /gi,"").includes(search.replace(/ /gi, ""))) {
             setAgenda(
               agenda.concat({
                 id: doc.id,
