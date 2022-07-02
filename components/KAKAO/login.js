@@ -9,12 +9,24 @@ import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
 import axios from "axios";
 import { getFirestore, setDoc, doc, getDoc } from "firebase/firestore";
 import styles from "./Login.module.css";
-const KakaoLogin = (props) => {
+import DetailModal from "../modal/detailModal/index";
+const KakaoLogin = () => {
+  const [show, setShow] = useState(true);
   const [login, setLogin] = useRecoilState(loginState);
   const [email, setEmail] = useState("");
+  const [nick, setNick] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [token, setToken] = useState("");
   const auth = getAuth();
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const db = getFirestore();
+  const fetchData = (c) => {
+    setNick(c.data.nickname);
+    setAge(c.data.age);
+    setGender(c.data.gender);
+    setToken(c.data.firebase_token);
+  };
   useEffect(() => {
     if (window.Kakao) {
       const kakao = window.Kakao;
@@ -25,7 +37,7 @@ const KakaoLogin = (props) => {
       }
     }
   }, []);
-  const loginWithKakao = () => {
+  const loginWithKakao = async () => {
     const db = getFirestore();
     const apiServer =
       "https://asia-northeast1-peoplevoice-fcea9.cloudfunctions.net/app";
@@ -39,26 +51,23 @@ const KakaoLogin = (props) => {
         };
         console.log(data);
         const comunication = await axios.post(apiServer, data);
-        await signInWithCustomToken(auth, comunication.data.firebase_token);
-        const d = await getDoc(doc(db, "user", auth.currentUser.uid));
         setClickCount(false);
-        let level = d.data().level;
-        let exp = d.data().exp;
-        level ? level : (level = 1);
-        exp ? exp : (exp = 0);
-        if (exp >= 100) {
-          level = level + 1;
-          exp = exp - 100;
+        let level = 1;
+        let exp = 0;
+        if (comunication.data.first === false) {
+          console.log("sadasdasdsa");
+          await signInWithCustomToken(auth, comunication.data.firebase_token);
+          // const d = await getDoc(doc(db, "user", auth.currentUser.uid));
+          // level = d.data().level;
+          // exp = d.data().exp;
+          // if (exp >= 100) {
+          //   level = level + 1;
+          //   exp = exp - 100;
+          // }
+        } else {
+          await fetchData(comunication);
+          setShow(false);
         }
-        await setDoc(doc(db, "user", auth.currentUser.uid), {
-          gender: comunication.data.gender,
-          age: `${comunication.data.age.substr(0, 2)}대`,
-          nickname: auth.currentUser.displayName,
-          level: level,
-          exp: exp,
-        });
-
-        setLogin(true);
       },
       fail: function (err) {
         alert(JSON.stringify(err));
@@ -66,12 +75,18 @@ const KakaoLogin = (props) => {
     });
   };
   return (
-    <div className={styles.main}>
-      <div className={styles.write}>1초만에 카카오 로그인 하기</div>
-      <a id="custom-login-btn" onClick={loginWithKakao}>
-        <Image src={Images} />
-      </a>
-    </div>
+    <>
+      {show ? (
+        <div className={styles.main}>
+          <div className={styles.write}>1초만에 카카오 로그인 하기</div>
+          <a id="custom-login-btn" onClick={loginWithKakao}>
+            <Image src={Images} />
+          </a>
+        </div>
+      ) : (
+        <DetailModal nick={nick} age={age} token={token} gender={gender} />
+      )}
+    </>
   );
 };
 

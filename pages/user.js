@@ -32,12 +32,12 @@ export default function User() {
   const text = useRecoilValue(loginState);
   const auth = getAuth();
   useEffect(() => {
-    const authUnsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log(user);
+    const authUnsubscribe = onAuthStateChanged(auth, (user) => {
       if (user === null) {
         setLogin(false);
         setLoading(false);
       } else {
+        console.log(user);
         setLogin(true);
         setTimeout(async () => {
           const db = getFirestore();
@@ -57,7 +57,7 @@ export default function User() {
             });
           }
           setLoading(false);
-        }, 100);
+        }, 2000);
       }
     });
   }, []);
@@ -65,8 +65,9 @@ export default function User() {
     const del = await auth.signOut();
     setLogin(false);
   };
+
   if (loading) return <div>loading</div>;
-  if (!login) return <KakaoLogin Exp={level} />;
+  if (!login) return <KakaoLogin />;
   return (
     <div className={styles.main}>
       <h1 className={styles.title}>{`${nickname}님`}</h1>
