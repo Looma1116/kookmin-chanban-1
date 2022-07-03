@@ -49,7 +49,8 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
     } else {
       const db = getFirestore();
       const auth = getAuth();
-      if (auth === null) {
+      console.log(auth);
+      if (auth.currentUser === null) {
         await signInWithCustomToken(auth, token);
       }
       await setDoc(doc(db, "user", auth.currentUser.uid), {
