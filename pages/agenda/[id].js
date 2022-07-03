@@ -13,12 +13,11 @@ import Article from "../../components/article";
 import { agendaState } from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
-import AgreeBtn from "../../ui/button/agreeBtn";
-import AlternativeBtn from "../../ui/button/alternativeBtn";
-import DisagreeBtn from "../../ui/button/disagreeBtn";
+import Vote from "../../components/vote";
 import News from "../../components/modal/news";
 import Modal from "react-modal";
 import Comment from "../../components/comment";
+import styles from "../../styles/Agenda.module.css";
 
 // HpwvymAsOmqwAPEuTrIs
 
@@ -56,16 +55,14 @@ const Agenda = () => {
     }
   };
   return (
-    <div>
+    <div className={styles.container}>
       {isFetched ? (
         <div>
           <Title />
           <Article />
           <News />
           <BestComment />
-          <AgreeBtn />
-          <AlternativeBtn />
-          <DisagreeBtn />
+          <Vote />
           <Comment />
         </div>
       ) : null}

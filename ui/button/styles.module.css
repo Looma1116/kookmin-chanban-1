@@ -1,32 +1,23 @@
 .agree {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background-color: white;
-  text-align: center;
-  border: none;
-  color: blue;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  transition: 0.5s;
+}
+
+.agree:hover {
+  padding: 1rem;
 }
 
 .alternative {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background-color: white;
-  text-align: center;
-  border: none;
-  color: yellow;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  transition: 0.5s;
+}
+
+.alternative:hover {
+  padding: 1rem;
 }
 
 .disagree {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background-color: white;
-  text-align: center;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  border: none;
-  color: red;
+  transition: 0.5s;
+}
+
+.disagree:hover {
+  padding: 1rem;
 }
