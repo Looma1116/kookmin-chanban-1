@@ -42,10 +42,15 @@ export const userState = atom({
   default: [{ age: 0, gender: "남", level: 1, name: "국민찬반" }],
 });
 export const clickCountState = atom({
-  key : "clickCountState",
-  default : false,
-})
+  key: "clickCountState",
+  default: false,
+});
 export const voteState = atom({
-  key : "voteState",
-  default : "",
-})
+  key: "voteState",
+  default: "",
+});
+
+export const changeState = atom({
+  key: "change",
+  default: false,
+});

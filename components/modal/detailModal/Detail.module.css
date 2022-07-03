@@ -1,12 +1,10 @@
 .modal{
-    position: absolute;
-    bottom:1rem;
     background-color: white;
     width: 90%;
-    height: 50%;
+    height: 90%;
     border-radius: 15px;
     padding: 20px;
-    
+    z-index: 100;
 }
 
 .body{
