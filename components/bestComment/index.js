@@ -9,7 +9,8 @@ import {
   where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
-import Bestcomments from "./comment";
+import Bestcomments from "./Bestcomments";
+import styles from "./Bestcomments.module.css";
 
 const BestComment = () => {
   const router = useRouter();
@@ -63,14 +64,15 @@ const BestComment = () => {
       setIsFetched(true);
     }
   };
+  console.log(agree);
 
   return (
-    <>
-      <h2>대표의견</h2>
+    <div>
+      <h2 className={styles.title}>대표의견</h2>
       <Bestcomments com={agree} />
       <Bestcomments com={alter} />
       <Bestcomments com={disagree} />
-    </>
+    </div>
   );
 };
 
