@@ -84,7 +84,14 @@ const KakaoLogin = () => {
           </a>
         </div>
       ) : (
-        <DetailModal nick={nick} age={age} token={token} gender={gender} />
+        <DetailModal
+          nick={nick}
+          age={age}
+          token={token}
+          gender={gender}
+          level={1}
+          exp={0}
+        />
       )}
     </>
   );

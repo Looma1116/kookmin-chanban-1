@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import Modal from "./agendaCard";
 import Card from "../../../ui/Card/Card";
-import { loadGetInitialProps } from "next/dist/shared/lib/utils";
 import Image from "next/image";
 import Images from "../../../public/joined.png";
 import styles from "./JoinedAgenda.module.css";
