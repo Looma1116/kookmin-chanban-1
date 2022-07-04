@@ -13,7 +13,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState, useRef } from "react";
-import { loginState } from "../components/recoil/recoil";
+import { changeState, loginState } from "../components/recoil/recoil";
 import KakaoLogin from "../components/KAKAO/login";
 import JoinedAgenda from "../components/modal/joinedAgenda";
 import axios from "axios";
@@ -22,6 +22,7 @@ import WroteComment from "../components/modal/wroteComment";
 import UserInfo from "../components/modal/userInfo";
 import styles from "../styles/User.module.css";
 export default function User() {
+  const [change, setChange] = useRecoilState(changeState);
   const [loading, setLoading] = useState(true);
   const [login, setLogin] = useRecoilState(loginState);
   const [nickname, setNickname] = useState("");
@@ -60,7 +61,8 @@ export default function User() {
         }, 2000);
       }
     });
-  }, []);
+  }, [change]);
+  console.log(change);
   const handleLogout = async () => {
     const del = await auth.signOut();
     setLogin(false);
@@ -82,6 +84,8 @@ export default function User() {
         gender={gender}
         age={age}
         onClick={handleLogout}
+        level={level}
+        exp={exp}
       />
     </div>
   );
