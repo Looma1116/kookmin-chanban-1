@@ -75,15 +75,15 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
         회원정보수정
       </div>
       <Modal show={showModal}>
-        <div>
-          <div>
-            <div>회원 정보 등록</div>
-          </div>
+        <div className={styles.modal}>
+          <h3 className={styles.title}>회원 정보 등록</h3>
           <form onSubmit={handleSubmit} className={styles.full}>
             <label htmlFor="nickname">
-              닉네임을 적어주세요:
+              닉네임을 적어주세요
+              <br />
               <input
                 id="nickname"
+                className={styles.input}
                 value={nicks}
                 type="text"
                 onChange={({ target: { value } }) => setNicks(value)}
@@ -92,7 +92,9 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
             </label>
             <div>
               연령대를 선택해주세요
+              <br />
               <select
+                className={styles.select}
                 onChange={({ target: { value } }) => setAges(value)}
                 value={ages}
               >
@@ -104,7 +106,9 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
               </select>
             </div>
             성별을 선택해주세요
+            <br />
             <select
+              className={styles.select}
               onChange={({ target: { value } }) => setGenders(value)}
               value={genders}
             >
@@ -114,7 +118,9 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
                 </option>
               ))}
             </select>
-            <button type="submit">완료</button>
+            <button className={styles.submit} type="submit">
+              <span>완료</span>
+            </button>
           </form>
         </div>
       </Modal>
