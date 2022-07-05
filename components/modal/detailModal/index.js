@@ -119,7 +119,7 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
               ))}
             </select>
             <button className={styles.submit} type="submit">
-              <span>완료</span>
+              완료
             </button>
           </form>
         </div>
