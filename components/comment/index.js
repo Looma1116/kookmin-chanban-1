@@ -8,6 +8,7 @@ import {
   setDoc,
   set,
   addDoc,
+  where,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import {
@@ -51,6 +52,9 @@ const Comment = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     if (logIn) {
+      const q = query(collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),where("story","==",`${router.query.id}`));
+      console.log(q);
+      console.log("쿼리 출력!");
       await addDoc(
         collection(db, "agenda", `${router.query.id}`, `${commentSort}`),
         {
