@@ -52,6 +52,7 @@ const KakaoLogin = () => {
         console.log(data);
         const comunication = await axios.post(apiServer, data);
         setClickCount(false);
+        setLogin(true);
         let level = 1;
         let exp = 0;
         if (comunication.data.first === false) {
