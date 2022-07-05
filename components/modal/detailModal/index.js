@@ -60,6 +60,7 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
         level: level,
         exp: exp,
       });
+      auth.currentUser.displayName = nicks;
       setShowModal(false);
       setChange(!change);
     }
