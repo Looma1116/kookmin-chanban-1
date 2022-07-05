@@ -4,8 +4,10 @@ import Images from "../../public/1.png";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { loginState } from "../recoil/recoil";
+import { getAuth } from "firebase/auth";
 
 const KakaoLogout = () => {
+  const auth = getAuth();
   const [login, setLogin] = useRecoilState(loginState);
   useEffect(() => {
     if (window.Kakao) {
@@ -18,19 +20,20 @@ const KakaoLogout = () => {
       }
     }
   }, []);
-  const handleLogout = (e) => {
+  const handleLogout = async (e) => {
     if (window.Kakao.Auth.getAccessToken()) {
       console.log(
         "카카오 인증 엑세스 토큰 존재",
-        window.Kakao.Auth.getAccessToken()
+        await window.Kakao.Auth.getAccessToken()
       );
-      window.Kakao.Auth.logout(() => {
+      await window.Kakao.Auth.logout(() => {
         console.log("카카오 로그아웃 완료", window.Kakao.Auth.getAccessToken());
       });
     }
+    await auth.signOut();
     setLogin(false);
   };
   return <button onClick={handleLogout}>Logout</button>;
 };
 
-export default KakaoLogin;
+export default KakaoLogout;

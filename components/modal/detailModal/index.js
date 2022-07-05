@@ -4,6 +4,7 @@ import { getFirestore, setDoc, doc, getDoc } from "firebase/firestore";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "./DetailModal.module.css";
 import Modal from "./detail";
+import axios from "axios";
 import { changeState } from "../../recoil/recoil";
 const AGEOPTIONS = [
   "나이를 선택해주세요",
@@ -59,10 +60,24 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
         nickname: nicks,
         level: level,
         exp: exp,
+        deleted: false,
+        email: auth.currentUser.email,
       });
-      auth.currentUser.displayName = nicks;
-      setShowModal(false);
-      setChange(!change);
+      const apiServer =
+        "https://asia-northeast1-peoplevoice-fcea9.cloudfunctions.net/app/fix";
+      const data = {
+        uid: auth.currentUser.uid,
+        email: auth.currentUser.email,
+        nick: nicks,
+      };
+      console.log(data);
+      const comunication = await axios.post(apiServer, data);
+      console.log(comunication.data.win);
+      console.log(auth.currentUser.displayName);
+      console.log(auth.currentUser);
+      if (nicks !== auth.currentUser.displayName) {
+        window.location.replace("/user");
+      }
     }
   };
   return (
