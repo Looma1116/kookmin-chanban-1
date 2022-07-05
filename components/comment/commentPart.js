@@ -58,30 +58,41 @@ const comment = () => {
     // });
     console.log(comment);
   };
-  const likeClickHandler = async ({ id }) => {
+  const likeClickHandler = async ({ id, like }) => {
+    console.log(id);
     if (logIn) {
       if(!likeClick){
-         const q = doc(
+         const commentRef = doc(
            db,
            "agenda",
            `${router.query.id}`,
            `${commentS}`,
            `${id}`
          );
-         const a = getDoc(q);
-         console.log(q);
+         await updateDoc(commentRef,{
+          like : like+1,
+         })
          console.log("댓글 출력");
          setLikeClick(true); 
       }
       else{
         setLikeClick(false);
+        const commentRef = doc(
+          db,
+          "agenda",
+          `${router.query.id}`,
+          `${commentS}`,
+          `${id}`
+        );
+        await updateDoc(commentRef, {
+          like: like - 1,
+        });
+        console.log("댓글 출력");
+        setLikeClick(true); 
       }
     } else {
       setClickCount(true);
     }
-    //  updateDoc(commentRef,{
-    //     like : (prev) => (prev)+1,
-    //   })
   };
   return (
     <div>
@@ -89,9 +100,13 @@ const comment = () => {
         return (
           <div>
             <div key={data.id}>
+              {console.log(data.id)}
               <span>{data.authorName} </span>
               <span>{data.authorLevel}</span>
-              <span onClick={() => likeClickHandler(data.id)}>
+              <span onClick={() => {
+                console.log(data.id);
+                likeClickHandler({id : data.id, like : data.like});
+                console.log(data.id)}}>
                 {likeClick ? data.like + 1 : data.like}
               </span>
               <div>{data.article}</div>

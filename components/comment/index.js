@@ -65,6 +65,7 @@ const Comment = () => {
           hide: false,
           like: 0, // 나중에 반응형으로 교체해야함
           wrote: new Date(),
+          id: auth.currentUser.uid,
         }
       );
       console.log("답변완료!");
