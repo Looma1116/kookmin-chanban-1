@@ -39,7 +39,7 @@ export const commentDataState = atom({
 });
 export const userState = atom({
   key: "userState",
-  default: [{ age: 0, gender: "남", level: 1, name: "국민찬반" }],
+  default: [{ age: "0", gender: "남", level: 1, name: "국민찬반" }],
 });
 export const clickCountState = atom({
   key: "clickCountState",
@@ -53,4 +53,8 @@ export const voteState = atom({
 export const changeState = atom({
   key: "change",
   default: false,
+});
+export const nickState = atom({
+  key: "nick",
+  default: "",
 });

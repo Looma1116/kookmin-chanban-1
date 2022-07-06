@@ -55,9 +55,11 @@ const KakaoLogin = () => {
         const comunication = await axios.post(apiServer, data);
         let level = 1;
         let exp = 0;
+        console.log(comunication.data.first);
         if (comunication.data.first === false) {
           console.log("sadasdasdsa");
           await signInWithCustomToken(auth, comunication.data.firebase_token);
+          setLogin(true);
           // const d = await getDoc(doc(db, "user", auth.currentUser.uid));
           // level = d.data().level;
           // exp = d.data().exp;
