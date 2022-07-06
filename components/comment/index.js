@@ -117,7 +117,6 @@ const Comment = () => {
         />
         <button>게시</button>
       </form>
-      {clickCount ? <LogInModal /> : <div />}
     </div>
   );
 };
