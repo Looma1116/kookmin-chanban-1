@@ -7,11 +7,13 @@ import {
   arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
   query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -20,7 +22,9 @@ import {
   voteState,
   loginState,
   agendaState,
+  clickCountState,
 } from "../../components/recoil/recoil";
+import Login from "../modal/login";
 
 const Vote = () => {
   const auth = getAuth();
@@ -28,9 +32,13 @@ const Vote = () => {
   const login = useRecoilValue(loginState);
   const db = getFirestore();
   const router = useRouter();
-  const [agree, setAgree] = useState("");
+  const [id, setId] = useState("");
   const agenda = useRecoilValue(agendaState);
+  const [agree, setAgree] = useState([]);
+  const [alternative, setAlternative] = useState([]);
+  const [disagree, setDisagree] = useState([]);
   const agendaObj = Object.assign({}, agenda);
+  const [clickCount, setClickCount] = useRecoilState(clickCountState);
 
   useEffect(() => {
     voteId();
@@ -43,13 +51,14 @@ const Vote = () => {
     snapshot.docs.forEach((doc) => {
       data.push({ ...doc.data(), id: doc.id });
     });
-    setAgree(data[0]?.id);
+    setId(data[0]?.id);
+    setAgree(data[0]?.agreeUser);
+    setAlternative(data[0]?.alternative);
+    setDisagree(data[0]?.disagreeUser);
   };
 
   const agreeCount = async () => {
-    const q = query(
-      doc(db, "agenda", `${router.query.id}`, "vote", `${agree}`)
-    );
+    const q = query(doc(db, "agenda", `${router.query.id}`, "vote", id));
     await updateDoc(q, {
       agreeUser: arrayUnion(`${auth.currentUser.uid}`),
     });
@@ -70,14 +79,34 @@ const Vote = () => {
     );
   };
 
+  const updateAgenda = async ({ numAgree, numAlternative, numDisagree }) => {
+    await updateDoc(doc(db, "agenda", router.query.id), {
+      numAgree: numAgree,
+      numAlternative: numAlternative,
+      numDisagree: numDisagree,
+      numVote: numAgree + numAlternative + numDisagree,
+    });
+  };
+
+  const updateUser = async () => {
+    if (agree.indexOf() < 0) {
+    }
+  };
+
   const agreeHandler = () => {
     setVote("agreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
       console.log("찬성 투표!");
       agreeCount();
       updateVote();
+      updateAgenda({
+        numAgree: agree.length,
+        numAlternative: alternative.length,
+        numDisagree: disagree.length,
+      });
+      updateUser();
     } else {
-      console.log("로그인 하세요!");
+      setClickCount(true);
     }
   };
 
@@ -88,6 +117,7 @@ const Vote = () => {
         <AgreeBtn onClick={agreeHandler} />
         <AlternativeBtn />
         <DisagreeBtn />
+        {clickCount ? <Login /> : null}
       </div>
     </>
   );
