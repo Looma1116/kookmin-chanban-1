@@ -5,7 +5,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "./DetailModal.module.css";
 import Modal from "./detail";
 import axios from "axios";
-import { changeState } from "../../recoil/recoil";
+import { changeState, loginState, nickState } from "../../recoil/recoil";
 const AGEOPTIONS = [
   "나이를 선택해주세요",
   "10대",
@@ -20,6 +20,8 @@ const AGEOPTIONS = [
 ];
 const GENOPTIONS = ["성별을 선택해주세요", "male", "female", "none"];
 const Detail = ({ nick, age, gender, token, level, exp }) => {
+  const [name, setName] = useRecoilState(nickState);
+  const [login, setLogin] = useRecoilState(loginState);
   const [change, setChange] = useRecoilState(changeState);
   const [showModal, setShowModal] = useState(true);
   console.log("hi");
@@ -54,6 +56,7 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
       if (auth.currentUser === null) {
         await signInWithCustomToken(auth, token);
       }
+      setName(nicks);
       await setDoc(doc(db, "user", auth.currentUser.uid), {
         gender: genders,
         age: ages,
@@ -63,23 +66,12 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
         deleted: false,
         email: auth.currentUser.email,
       });
-      const apiServer =
-        "https://asia-northeast1-peoplevoice-fcea9.cloudfunctions.net/app/fix";
-      const data = {
-        uid: auth.currentUser.uid,
-        email: auth.currentUser.email,
-        nick: nicks,
-      };
-      console.log(data);
-      const comunication = await axios.post(apiServer, data);
-      console.log(comunication.data.win);
-      console.log(auth.currentUser.displayName);
-      console.log(auth.currentUser);
-      if (nicks !== auth.currentUser.displayName) {
-        window.location.replace("/user");
-      }
     }
+    setLogin(true);
+    setChange(!change);
+    setShowModal(false);
   };
+  console.log(name);
   return (
     <div className={styles.out}>
       <div
