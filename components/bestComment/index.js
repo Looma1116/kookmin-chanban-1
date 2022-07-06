@@ -64,14 +64,24 @@ const BestComment = () => {
       setIsFetched(true);
     }
   };
-  console.log(agree);
+  const sortedAgree = agree.sort((a, b) => {
+    return b.like - a.like;
+  });
+
+  const sortedAlter = alter.sort((a, b) => {
+    return b.like - a.like;
+  });
+
+  const sortedDisagree = disagree.sort((a, b) => {
+    return b.like - a.like;
+  });
 
   return (
     <div>
       <h2 className={styles.title}>대표의견</h2>
-      <Bestcomments com={agree} />
-      <Bestcomments com={alter} />
-      <Bestcomments com={disagree} />
+      <Bestcomments com={sortedAgree} />
+      <Bestcomments com={sortedAlter} />
+      <Bestcomments com={sortedDisagree} />
     </div>
   );
 };
