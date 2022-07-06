@@ -8,9 +8,9 @@ import {
   where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Article from "../../components/article";
-import { agendaState } from "../../components/recoil/recoil";
+import { agendaState, clickCountState } from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
 import Vote from "../../components/vote";
@@ -18,6 +18,7 @@ import News from "../../components/modal/news";
 import Modal from "react-modal";
 import Comment from "../../components/comment";
 import styles from "../../styles/Agenda.module.css";
+import LogInModal from "../../components/modal/login";
 
 // HpwvymAsOmqwAPEuTrIs
 
@@ -27,10 +28,11 @@ const Agenda = () => {
   const [agenda, setAgenda] = useRecoilState(agendaState);
   const [isFetched, setIsFetched] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const clickCount = useRecoilValue(clickCountState);
 
   useEffect(() => {
     fetchData();
-  }, [isFetched]);
+  }, [isFetched,clickCount]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -64,6 +66,7 @@ const Agenda = () => {
           <BestComment />
           <Vote />
           <Comment />
+          {clickCount? <LogInModal/>:null}
         </div>
       ) : null}
     </div>
