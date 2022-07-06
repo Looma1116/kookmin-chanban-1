@@ -16,18 +16,21 @@ import {
   doc,
   updateDoc,
   getDoc,
+  setDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { useRecoilState, useRecoilValue } from "recoil";
-import LogInModal from "../modal/login";
+import { getAuth } from "firebase/auth";
 
 const comment = () => {
   const router = useRouter();
+  const auth = getAuth();
   const db = getFirestore();
   let [comment, setComment] = useRecoilState(commentDataState);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const commentS = useRecoilValue(commentState);
   const logIn = useRecoilValue(loginState);
-  const [likeClick, setLikeClick] = useState(false);
+  let likeClick = [];
 
   useEffect(() => {
     setComment([]);
@@ -48,35 +51,13 @@ const comment = () => {
       ...doc.data(),
     }));
     setComment(a);
-    // snapShot.forEach((doc) => {
-    //   setComment(
-    //     comment.concat({
-    //       id: doc.id,
-    //       ...doc.data(),
-    //     })
-    //   );
-    // });
     console.log(comment);
   };
   const likeClickHandler = async ({ id, like }) => {
     console.log(id);
     if (logIn) {
-      if(!likeClick){
-         const commentRef = doc(
-           db,
-           "agenda",
-           `${router.query.id}`,
-           `${commentS}`,
-           `${id}`
-         );
-         await updateDoc(commentRef,{
-          like : like+1,
-         })
-         console.log("댓글 출력");
-         setLikeClick(true); 
-      }
-      else{
-        setLikeClick(false);
+      if (!match(id)) {
+        console.log(id);
         const commentRef = doc(
           db,
           "agenda",
@@ -84,34 +65,69 @@ const comment = () => {
           `${commentS}`,
           `${id}`
         );
-        await updateDoc(commentRef, {
+        await updateDoc(commentRef, { // 좋아요 파이어베이스로 업데이트
+          like: like + 1,
+        });
+        const userCommentRef = doc(db, "user", `${auth.currentUser.uid}`);
+        await updateDoc(userCommentRef, {
+          likeComment: arrayUnion(`${id}`),
+        });
+        likeClick.push({
+          id,
+        });
+        console.log(likeClick);
+        console.log("좋아요 추가!");
+      } else {       
+        likeClick = likeClick.filter((element) => element != `${id}`);
+        const commentRef = doc(
+          db,
+          "agenda",
+          `${router.query.id}`,
+          `${commentS}`,
+          `${id}`
+        );
+        await updateDoc(commentRef, { //좋아요 취소 파이어베이스 업데이트
           like: like - 1,
         });
-        console.log("댓글 출력");
-        setLikeClick(true); 
+        console.log("좋아요 취소!");
       }
     } else {
       setClickCount(true);
     }
   };
+  const match = (id)=>{
+    console.log("매치 시작");
+    console.log(id);
+    likeClick.forEach((item)=>{
+      console.log(item);
+      if(item.id==id){
+        return true;
+      }
+      else{
+        false;
+      }
+    })
+  }
   return (
     <div>
       {comment.map((data) => {
         return (
           <div>
             <div key={data.id}>
-              {console.log(data.id)}
+              {async () => {
+                likeClick = false;
+              }}
               <span>{data.authorName} </span>
               <span>{data.authorLevel}</span>
-              <span onClick={() => {
-                console.log(data.id);
-                likeClickHandler({id : data.id, like : data.like});
-                console.log(data.id)}}>
-                {likeClick ? data.like + 1 : data.like}
+              <span
+                onClick={() => {
+                  likeClickHandler({ id: data.id, like: data.like });
+                }}
+              >
+                {match(data.id) ? data.like + 1 : data.like}
               </span>
               <div>{data.article}</div>
             </div>
-            {clickCount ? <LogInModal /> : <div />}
           </div>
         );
       })}
