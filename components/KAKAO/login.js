@@ -50,9 +50,8 @@ const KakaoLogin = () => {
           token: authObj.access_token,
         };
         console.log(data);
-         setClickCount(false);
-         setLogin(true);
-         console.log("로그인 완료!");
+        setClickCount(false);
+        console.log("로그인 완료!");
         const comunication = await axios.post(apiServer, data);
         let level = 1;
         let exp = 0;
