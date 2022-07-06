@@ -40,7 +40,7 @@ const KakaoLogin = () => {
   const loginWithKakao = async () => {
     const db = getFirestore();
     const apiServer =
-      "https://asia-northeast1-peoplevoice-fcea9.cloudfunctions.net/app";
+      "https://asia-northeast1-peoplevoice-fcea9.cloudfunctions.net/app/login";
     const { Kakao } = window;
     console.log(Kakao);
     Kakao.Auth.login({

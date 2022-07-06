@@ -39,7 +39,6 @@ export default function User() {
         setLoading(false);
       } else {
         console.log(user);
-        setLogin(true);
         setTimeout(async () => {
           const db = getFirestore();
           const d = await getDoc(doc(db, "user", user.uid));
@@ -57,17 +56,18 @@ export default function User() {
               exp: exp,
             });
           }
+          setLogin(true);
           setLoading(false);
         }, 2000);
       }
     });
   }, [change]);
   console.log(change);
-  const handleLogout = async () => {
-    const del = await auth.signOut();
-    setLogin(false);
-  };
-
+  // const handleLogout = async () => {
+  //   const del = await auth.signOut();
+  //   setLogin(false);
+  // };
+  console.log(nickname);
   if (loading) return <div>loading</div>;
   if (!login) return <KakaoLogin />;
   return (
@@ -83,7 +83,6 @@ export default function User() {
         nickname={nickname}
         gender={gender}
         age={age}
-        onClick={handleLogout}
         level={level}
         exp={exp}
       />

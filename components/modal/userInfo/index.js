@@ -5,6 +5,8 @@ import styles from "./UserInfo.module.css";
 import Image from "next/image";
 import Images from "../../../public/logout.png";
 import FixUser from "../detailModal/index";
+import DeleteUser from "../deleteUser/index";
+import KakaoLogout from "../../KAKAO/logout";
 export default function UserInfo(props) {
   const [showModal, setShowModal] = useState(false);
   const handleClick = (e) => {
@@ -22,7 +24,8 @@ export default function UserInfo(props) {
           <div className={styles.line}> {props.nickname}</div>
           <div className={styles.line}>{props.gender}</div>
           <div className={styles.line}>{props.age}</div>
-          <Image src={Images} onClick={props.onClick} />
+          {/* <Image src={Images} onClick={props.onClick} /> */}
+          <KakaoLogout />
           <FixUser
             nick={props.nickname}
             age={props.age}
@@ -30,6 +33,7 @@ export default function UserInfo(props) {
             level={props.level}
             exp={props.exp}
           />
+          <DeleteUser />
         </div>
       </Modal>
     </div>
