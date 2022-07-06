@@ -117,7 +117,6 @@ const Vote = () => {
         <AgreeBtn onClick={agreeHandler} />
         <AlternativeBtn />
         <DisagreeBtn />
-        {clickCount ? <Login /> : null}
       </div>
     </>
   );
