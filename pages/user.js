@@ -12,8 +12,13 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import Loading from "../components/modal/loading/index";
 import { useEffect, useState, useRef } from "react";
-import { changeState, loadingState, loginState } from "../components/recoil/recoil";
+import {
+  changeState,
+  loadingState,
+  loginState,
+} from "../components/recoil/recoil";
 import KakaoLogin from "../components/KAKAO/login";
 import JoinedAgenda from "../components/modal/joinedAgenda";
 import axios from "axios";
@@ -69,7 +74,7 @@ export default function User() {
   //   setLogin(false);
   // };
   console.log(nickname);
-  if (loading) return <div>loading</div>;
+  if (loading) return <Loading />;
   if (!login) return <KakaoLogin />;
   return (
     <div className={styles.main}>

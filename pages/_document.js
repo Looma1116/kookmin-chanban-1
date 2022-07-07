@@ -5,6 +5,7 @@ export default function Document() {
     <Html>
       <Head>
         <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+        <meta name="viewport" content="viewport-fit=cover" />
       </Head>
       <body>
         <Main />
@@ -16,6 +17,7 @@ export default function Document() {
         <div id="modal-userInfo"></div>
         <div id="modal-detailUser"></div>
         <div id="modal-deleteUser"></div>
+        <div id="modal-Loading"></div>
         <div id="root"></div>
       </body>
     </Html>
