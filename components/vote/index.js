@@ -24,7 +24,7 @@ import {
   agendaState,
   clickCountState,
 } from "../../components/recoil/recoil";
-import Login from "../modal/login";
+import Statistic from "../statistic";
 
 const Vote = () => {
   const auth = getAuth();
@@ -39,10 +39,15 @@ const Vote = () => {
   const [disagree, setDisagree] = useState([]);
   const agendaObj = Object.assign({}, agenda);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
+  const [votewhere, setVotewhere] = useState(0);
+  const [ivoted, setIvoted] = useState(false);
 
   useEffect(() => {
     voteId();
-  }, []);
+    if (login) {
+      updateUser();
+    }
+  }, [login, ivoted]);
 
   const voteId = async () => {
     const q = query(collection(db, "agenda", `${router.query.id}`, "vote"));
@@ -89,14 +94,24 @@ const Vote = () => {
   };
 
   const updateUser = async () => {
-    if (agree.indexOf() < 0) {
+    if (agree.indexOf(auth.currentUser.uid) >= 0) {
+      setVotewhere(1);
+      console.log("찬성한 유저입니다.");
+    } else if (alternative.indexOf(auth.currentUser.uid) >= 0) {
+      setVotewhere(2);
+      console.log("중립한 유저입니다.");
+    } else if (disagree.indexOf(auth.currentUser.uid) >= 0) {
+      setVotewhere(3);
+      console.log("반대하는 유저입니다.");
+    } else {
+      console.log("투표 안 한 유저입니다.");
     }
   };
 
   const agreeHandler = () => {
     setVote("agreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
+    setIvoted(true);
     if (login) {
-      console.log("찬성 투표!");
       agreeCount();
       updateVote();
       updateAgenda({
@@ -104,7 +119,6 @@ const Vote = () => {
         numAlternative: alternative.length,
         numDisagree: disagree.length,
       });
-      updateUser();
     } else {
       setClickCount(true);
     }
@@ -113,11 +127,19 @@ const Vote = () => {
   return (
     <>
       <h2 className={styles.title}>사람들은 어떻게 생각할까요?</h2>
-      <div className={styles.vote}>
-        <AgreeBtn onClick={agreeHandler} />
-        <AlternativeBtn />
-        <DisagreeBtn />
-      </div>
+      {votewhere == 0 ? (
+        <div className={styles.vote}>
+          <AgreeBtn onClick={agreeHandler} />
+          <AlternativeBtn />
+          <DisagreeBtn />
+        </div>
+      ) : (
+        <Statistic
+          agree={agree.length}
+          alternative={alternative.length}
+          disagree={disagree.length}
+        />
+      )}
     </>
   );
 };
