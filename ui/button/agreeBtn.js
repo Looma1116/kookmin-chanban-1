@@ -14,7 +14,7 @@ const AgreeBtn = (props) => {
         <circle cx="54.5" cy="52.5" r="49.5" fill="white" />
       </g>
       <g filter="url(#filter1_i_583_302)">
-        <circle cx="54.5" cy="52.5" r="28" stroke="#B3D1FF" strokeWidth="9" />
+        <circle cx="54.5" cy="52.5" r="28" stroke="#B3D1FF" stroke-width="9" />
       </g>
       <defs>
         <filter
@@ -24,9 +24,9 @@ const AgreeBtn = (props) => {
           width="109"
           height="109"
           filterUnits="userSpaceOnUse"
-          colorInterpolationFilters="sRGB"
+          color-interpolation-filters="sRGB"
         >
-          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -59,9 +59,9 @@ const AgreeBtn = (props) => {
           width="65"
           height="69"
           filterUnits="userSpaceOnUse"
-          colorInterpolationFilters="sRGB"
+          color-interpolation-filters="sRGB"
         >
-          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"

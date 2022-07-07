@@ -1,18 +1,5 @@
 import styles from "./styles.module.css";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { loginState, voteState } from "../../components/recoil/recoil";
-const AlternativeBtn = () => {
-  const [vote, setVote] = useRecoilState(voteState);
-  const login = useRecoilValue(loginState);
-
-  const clickHandler = () => {
-    setVote("alternativeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
-    if (login) {
-      console.log("중립 투표!");
-    } else {
-      console.log("로그인 하세요!");
-    }
-  };
+const AlternativeBtn = (props) => {
   return (
     <svg
       width="109"
@@ -21,7 +8,7 @@ const AlternativeBtn = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={styles.alternative}
-      onClick={clickHandler}
+      onClick={props.onClick}
     >
       <g filter="url(#filter0_d_319_271)">
         <circle cx="54.5" cy="52.5" r="49.5" fill="white" />
