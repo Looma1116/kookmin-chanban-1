@@ -12,8 +12,13 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import Loading from "../components/modal/loading/index";
 import { useEffect, useState, useRef } from "react";
-import { changeState, loginState } from "../components/recoil/recoil";
+import {
+  changeState,
+  loadingState,
+  loginState,
+} from "../components/recoil/recoil";
 import KakaoLogin from "../components/KAKAO/login";
 import JoinedAgenda from "../components/modal/joinedAgenda";
 import axios from "axios";
@@ -23,7 +28,7 @@ import UserInfo from "../components/modal/userInfo";
 import styles from "../styles/User.module.css";
 export default function User() {
   const [change, setChange] = useRecoilState(changeState);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useRecoilState(loadingState);
   const [login, setLogin] = useRecoilState(loginState);
   const [nickname, setNickname] = useState("");
   const [level, setLevel] = useState(0);
@@ -39,6 +44,7 @@ export default function User() {
         setLoading(false);
       } else {
         console.log(user);
+        setLoading(true);
         setTimeout(async () => {
           const db = getFirestore();
           const d = await getDoc(doc(db, "user", user.uid));
@@ -68,7 +74,7 @@ export default function User() {
   //   setLogin(false);
   // };
   console.log(nickname);
-  if (loading) return <div>loading</div>;
+  if (loading) return <Loading />;
   if (!login) return <KakaoLogin />;
   return (
     <div className={styles.main}>
