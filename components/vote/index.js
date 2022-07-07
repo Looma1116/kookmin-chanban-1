@@ -42,6 +42,15 @@ const Vote = () => {
   const [votewhere, setVotewhere] = useState(0);
   const [ivoted, setIvoted] = useState(false);
 
+  console.log(agenda[0]);
+
+  useEffect(() => {
+    voteId();
+    if (login) {
+      updateUser();
+    }
+  }, []);
+
   useEffect(() => {
     voteId();
     if (login) {
@@ -61,6 +70,10 @@ const Vote = () => {
     setAlternative(data[0]?.alternative);
     setDisagree(data[0]?.disagreeUser);
   };
+
+  console.log(agree);
+  console.log(alternative);
+  console.log(disagree);
 
   const agreeCount = async () => {
     const q = query(doc(db, "agenda", `${router.query.id}`, "vote", id));
@@ -93,7 +106,10 @@ const Vote = () => {
         router.query.id
       ),
       {
-        agendaObj,
+        category: agenda[0].category,
+        joined: new Date(),
+        story: agenda[0].id,
+        title: agenda[0].title,
       }
     );
   };
@@ -156,6 +172,7 @@ const Vote = () => {
       console.log("로그인 하세요!");
     }
   };
+  console.log(votewhere);
 
   const disagreeHandler = () => {
     setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
@@ -169,6 +186,7 @@ const Vote = () => {
         numDisagree: disagree.length,
       });
       console.log("반대 투표!");
+      console.log(votewhere);
     } else {
       setClickCount(true);
       console.log("로그인 하세요!");
