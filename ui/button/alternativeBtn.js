@@ -7,11 +7,10 @@ const AlternativeBtn = () => {
 
   const clickHandler = () => {
     setVote("alternativeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
-    if (login){
+    if (login) {
       console.log("중립 투표!");
-    }
-    else {
-      console.log("로그인 하세요!")
+    } else {
+      console.log("로그인 하세요!");
     }
   };
   return (
@@ -38,8 +37,8 @@ const AlternativeBtn = () => {
           height="53"
           rx="7"
           stroke="#FFE27D"
-          stroke-width="18"
-          stroke-linejoin="round"
+          strokeWidth="18"
+          strokeLinejoin="round"
           mask="url(#path-2-inside-1_319_271)"
         />
       </g>
@@ -51,9 +50,9 @@ const AlternativeBtn = () => {
           width="109"
           height="109"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -86,9 +85,9 @@ const AlternativeBtn = () => {
           width="53"
           height="57"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"

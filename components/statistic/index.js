@@ -6,11 +6,6 @@ const Statistic = (props) => {
   const dataset = [props.agree, props.alternative, props.disagree];
   const colors = ["#2373EB", "#FFC700", "#FF0000"];
 
-  dataset.forEach((data) => {
-    const ratio = data / total;
-    const strokeLength = diameter * ratio;
-  });
-
   const acc = dataset.reduce(
     (result, value) => [...result, result[result.length - 1] + value],
     [0]
@@ -40,9 +35,9 @@ const Statistic = (props) => {
           r={String(radius)}
           fill="transparent"
           stroke={colors[0]}
-          stroke-width="10"
-          stroke-dasharray={`${fillSpace[0]} ${emptySpace[0]}`}
-          stroke-dashoffset={String(-offset[0])}
+          strokeWidth="10"
+          strokeDasharray={`${fillSpace[0]} ${emptySpace[0]}`}
+          strokeDashoffset={String(-offset[0])}
         />
         <circle
           cx="50"
@@ -50,9 +45,9 @@ const Statistic = (props) => {
           r={String(radius)}
           fill="transparent"
           stroke={colors[1]}
-          stroke-width="10"
-          stroke-dasharray={`${fillSpace[1]} ${emptySpace[1]}`}
-          stroke-dashoffset={String(-offset[1])}
+          strokeWidth="10"
+          strokeDasharray={`${fillSpace[1]} ${emptySpace[1]}`}
+          strokeDashoffset={String(-offset[1])}
         />
         <circle
           cx="50"
@@ -60,9 +55,9 @@ const Statistic = (props) => {
           r={String(radius)}
           fill="transparent"
           stroke={colors[2]}
-          stroke-width="10"
-          stroke-dasharray={`${fillSpace[2]} ${emptySpace[2]}`}
-          stroke-dashoffset={String(-offset[2])}
+          strokeWidth="10"
+          strokeDasharray={`${fillSpace[2]} ${emptySpace[2]}`}
+          strokeDashoffset={String(-offset[2])}
         />
       </svg>
       <div>
