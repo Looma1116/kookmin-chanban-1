@@ -3,52 +3,17 @@ const Statistic = (props) => {
   const total = props.agree + props.alternative + props.disagree;
   return (
     <div className={styles.statistic}>
-      <svg width="100%" height="100%" viewBox="0 0 100 100">
+      <svg height="300" viewBox="0 0 100 100">
         <circle
           cx="50"
           cy="50"
-          r="30"
+          r="20"
+          fill="transparent"
           stroke="blue"
-          stroke-width="15"
-          fill="transparent"
-          stroke-dasharray="188.496"
-          stroke-dashoffset="25%"
-          transform="rotate(-90 50 50)"
-        />
-        <circle
-          cx="50"
-          cy="50"
-          r="30"
-          stroke="black"
-          stroke-width="15"
-          fill="transparent"
-          stroke-dasharray="188.496"
-          stroke-dashoffset="25%"
-          transform="rotate(0 50 50)"
-        />
-        <circle
-          cx="50"
-          cy="50"
-          r="30"
-          stroke="green"
-          stroke-width="15"
-          fill="transparent"
-          stroke-dasharray="188.496"
-          stroke-dashoffset="25%"
-          transform="rotate(90 50 50)"
-        />
-        <circle
-          cx="50"
-          cy="50"
-          r="30"
-          stroke="red"
-          stroke-width="15"
-          fill="transparent"
-          stroke-dasharray="188.496"
-          stroke-dashoffset="25%"
-          transform="rotate(180 50 50)"
+          stroke-width="10"
         />
       </svg>
+
       <div>
         찬성:
         {(props.agree / total) * 100}% 중립:
