@@ -9,8 +9,6 @@ const Statistic = (props) => {
   dataset.forEach((data) => {
     const ratio = data / total;
     const strokeLength = diameter * ratio;
-    const spaceLength = diameter - strokeLength;
-    console.log(`stroke-dasharray = ${strokeLength} ${spaceLength}`);
   });
 
   const acc = dataset.reduce(
@@ -18,21 +16,53 @@ const Statistic = (props) => {
     [0]
   );
 
+  let fillSpace = [];
+  let emptySpace = [];
+  let offset = [];
+
   dataset.forEach((data, i) => {
-    const offset = (acc[i] / total) * diameter;
-    console.log(`stroke-dashoffset = ${-offset}`);
+    const ratio = data / total;
+    fillSpace.push(diameter * ratio);
+    emptySpace.push(diameter - fillSpace[i]);
+    offset.push((acc[i] / total) * diameter);
   });
+
+  console.log(fillSpace);
+  console.log(emptySpace);
+  console.log(offset);
 
   return (
     <div className={styles.statistic}>
-      <svg width="300" height="200" viewBox="0 0 100 100">
+      <svg viewBox="0 0 100 100">
         <circle
           cx="50"
           cy="50"
-          r={radius}
+          r={String(radius)}
           fill="transparent"
-          stroke="#2373EB"
+          stroke={colors[0]}
           stroke-width="10"
+          stroke-dasharray={`${fillSpace[0]} ${emptySpace[0]}`}
+          stroke-dashoffset={String(-offset[0])}
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r={String(radius)}
+          fill="transparent"
+          stroke={colors[1]}
+          stroke-width="10"
+          stroke-dasharray={`${fillSpace[1]} ${emptySpace[1]}`}
+          stroke-dashoffset={String(-offset[1])}
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r={String(radius)}
+          fill="transparent"
+          stroke={colors[2]}
+          stroke-width="10"
+          stroke-dasharray={`${fillSpace[2]} ${emptySpace[2]}`}
+          stroke-dashoffset={String(-offset[2])}
         />
       </svg>
       <div>
