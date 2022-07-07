@@ -1,14 +1,14 @@
 .out {
-  min-height: 50%;
 }
 
 .name {
   font-family: "Roboto";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 1.5rem;
   text-align: center;
   color: #00b2ff;
+  margin-top: 0.75rem;
 }
 
 .name :hover {
@@ -20,22 +20,30 @@
 }
 
 .input {
-  width: 40%;
+  width: 70%;
   border: none;
   border-radius: 15px;
   outline: none;
   background-color: rgb(233, 233, 233);
   text-align: center;
+  margin: 1rem;
+  padding: 0.5rem;
 }
-
+.age {
+  margin: 0.5rem;
+}
+.gen {
+  margin: 0.5rem;
+}
 .select {
-  width:40%;
+  margin: 1rem;
+  width: 70%;
   text-align: center;
   display: flex;
   margin: 0 auto;
 }
 
-.select::-ms-expand { 
+.select::-ms-expand {
   display: none;
 }
 
@@ -50,7 +58,21 @@
 }
 
 .submit {
-  width:40%;
+  width: 40%;
   text-align: center;
-  margin:1rem auto;
+  margin: 5rem;
+}
+@media (max-width: 767px) and (max-height: 920px) {
+  .title {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media (min-width: 1200px) {
 }

@@ -1,9 +1,6 @@
-import { getAuth } from "firebase/auth";
 import { useState } from "react";
 import Modal from "./ModalInfo";
 import styles from "./UserInfo.module.css";
-import Image from "next/image";
-import Images from "../../../public/logout.png";
 import FixUser from "../detailModal/index";
 import DeleteUser from "../deleteUser/index";
 import KakaoLogout from "../../KAKAO/logout";

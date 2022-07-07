@@ -5,7 +5,12 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "./DetailModal.module.css";
 import Modal from "./detail";
 import axios from "axios";
-import { changeState, loadingState, loginState, nickState } from "../../recoil/recoil";
+import {
+  changeState,
+  loadingState,
+  loginState,
+  nickState,
+} from "../../recoil/recoil";
 const AGEOPTIONS = [
   "나이를 선택해주세요",
   "10대",
@@ -23,7 +28,7 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
   const [name, setName] = useRecoilState(nickState);
   const [login, setLogin] = useRecoilState(loginState);
   const [change, setChange] = useRecoilState(changeState);
-  const [loading,setLoading]= useRecoilState(loadingState);
+  const [loading, setLoading] = useRecoilState(loadingState);
   const [showModal, setShowModal] = useState(true);
   console.log("hi");
   const [nicks, setNicks] = useState(nick);
@@ -100,7 +105,7 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
               ></input>
             </label>
             <div>
-              연령대를 선택해주세요
+              <div className={styles.age}>연령대를 선택해주세요</div>
               <br />
               <select
                 className={styles.select}
@@ -114,19 +119,21 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
                 ))}
               </select>
             </div>
-            성별을 선택해주세요
-            <br />
-            <select
-              className={styles.select}
-              onChange={({ target: { value } }) => setGenders(value)}
-              value={genders}
-            >
-              {GENOPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+            <div>
+              <div className={styles.gen}>성별을 선택해주세요</div>
+              <br />
+              <select
+                className={styles.select}
+                onChange={({ target: { value } }) => setGenders(value)}
+                value={genders}
+              >
+                {GENOPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
             <button className={styles.submit} type="submit">
               완료
             </button>

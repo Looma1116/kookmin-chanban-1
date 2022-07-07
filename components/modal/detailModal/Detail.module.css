@@ -22,3 +22,18 @@
   background: center;
   background-color: rgb(0, 0, 0, 0.7);
 }
+@media (max-width: 767px) and (max-height: 920px) {
+  .modal {
+    width: 90%;
+    height: 90%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media (min-width: 1200px) {
+}

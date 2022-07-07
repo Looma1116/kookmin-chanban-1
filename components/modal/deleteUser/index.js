@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Modal from "./deleteModal";
 import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
+import styles from "./UserDelete.module.css";
 import {
   getFirestore,
   setDoc,
@@ -34,7 +35,7 @@ const index = ({ onClick }) => {
   };
   return (
     <div>
-      <div
+      <div className={styles.out}
         onClick={() => {
           setShowModal(true);
         }}
