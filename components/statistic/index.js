@@ -22,10 +22,6 @@ const Statistic = (props) => {
     offset.push((acc[i] / total) * diameter);
   });
 
-  console.log(fillSpace);
-  console.log(emptySpace);
-  console.log(offset);
-
   return (
     <div className={styles.statistic}>
       <svg viewBox="0 0 100 100">
