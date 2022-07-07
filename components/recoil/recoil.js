@@ -58,3 +58,7 @@ export const nickState = atom({
   key: "nick",
   default: "",
 });
+export const loadingState=atom({
+  key: "load",
+  default:false,
+})
