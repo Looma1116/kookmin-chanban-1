@@ -5,7 +5,6 @@ export default function Document() {
     <Html>
       <Head>
         <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-        <meta name="viewport" content="viewport-fit=cover" />
       </Head>
       <body>
         <Main />

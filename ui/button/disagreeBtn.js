@@ -7,11 +7,10 @@ const DisagreeBtn = () => {
 
   const clickHandler = () => {
     setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
-    if (login){
+    if (login) {
       console.log("반대 투표!");
-    }
-    else {
-      console.log("로그인 하세요!")
+    } else {
+      console.log("로그인 하세요!");
     }
   };
   return (
@@ -34,8 +33,8 @@ const DisagreeBtn = () => {
           x2="76"
           y2="72.636"
           stroke="#FF7F7F"
-          stroke-width="9"
-          stroke-linecap="round"
+          strokeWidth="9"
+          strokeLinecap="round"
         />
         <line
           x1="34.3984"
@@ -43,8 +42,8 @@ const DisagreeBtn = () => {
           x2="77.0345"
           y2="30"
           stroke="#FF7F7F"
-          stroke-width="9"
-          stroke-linecap="round"
+          strokeWidth="9"
+          strokeLinecap="round"
         />
       </g>
       <defs>
@@ -55,9 +54,9 @@ const DisagreeBtn = () => {
           width="109"
           height="109"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -90,9 +89,9 @@ const DisagreeBtn = () => {
           width="52.6699"
           height="55.636"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"

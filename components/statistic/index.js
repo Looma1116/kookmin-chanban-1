@@ -6,33 +6,54 @@ const Statistic = (props) => {
   const dataset = [props.agree, props.alternative, props.disagree];
   const colors = ["#2373EB", "#FFC700", "#FF0000"];
 
-  dataset.forEach((data) => {
-    const ratio = data / total;
-    const strokeLength = diameter * ratio;
-    const spaceLength = diameter - strokeLength;
-    console.log(`stroke-dasharray = ${strokeLength} ${spaceLength}`);
-  });
-
   const acc = dataset.reduce(
     (result, value) => [...result, result[result.length - 1] + value],
     [0]
   );
 
+  let fillSpace = [];
+  let emptySpace = [];
+  let offset = [];
+
   dataset.forEach((data, i) => {
-    const offset = (acc[i] / total) * diameter;
-    console.log(`stroke-dashoffset = ${-offset}`);
+    const ratio = data / total;
+    fillSpace.push(diameter * ratio);
+    emptySpace.push(diameter - fillSpace[i]);
+    offset.push((acc[i] / total) * diameter);
   });
 
   return (
     <div className={styles.statistic}>
-      <svg width="300" height="200" viewBox="0 0 100 100">
+      <svg viewBox="0 0 100 100">
         <circle
           cx="50"
           cy="50"
-          r={radius}
+          r={String(radius)}
           fill="transparent"
-          stroke="#2373EB"
-          stroke-width="10"
+          stroke={colors[0]}
+          strokeWidth="10"
+          strokeDasharray={`${fillSpace[0]} ${emptySpace[0]}`}
+          strokeDashoffset={String(-offset[0])}
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r={String(radius)}
+          fill="transparent"
+          stroke={colors[1]}
+          strokeWidth="10"
+          strokeDasharray={`${fillSpace[1]} ${emptySpace[1]}`}
+          strokeDashoffset={String(-offset[1])}
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r={String(radius)}
+          fill="transparent"
+          stroke={colors[2]}
+          strokeWidth="10"
+          strokeDasharray={`${fillSpace[2]} ${emptySpace[2]}`}
+          strokeDashoffset={String(-offset[2])}
         />
       </svg>
       <div>
