@@ -24,7 +24,7 @@ const WroteAgenda = ({ user }) => {
   const fetchData = async () => {
     const db = getFirestore();
     const wroteAgendaRef = collection(db, "user", user.uid, "wroteAgenda");
-    const wroteAgendaQuery = query(wroteAgendaRef, orderBy("wrote"), limit(10));
+    const wroteAgendaQuery = query(wroteAgendaRef, orderBy("wrote"), limit(5));
     wroteAgendaUnsubscribe.current = await onSnapshot(
       wroteAgendaQuery,
       (snapshot) => {
@@ -58,7 +58,7 @@ const WroteAgenda = ({ user }) => {
           <div className={styles.title}>제시한 찬반</div>
         </div>
         {wroteAgenda?.map((agenda, index) => (
-          <Card key={index} story={agenda.story}>
+          <Card key={index} story={agenda?.story}>
             <h3 key={index}>{agenda?.title}</h3>
             <p key={index}>{agenda?.category}</p>
             <div key={index}>{agenda?.wrote.toDate().toLocaleDateString()}</div>

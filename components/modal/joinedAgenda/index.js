@@ -22,6 +22,48 @@ const JoinedAgenda = ({ user }) => {
   const [joinedAgenda, setJoinedAgenda] = useState([]);
   const joinedAgendaUnsubsribe = useRef([]);
   const [showModal, setShowModal] = useState(false);
+
+  // const [scrollTop, setScrollTop] = useState(0);
+  // const [hide, setHide] = useState(true);
+  // const scrolltoTop = () => {
+  //   window.scrollTo({
+  //     top: 0,
+  //     behavior: "smooth",
+  //   });
+  // };
+  // const handleScroll = async () => {
+  //   setScrollTop(document.documentElement.scrollTop);
+  //   const scrollHeight = document.documentElement.scrollHeight - 10;
+  //   const clientHeight = document.documentElement.clientHeight;
+  //   if (scrollTop > 200) {
+  //     setHide(false);
+  //   } else {
+  //     setHide(true);
+  //   }
+  //   if (scrollTop + clientHeight >= scrollHeight) {
+  //     await fetchData(joinedAgenda[cnt].joined);
+  //   }
+  // };
+  // const handleScroll = async () => {
+  //   console.log(document.documentElement.scrollHeight);
+  //   const scrollHeight = document.documentElement.scrollHeight;
+  //   const scrollTop = document.documentElement.scrollTop;
+  //   const clientHeight = document.documentElement.clientHeight;
+  //   if (scrollTop + clientHeight >= scrollHeight) {
+  //     // 페이지 끝에 도달하면 추가 데이터를 받아온다
+  //     await fetchData(joinedAgenda);
+  //     console.log("hi");
+  //   }
+  // };
+  // useEffect(() => {
+  //   // scroll event listener 등록
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     // scroll event listener 해제
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // });
+
   let cnt = 0;
   const fetchData = async (time) => {
     if (time == null) time = new Date();
@@ -31,7 +73,7 @@ const JoinedAgenda = ({ user }) => {
       joinedAgendaRef,
       orderBy("joined", "desc"),
       where("joined", "<=", time),
-      limit(5)
+      limit(20)
     );
     joinedAgendaUnsubsribe.current = await onSnapshot(
       joinedAgendaQuery,
@@ -54,11 +96,12 @@ const JoinedAgenda = ({ user }) => {
         <MdOutlineHowToVote size="2.5rem" color="#2373EB" />
         <div className={styles.name}>참여한 찬반</div>
       </div>
-      <Modal
-        show={showModal}
-        fetchData={fetchData}
-        joinedAgenda={joinedAgenda[cnt]?.joined}
-      >
+      <Modal show={showModal}>
+        {/* {hide ? null : (
+          <button className={styles.top} onClick={scrolltoTop}>
+            TOP
+          </button>
+        )} */}
         <button
           className={styles.btn}
           type="button"
