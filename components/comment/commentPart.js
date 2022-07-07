@@ -5,6 +5,7 @@ import {
   commentDataState,
   loginState,
   clickCountState,
+  likeClickState,
 } from "../recoil/recoil";
 import {
   collection,
@@ -30,7 +31,9 @@ const comment = () => {
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const commentS = useRecoilValue(commentState);
   const logIn = useRecoilValue(loginState);
-  let likeClick = [];
+  let likeClickCommentId = [];
+  const [likeClick, setLikeClick] = useRecoilState(likeClickState);
+  let [click, setClick] = useState(false);
 
   useEffect(() => {
     setComment([]);
@@ -53,61 +56,89 @@ const comment = () => {
     setComment(a);
     console.log(comment);
   };
-  const likeClickHandler = async ({ id, like }) => {
-    console.log(id);
-    if (logIn) {
-      if (!match(id)) {
-        console.log(id);
-        const commentRef = doc(
-          db,
-          "agenda",
-          `${router.query.id}`,
-          `${commentS}`,
-          `${id}`
-        );
-        await updateDoc(commentRef, { // 좋아요 파이어베이스로 업데이트
-          like: like + 1,
-        });
-        const userCommentRef = doc(db, "user", `${auth.currentUser.uid}`);
-        await updateDoc(userCommentRef, {
-          likeComment: arrayUnion(`${id}`),
-        });
-        likeClick.push({
-          id,
-        });
-        console.log(likeClick);
-        console.log("좋아요 추가!");
-      } else {       
-        likeClick = likeClick.filter((element) => element != `${id}`);
-        const commentRef = doc(
-          db,
-          "agenda",
-          `${router.query.id}`,
-          `${commentS}`,
-          `${id}`
-        );
-        await updateDoc(commentRef, { //좋아요 취소 파이어베이스 업데이트
-          like: like - 1,
-        });
-        console.log("좋아요 취소!");
-      }
-    } else {
-      setClickCount(true);
-    }
-  };
-  const match = (id)=>{
-    console.log("매치 시작");
-    console.log(id);
-    likeClick.forEach((item)=>{
-      console.log(item);
-      if(item.id==id){
-        return true;
-      }
-      else{
-        false;
-      }
-    })
-  }
+  
+
+  // const likeClickHandler = async ({ id, like }) => {
+  //   console.log(id);
+  //   if (logIn) {
+  //     match(id);
+  //     if (!likeClick) { // 좋아요를 누른적이 없다면
+  //       console.log(likeClick);
+  //       console.log(id);
+  //       const commentRef = doc(
+  //         db,
+  //         "agenda",
+  //         `${router.query.id}`,
+  //         `${commentS}`,
+  //         `${id}`
+  //       );
+  //       await updateDoc(commentRef, {
+  //         // 좋아요 파이어베이스로 업데이트
+  //         like: like + 1,
+  //       });
+  //       const userCommentRef = doc(db, "user", `${auth.currentUser.uid}`);
+  //       await updateDoc(userCommentRef, {
+  //         likeComment: arrayUnion(`${id}`),
+  //       });
+  //       likeClickCommentId.push({
+  //         id,
+  //       });
+  //       console.log(likeClickCommentId);
+  //       console.log("좋아요 추가!");
+  //     } else { // 좋아요 누른적이 있다면
+  //       if(likeClickCommentId.length==1){
+  //         likeClickCommentId = [];
+  //       }
+  //       else{
+  //          likeClickCommentId = likeClickCommentId.filter(
+  //            (element) => element.id != `${id}`
+  //          );
+  //       }
+  //       console.log("좋아요 취소!");
+  //       console.log(likeClickCommentId);
+  //       const commentRef = doc(
+  //         db,
+  //         "agenda",
+  //         `${router.query.id}`,
+  //         `${commentS}`,
+  //         `${id}`
+  //       );
+  //       console.log(likeClickCommentId);
+  //       await updateDoc(commentRef, {
+  //         //좋아요 취소 파이어베이스 업데이트
+  //         like: like - 1,
+  //       });
+  //       console.log("좋아요 취소 완료");
+  //     }
+  //   } else { //로그인 안되어 있으면 로그인 모달 띄우기
+  //     setClickCount(true);
+  //   }
+  // };
+  // const match = (id) => { //likeClickCommentId와 방금 좋아요누른 commentId 비교
+  //   console.log("매치 시작");
+  //   setLikeClick(false);
+  //   console.log(id);
+  //   console.log(likeClickCommentId);
+  //   if (likeClickCommentId.length==0) { //좋아요 누른 적이 없을 때
+  //     console.log("좋아요한 댓글 없음!");
+  //     setLikeClick(false);
+  //     return;
+  //   } else { // 비교
+  //     console.log("좋아요 누른 댓글 있음");
+  //     likeClickCommentId.forEach(async(item) => {
+  //       console.log(item.id);
+  //       console.log(id);
+  //       if (item.id == id) { //해당 댓글 좋아요 눌렀던적이 있음
+  //         console.log("해당 댓글 좋아요 눌렀던적이 있음");
+  //         setLikeClick(true);
+  //         return;
+  //       } else { // 해당 댓글 좋아요 처음 누름
+  //         setLikeClick(false);
+  //         return;
+  //       }
+  //     });
+  //   }
+  // };
   return (
     <div>
       {comment.map((data) => {
@@ -115,17 +146,25 @@ const comment = () => {
           <div>
             <div key={data.id}>
               {async () => {
-                likeClick = false;
+                click = false;
               }}
               <span>{data.authorName} </span>
               <span>{data.authorLevel}</span>
-              <span
+              {/* <span
+                onClick={() => {
+                  clickHandler({ id: data.id });
+                }}
+              >
+                {match({id:data.id}) ? data.like + 1 : data.like}
+              </span> */}
+              {/* <span
                 onClick={() => {
                   likeClickHandler({ id: data.id, like: data.like });
                 }}
               >
-                {match(data.id) ? data.like + 1 : data.like}
-              </span>
+                {match(data.id)}
+                {likeClick ? data.like + 1 : data.like}
+              </span> */}
               <div>{data.article}</div>
             </div>
           </div>

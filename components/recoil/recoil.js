@@ -62,3 +62,7 @@ export const loadingState=atom({
   key: "load",
   default:false,
 })
+export const likeClickState = atom({
+  key: "likeClickState",
+  default : false,
+})
