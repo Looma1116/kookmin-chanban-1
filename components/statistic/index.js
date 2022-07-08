@@ -58,9 +58,9 @@ const Statistic = (props) => {
       </svg>
       <div>
         찬성:
-        {(props.agree / total) * 100}% 중립:
-        {(props.alternative / total) * 100}% 반대:
-        {(props.disagree / total) * 100}%
+        {Math.round((props.agree / total) * 100)}% ({props.agree}) 중립:
+        {Math.round((props.alternative / total) * 100)}% ({props.alternative}) 반대:
+        {Math.round((props.disagree / total) * 100)}% ({props.disagree})
       </div>
     </div>
   );
