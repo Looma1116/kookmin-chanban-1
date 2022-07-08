@@ -37,29 +37,26 @@ const Vote = () => {
   const [agree, setAgree] = useState([]);
   const [alternative, setAlternative] = useState([]);
   const [disagree, setDisagree] = useState([]);
+  const agendaObj = Object.assign({}, agenda);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const [votewhere, setVotewhere] = useState(0);
   const [ivoted, setIvoted] = useState(false);
+  const [iam, setIam] = useState("");
+
+  console.log(agenda[0]);
 
   useEffect(() => {
     voteId();
     if (login) {
       updateUser();
     }
-
-    console.log(agree);
-    console.log(alternative);
-    console.log(disagree);
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     voteId();
     if (login) {
       updateUser();
     }
-    console.log(agree);
-    console.log(alternative);
-    console.log(disagree);
   }, [login, ivoted]);
 
   const voteId = async () => {
@@ -74,6 +71,10 @@ const Vote = () => {
     setAlternative(data[0]?.alternative);
     setDisagree(data[0]?.disagreeUser);
   };
+
+  console.log(agree);
+  console.log(alternative);
+  console.log(disagree);
 
   const agreeCount = async () => {
     const q = query(doc(db, "agenda", `${router.query.id}`, "vote", id));
@@ -126,13 +127,13 @@ const Vote = () => {
   const updateUser = async () => {
     if (agree.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(1);
-      console.log("찬성 유저입니다.");
+      setIam("찬성");
     } else if (alternative.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(2);
-      console.log("중립 유저입니다.");
+      setIam("중립");
     } else if (disagree.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(3);
-      console.log("반대 유저입니다.");
+      setIam("반대");
     } else {
       console.log("투표 안 한 유저입니다.");
     }
@@ -172,6 +173,7 @@ const Vote = () => {
       console.log("로그인 하세요!");
     }
   };
+  console.log(votewhere);
 
   const disagreeHandler = () => {
     setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
@@ -194,19 +196,24 @@ const Vote = () => {
 
   return (
     <>
-      <h2 className={styles.title}>사람들은 어떻게 생각할까요?</h2>
       {votewhere == 0 ? (
-        <div className={styles.vote}>
-          <AgreeBtn onClick={agreeHandler} />
-          <AlternativeBtn onClick={alterHandler} />
-          <DisagreeBtn onClick={disagreeHandler} />
+        <div>
+          <h2 className={styles.title}>사람들은 어떻게 생각할까요?</h2>
+          <div className={styles.vote}>
+            <AgreeBtn onClick={agreeHandler} />
+            <AlternativeBtn onClick={alterHandler} />
+            <DisagreeBtn onClick={disagreeHandler} />
+          </div>
         </div>
       ) : (
-        <Statistic
-          agree={agree.length}
-          alternative={alternative.length}
-          disagree={disagree.length}
-        />
+        <div>
+          <h2 className={styles.title}>{iam}을(를) 선택 하셨습니다!</h2>
+          <Statistic
+            agree={agree.length}
+            alternative={alternative.length}
+            disagree={disagree.length}
+          />
+        </div>
       )}
     </>
   );
