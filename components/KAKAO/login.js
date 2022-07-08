@@ -50,7 +50,6 @@ const KakaoLogin = () => {
           token: authObj.access_token,
         };
         console.log(data);
-        setClickCount(false);
         console.log("로그인 완료!");
         const comunication = await axios.post(apiServer, data);
         let level = 1;
@@ -60,6 +59,7 @@ const KakaoLogin = () => {
           console.log("sadasdasdsa");
           await signInWithCustomToken(auth, comunication.data.firebase_token);
           setLogin(true);
+          setClickCount(false);
           // const d = await getDoc(doc(db, "user", auth.currentUser.uid));
           // level = d.data().level;
           // exp = d.data().exp;
