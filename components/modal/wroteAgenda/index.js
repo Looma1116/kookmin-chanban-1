@@ -1,21 +1,16 @@
 import { useEffect, useState, useRef } from "react";
 import Modal from "./agendaCard";
 import Card from "../../../ui/Card/Card";
-import { loadGetInitialProps } from "next/dist/shared/lib/utils";
 import Image from "next/image";
 import Images from "../../../public/wrote.png";
 import styles from "../joinedAgenda/JoinedAgenda.module.css";
 import {
   collection,
-  doc,
-  getDoc,
   getFirestore,
   limit,
   onSnapshot,
   orderBy,
   query,
-  setDoc,
-  updateDoc,
 } from "firebase/firestore";
 const WroteAgenda = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
@@ -24,7 +19,7 @@ const WroteAgenda = ({ user }) => {
   const fetchData = async () => {
     const db = getFirestore();
     const wroteAgendaRef = collection(db, "user", user.uid, "wroteAgenda");
-    const wroteAgendaQuery = query(wroteAgendaRef, orderBy("wrote"), limit(5));
+    const wroteAgendaQuery = query(wroteAgendaRef, orderBy("wrote"), limit(20));
     wroteAgendaUnsubscribe.current = await onSnapshot(
       wroteAgendaQuery,
       (snapshot) => {
@@ -57,13 +52,17 @@ const WroteAgenda = ({ user }) => {
           <Image src={Images} />
           <div className={styles.title}>제시한 찬반</div>
         </div>
-        {wroteAgenda?.map((agenda, index) => (
-          <Card key={index} story={agenda?.story}>
-            <h3 key={index}>{agenda?.title}</h3>
-            <p key={index}>{agenda?.category}</p>
-            <div key={index}>{agenda?.wrote.toDate().toLocaleDateString()}</div>
-          </Card>
-        ))}
+        <div className={styles.card}>
+          {wroteAgenda?.map((agenda, index) => (
+            <Card key={index} story={agenda?.story}>
+              <h3 key={index}>{agenda?.title}</h3>
+              <p key={index}>{agenda?.category}</p>
+              <div key={index}>
+                {agenda?.wrote.toDate().toLocaleDateString()}
+              </div>
+            </Card>
+          ))}
+        </div>
       </Modal>
     </div>
   );

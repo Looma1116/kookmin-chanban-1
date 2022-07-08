@@ -25,7 +25,7 @@ const AGEOPTIONS = [
   "90대",
 ];
 const GENOPTIONS = ["성별을 선택해주세요", "male", "female", "none"];
-const Detail = ({ nick, age, gender, token, level, exp }) => {
+const Detail = ({ nick, age, gender, token, level, exp, secondTry }) => {
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const [name, setName] = useRecoilState(nickState);
   const [login, setLogin] = useRecoilState(loginState);
@@ -137,9 +137,21 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
                 ))}
               </select>
             </div>
-            <button className={styles.submit} type="submit">
-              완료
-            </button>
+            <div>
+              <button className={styles.submit} type="submit">
+                완료
+              </button>
+              {secondTry ? (
+                <button
+                  className={styles.submit}
+                  onClick={() => {
+                    setShowModal(false);
+                  }}
+                >
+                  취소
+                </button>
+              ) : null}
+            </div>
           </form>
         </div>
       </Modal>

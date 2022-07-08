@@ -3,11 +3,26 @@
   bottom: 1rem;
   background-color: white;
   width: 50%;
-  height: 50%;
+  height: 30%;
   border-radius: 1rem;
   padding: 0.5rem;
+  overflow-y: scroll;
 }
 
+.modal::-webkit-scrollbar {
+  width: 0.7rem; /* 스크롤바의 너비 */
+}
+
+.modal::-webkit-scrollbar-thumb {
+  height: 30%; /* 스크롤바의 길이 */
+  background: #61676e; /* 스크롤바의 색상 */
+
+  border-radius: 10px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0); /*스크롤바 뒷 배경 색상*/
+}
 .body {
   padding-top: 1rem;
 }

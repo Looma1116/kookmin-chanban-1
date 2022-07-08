@@ -113,15 +113,17 @@ const JoinedAgenda = ({ user }) => {
           <Image src={Images} />
           <div className={styles.title}>참여한 찬반</div>
         </div>
-        {joinedAgenda?.map((agenda, index) => (
-          <Card key={index} story={agenda.story}>
-            <h3 key={index}>{agenda?.title}</h3>
-            <p key={index}>{agenda?.category}</p>
-            <div key={index}>
-              {agenda?.joined.toDate().toLocaleDateString()}
-            </div>
-          </Card>
-        ))}
+        <div className={styles.card}>
+          {joinedAgenda?.map((agenda, index) => (
+            <Card key={index} story={agenda.story}>
+              <h3 key={index}>{agenda?.title}</h3>
+              <p key={index}>{agenda?.category}</p>
+              <div key={index}>
+                {agenda?.joined.toDate().toLocaleDateString()}
+              </div>
+            </Card>
+          ))}
+        </div>
       </Modal>
     </div>
   );

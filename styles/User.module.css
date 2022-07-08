@@ -13,6 +13,7 @@
   -ms-flex-align: center;
   align-items: center;
   font-family: "Roboto";
+  margin-bottom: 4rem;
 }
 
 .main .title {
@@ -30,7 +31,7 @@
 }
 
 .main .progress {
-  width: 50%;
+  width: 80%;
   padding: 1rem;
   margin: 1rem;
 }

@@ -1,26 +1,39 @@
-.modal{
-    background-color: white;
-    width: 90%;
-    height: 90%;
-    border-radius: 15px;
-    padding: 20px;
-    z-index: 100;
-    overflow-y: scroll;
+.modal {
+  background-color: white;
+  width: 90%;
+  height: 90%;
+  border-radius: 15px;
+  padding: 20px;
+  z-index: 100;
+  overflow-y: scroll;
 }
 
-.body{
-    padding-top:10px;
-   
+.body {
+  padding-top: 10px;
 }
-.overlay{
-    position: absolute;
-    top:0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: center;
-    background-color: rgb(0, 0, 0,0.7);
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: center;
+  background-color: rgb(0, 0, 0, 0.7);
+}
+.modal::-webkit-scrollbar {
+  width: 0.7rem; /* 스크롤바의 너비 */
+}
+
+.modal::-webkit-scrollbar-thumb {
+  height: 30%; /* 스크롤바의 길이 */
+  background: #61676e; /* 스크롤바의 색상 */
+
+  border-radius: 10px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0); /*스크롤바 뒷 배경 색상*/
 }

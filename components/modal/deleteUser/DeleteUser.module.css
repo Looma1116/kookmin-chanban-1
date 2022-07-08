@@ -1,26 +1,54 @@
 .modal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: white;
-    width: 30%;
-    height: 15%;
-    border-radius: 15px;
-    padding: 20px;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  width: 40%;
+  height: 25%;
+  border-radius: 15px;
+  padding: 1.4rem;
+  overflow: hidden;
+}
+.body {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: center;
+  background-color: rgb(0, 0, 0, 0.4);
+}
+.modal::-webkit-scrollbar {
+  width: 0.3rem; /* 스크롤바의 너비 */
+}
 
-  
-  .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: center;
-    background-color: rgb(0, 0, 0, 0.7);
+.modal::-webkit-scrollbar-thumb {
+  height: 30%; /* 스크롤바의 길이 */
+  background: #61676e; /* 스크롤바의 색상 */
+
+  border-radius: 15px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0); /*스크롤바 뒷 배경 색상*/
+}
+@media (max-width: 767px) and (max-height: 920px) {
+  .modal {
+    width: 80%;
   }
-  
+}
+
+@media (min-width: 768px) and (max-width: 1058px) {
+}
+
+@media (min-width: 1058px) and (max-width: 1199px) {
+}
+
+@media (min-width: 1200px) {
+}
