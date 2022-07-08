@@ -7,6 +7,7 @@ import Modal from "./detail";
 import axios from "axios";
 import {
   changeState,
+  clickCountState,
   loadingState,
   loginState,
   nickState,
@@ -25,6 +26,7 @@ const AGEOPTIONS = [
 ];
 const GENOPTIONS = ["성별을 선택해주세요", "male", "female", "none"];
 const Detail = ({ nick, age, gender, token, level, exp }) => {
+  const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const [name, setName] = useRecoilState(nickState);
   const [login, setLogin] = useRecoilState(loginState);
   const [change, setChange] = useRecoilState(changeState);
@@ -73,6 +75,7 @@ const Detail = ({ nick, age, gender, token, level, exp }) => {
         email: auth.currentUser.email,
       });
     }
+    setClickCount(false);
     setLogin(true);
     setChange(!change);
     setShowModal(false);
