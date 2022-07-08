@@ -7,7 +7,7 @@ const Modal = ({ show, onClose, children }) => {
     setIsBrowser(true);
   }, []);
   const modalContent = show ? (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal}>
         <div className={styles.body}>{children}</div>
       </div>

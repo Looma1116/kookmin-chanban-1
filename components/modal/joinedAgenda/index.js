@@ -7,15 +7,11 @@ import styles from "./JoinedAgenda.module.css";
 import { MdOutlineHowToVote } from "react-icons/md";
 import {
   collection,
-  doc,
-  getDoc,
   getFirestore,
   limit,
   onSnapshot,
   orderBy,
   query,
-  setDoc,
-  updateDoc,
   where,
 } from "firebase/firestore";
 const JoinedAgenda = ({ user }) => {

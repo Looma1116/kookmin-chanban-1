@@ -17,6 +17,11 @@ import { loginState } from "../../recoil/recoil";
 const index = ({ onClick }) => {
   const [login, setLogin] = useRecoilState(loginState);
   const [showModal, setShowModal] = useState(false);
+  const handleClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setShowModal(false);
+    }
+  };
   const handleDelete = async () => {
     const db = getFirestore();
     const auth = getAuth();
@@ -45,7 +50,7 @@ const index = ({ onClick }) => {
       >
         회원 탈퇴
       </div>
-      <Modal show={showModal}>
+      <Modal show={showModal} onClose={handleClick}>
         <h3 className={styles.title}>정말로 삭제하시겠습니까?</h3>
         <div className={styles.story}>
           <AgreeBtn onClick={handleDelete} />
@@ -60,4 +65,3 @@ const index = ({ onClick }) => {
   );
 };
 export default index;
-

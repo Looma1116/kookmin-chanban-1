@@ -1,6 +1,7 @@
 .out {
   text-align: center;
   color: red;
+  cursor: pointer;
 }
 .title {
   color: royalblue;
