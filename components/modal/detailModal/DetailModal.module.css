@@ -9,6 +9,7 @@
   text-align: center;
   color: #00b2ff;
   margin-top: 0.75rem;
+  cursor: pointer;
 }
 
 .name :hover {
