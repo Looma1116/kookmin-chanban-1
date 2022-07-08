@@ -5,22 +5,14 @@
   box-shadow: 0px 2px 6px 0px rgb(194, 194, 194);
   margin-bottom: 1rem;
   flex: none;
-  padding: 1rem 1rem 1rem 1rem;
+  padding: 1rem;
   height: auto;
+  max-width: 450px;
+  max-height: 100px;
   overflow: hidden;
   width: auto;
 }
 
 .title {
   text-align: center;
-}
-
-.author {
-  float: left;
-  width: 49%;
-}
-
-.like {
-  float: right;
-  width: 49%;
 }

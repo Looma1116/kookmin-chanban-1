@@ -14,11 +14,11 @@ const Title = () => {
       }}
       className={styles.title}
     >
-      <button type="button" onClick={() => Router.back()}>
+      <span className={styles.button} onClick={() => Router.back()}>
         뒤로
-      </button>
+      </span>
       <div className={styles.content}>
-        <h1>{agenda[0]?.title}!</h1>
+        <h2>{agenda[0]?.title}!</h2>
         <h3>국민 여러분의 생각은? 지금 바로 참여하세요!</h3>
       </div>
     </div>
