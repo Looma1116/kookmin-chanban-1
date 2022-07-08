@@ -14,6 +14,7 @@ import {
   collection,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import styles from "./editAgenda.module.css";
 
 const EditAgenda = () => {
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
@@ -104,6 +105,7 @@ const EditAgenda = () => {
                 setWarningModalIsOpen(true);
               }
         }
+        className={styles.btn}
       >
         새 글
       </button>
@@ -113,21 +115,31 @@ const EditAgenda = () => {
       >
         <button onClick={() => setEditModalIsOpen(false)}>뒤로</button>
         <form onSubmit={onSubmitHandler}>
-          <div>카테고리</div>
           <select value={category} onChange={categoryHandler}>
             <option value="정치">정치</option>
             <option value="연애">연애</option>
             <option value="진로">진로</option>
           </select>
           <div>제목</div>
-          <input type="text" name="title"></input>
+          <input type="text" name="title" className={styles.input}></input>
+          <br />
+          <br />
           <div>부제목</div>
-          <input type="text" name="subTitle"></input>
+          <input type="text" name="subTitle" className={styles.input}></input>
+          <br />
+          <br />
           <div>본문</div>
-          <textarea name="article"></textarea>
+          <textarea
+            name="article"
+            rows="10"
+            className={styles.input}
+          ></textarea>
           <br></br>
           <input type="file" name="image" onChange={imageHandler}></input>
-          <button type="submit">등록</button>
+          <br />
+          <button type="submit" className={styles.btn}>
+            등록
+          </button>
         </form>
       </Modal>
       <Modal
