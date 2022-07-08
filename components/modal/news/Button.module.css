@@ -2,4 +2,5 @@
   display: flex;
   border: none;
   background-color: white;
+  cursor: pointer;
 }

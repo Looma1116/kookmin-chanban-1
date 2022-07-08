@@ -32,7 +32,7 @@ const Agenda = () => {
 
   useEffect(() => {
     fetchData();
-  }, [isFetched,clickCount]);
+  }, [isFetched, clickCount]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -59,14 +59,14 @@ const Agenda = () => {
   return (
     <div className={styles.container}>
       {isFetched ? (
-        <div>
+        <div className={styles.agenda}>
           <Title />
           <Article />
           <News />
           <BestComment />
           <Vote />
           <Comment />
-          {clickCount? <LogInModal/>:null}
+          {clickCount ? <LogInModal /> : null}
         </div>
       ) : null}
     </div>
