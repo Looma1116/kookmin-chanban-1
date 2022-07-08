@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import Modal from "./comment";
 import Card from "../../../ui/Card/Card";
-import { loadGetInitialProps } from "next/dist/shared/lib/utils";
 import Image from "next/image";
 import Images from "../../../public/comment.png";
 import styles from "./WroteComment.module.css";
@@ -27,7 +26,7 @@ const WroteComment = ({ user }) => {
     const wroteCommentQuery = query(
       wroteCommentRef,
       orderBy("wrote"),
-      limit(10)
+      limit(20)
     );
     wroteCommentUnsubsribe.current = await onSnapshot(
       wroteCommentQuery,
@@ -61,17 +60,19 @@ const WroteComment = ({ user }) => {
           <Image src={Images} />
           <div className={styles.title}>남긴 목소리</div>
         </div>
-        {wroteComment?.map((agenda, index) => (
-          <Card cla="Comment" key={index} story={agenda.story}>
-            <div className={styles.line}>
-              <div key={index} className={styles.date}>
-                {agenda?.wrote.toDate().toLocaleDateString()}
+        <div className={styles.card}>
+          {wroteComment?.map((agenda, index) => (
+            <Card cla="Comment" key={index} story={agenda.story}>
+              <div className={styles.line}>
+                <div key={index} className={styles.date}>
+                  {agenda?.wrote.toDate().toLocaleDateString()}
+                </div>
+                <div key={index}>👍{agenda?.like}</div>
               </div>
-              <div key={index}>👍{agenda?.like}</div>
-            </div>
-            <div key={index}>{agenda?.article}</div>
-          </Card>
-        ))}
+              <div key={index}>{agenda?.article}</div>
+            </Card>
+          ))}
+        </div>
       </Modal>
     </div>
   );

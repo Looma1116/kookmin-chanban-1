@@ -2,3 +2,35 @@
   text-align: center;
   color: red;
 }
+.title {
+  color: royalblue;
+  font-size: 2rem;
+  margin-top: -1rem;
+}
+.story {
+  display: flex;
+  justify-content: space-between;
+}
+.ack {
+  margin-left: 3rem;
+}
+.nak {
+  margin-right: 3rem;
+}
+@media (max-width: 767px) and (max-height: 920px) {
+  .title {
+    margin-top: 0rem;
+    font-size: 1.3rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1058px) {
+  .title {
+    font-size: 1.4rem;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+@media (min-width: 1200px) {
+}

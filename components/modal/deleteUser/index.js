@@ -9,6 +9,8 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
+import AgreeBtn from "../../../ui/button/agreeBtn";
+import DisagreeBtn from "../../../ui/button/disagreeBtn";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { loginState } from "../../recoil/recoil";
@@ -35,7 +37,8 @@ const index = ({ onClick }) => {
   };
   return (
     <div>
-      <div className={styles.out}
+      <div
+        className={styles.out}
         onClick={() => {
           setShowModal(true);
         }}
@@ -43,18 +46,18 @@ const index = ({ onClick }) => {
         회원 탈퇴
       </div>
       <Modal show={showModal}>
-        <h3>정말로 삭제하시겠습니까?</h3>
-        <div>주의!탈퇴후 동일계정으로 7일간 로그인하지 못합니다</div>
-        <button onClick={handleDelete}>확인</button>
-        <button
-          onClick={() => {
-            setShowModal(false);
-          }}
-        >
-          취소
-        </button>
+        <h3 className={styles.title}>정말로 삭제하시겠습니까?</h3>
+        <div className={styles.story}>
+          <AgreeBtn onClick={handleDelete} />
+          <DisagreeBtn
+            onClick={() => {
+              setShowModal(false);
+            }}
+          />
+        </div>
       </Modal>
     </div>
   );
 };
 export default index;
+

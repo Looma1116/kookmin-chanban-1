@@ -60,7 +60,8 @@
 .submit {
   width: 40%;
   text-align: center;
-  margin: 5rem;
+  margin-top: 3rem;
+  margin-right: 1rem;
 }
 @media (max-width: 767px) and (max-height: 920px) {
   .title {

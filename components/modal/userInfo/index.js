@@ -29,6 +29,7 @@ export default function UserInfo(props) {
             gender={props.gender}
             level={props.level}
             exp={props.exp}
+            secondTry={true}
           />
           <DeleteUser />
         </div>

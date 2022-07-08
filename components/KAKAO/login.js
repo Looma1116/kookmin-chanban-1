@@ -94,6 +94,7 @@ const KakaoLogin = () => {
           gender={gender}
           level={1}
           exp={0}
+          secondTry={false}
         />
       )}
     </>
