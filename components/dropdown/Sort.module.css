@@ -1,0 +1,29 @@
+.select {
+  width: 6rem;
+  border: 1px solid #999;
+  font-family: inherit;
+  font-size: 1.1rem;
+  background: url("../../public/sortdown.svg") no-repeat 95% 50%;
+  background-position: 5% 50%;
+  border-radius: 0px;
+  background-size: 0.8rem;
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-align: center;
+  padding-right: 30%;
+  margin-left: 10%;
+}
+.select:focus {
+  outline: none;
+}
+.select::-ms-expand {
+  display: none;
+}
+.select option {
+  text-align-last: center;
+  text-align: center;
+  -ms-text-align-last: center;
+  -moz-text-align-last: center;
+}

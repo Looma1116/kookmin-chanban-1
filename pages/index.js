@@ -16,17 +16,21 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import AgendaCard from "../components/agendaCard";
 import styles from "../styles/Home.module.css";
+import { useRecoilState } from "recoil";
+import { searchIsClicked } from "../components/recoil/recoil";
 
 export default function Home() {
   const db = getFirestore();
   const [isLoaded, setIsLoaded] = useState(false);
   const [agendas, setAgendas] = useState([]);
+  const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
 
   // 투표수 상위 10개 내림차순
   const agendaRef = query(collection(db, "agenda"));
   const q = query(agendaRef, orderBy("numVote", "desc"), limit(10));
 
   useEffect(() => {
+    setIsClicked(false);
     fetchData();
   }, []);
 

@@ -18,6 +18,7 @@ import {
   changeState,
   loadingState,
   loginState,
+  searchIsClicked,
 } from "../components/recoil/recoil";
 import KakaoLogin from "../components/KAKAO/login";
 import JoinedAgenda from "../components/modal/joinedAgenda";
@@ -37,7 +38,9 @@ export default function User() {
   const [exp, setExp] = useState(0);
   const text = useRecoilValue(loginState);
   const auth = getAuth();
+  const [isClicked,setIsClicked] = useRecoilState(searchIsClicked);
   useEffect(() => {
+    setIsClicked(false);
     const authUnsubscribe = onAuthStateChanged(auth, (user) => {
       if (user === null) {
         setLogin(false);
