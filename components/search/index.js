@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
-import { searchState, submitState } from "../recoil/recoil";
-import { useRecoilState } from "recoil";
+import { searchIsClicked, searchState, submitState } from "../recoil/recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import styles from "./Search.module.css";
 
-const search = () => {
+const Search = () => {
   const [SearchState, setSearchState] = useRecoilState(searchState);
   const [submit, setSubmit] = useRecoilState(submitState);
+  const isClicked = useRecoilValue(searchIsClicked);
   useEffect(()=>{
 
   })
@@ -22,9 +24,10 @@ const search = () => {
   };
   return (
     <div>
-      <form onSubmit={submitHandler}>
+      <form className ={styles.search_box} onSubmit={submitHandler}>
         <input
           type="text"
+          className={isClicked ? styles.input_search:styles.input_search2}
           placeholder="시민찬반 제목 검색"
           value={SearchState}
           onChange={onChangeHandler}
@@ -35,4 +38,4 @@ const search = () => {
   );
 };
 
-export default search;
+export default Search;
