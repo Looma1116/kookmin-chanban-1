@@ -27,6 +27,7 @@ const FetchData = () => {
   const submit = useRecoilValue(submitState);
   const search = useRecoilValue(searchState);
   const [isFeched, setIsFetched] = useState(false);
+  let data = [];
 
   useEffect(() => {
     agenda = [];
@@ -58,26 +59,18 @@ const FetchData = () => {
       const dateDays = parseInt(Math.abs(diffDate / (1000 * 3600 * 24))); // 차이 일수 계산
       if (dateDays <= sort) {
         if (search === null || search === "") {
-          setAgenda(
-            agenda.concat({
-              id: doc.id,
-              ...doc.data(),
-            })
-          );
+          data.push({...doc.data(), id:doc.id});
+  
           setIsFetched(true);
         } else {
           if (doc.data().title.replace(/ /gi,"").includes(search.replace(/ /gi, ""))) {
-            setAgenda(
-              agenda.concat({
-                id: doc.id,
-                ...doc.data(),
-              })
-            );
+            data.push({ ...doc.data(), id: doc.id });
             setIsFetched(true);
           }
         }
       }
     });
+     setAgenda(data);
   };
 
   return (
@@ -89,7 +82,7 @@ const FetchData = () => {
               {agenda.map((data) => {
                 return (
                   <div key={data.id}>
-                    <Link href={`/agenda/${data.id}`}>
+                    <Link href={`/userAgenda/${data.id}`}>
                       <a>
                         <AgendaCard props={data} />
                       </a>
