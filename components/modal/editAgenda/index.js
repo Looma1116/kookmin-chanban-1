@@ -26,6 +26,8 @@ const EditAgenda = () => {
   const auth = getAuth();
   const router = useRouter();
   const imageHandler = ({ target: { files } }) => {
+    console.log(image);
+
     if (files.length === 1) {
       if (files[0].size >= 2 * 1024 * 1024) {
         return alert("2MB 미만의 이미지만 올리 실 수 있습니다");
@@ -43,14 +45,17 @@ const EditAgenda = () => {
     const storage = getStorage();
 
     //storage에 이미지 추가
-    const storageRef = ref(
-      storage,
-      `thumbnail/${auth.currentUser.uid}_${new Date().getTime()}.jpg`
-    );
-    await uploadBytes(storageRef, image).then((snapshot) => {
-      console.log("Uploaded a or file!");
-    });
-    const imageURL = await getDownloadURL(storageRef);
+    let imageURL = "";
+    if (image != null) {
+      const storageRef = ref(
+        storage,
+        `thumbnail/${auth.currentUser.uid}_${new Date().getTime()}.jpg`
+      );
+      await uploadBytes(storageRef, image).then((snapshot) => {
+        console.log("Uploaded a or file!");
+      });
+      imageURL = await getDownloadURL(storageRef);
+    }
 
     // userAgenda에 추가
     const createdAt = new Date();
@@ -113,29 +118,67 @@ const EditAgenda = () => {
         isOpen={editModalIsOpen}
         onRequestClose={() => setEditModalIsOpen(false)}
       >
-        <button onClick={() => setEditModalIsOpen(false)}>뒤로</button>
+        <button
+          onClick={() => setEditModalIsOpen(false)}
+          className={styles.backBtn}
+        >
+          뒤로
+        </button>
         <form onSubmit={onSubmitHandler}>
-          <select value={category} onChange={categoryHandler}>
+          <select
+            value={category}
+            onChange={categoryHandler}
+            className={styles.category}
+          >
             <option value="정치">정치</option>
             <option value="연애">연애</option>
             <option value="진로">진로</option>
           </select>
-          <div>제목</div>
+          <div className={styles.label}>제목</div>
           <input type="text" name="title" className={styles.input}></input>
           <br />
           <br />
-          <div>부제목</div>
+          <div className={styles.label}>부제목</div>
           <input type="text" name="subTitle" className={styles.input}></input>
           <br />
           <br />
-          <div>본문</div>
+          <div className={styles.label}>본문</div>
           <textarea
             name="article"
             rows="10"
             className={styles.input}
           ></textarea>
-          <br></br>
-          <input type="file" name="image" onChange={imageHandler}></input>
+          <br />
+          <br />
+
+          {image === null ? (
+            <div>
+              <label htmlFor="upload" className={styles.uploadBtn}>
+                이미지 업로드
+              </label>
+              <input
+                type="file"
+                name="image"
+                onChange={imageHandler}
+                id="upload"
+                style={{ display: "none" }}
+              ></input>
+            </div>
+          ) : (
+            <div>
+              <label htmlFor="change" className={styles.uploadBtn}>
+                이미지 변경
+              </label>
+              <span> {image.name}</span>
+              <input
+                type="file"
+                name="image"
+                onChange={imageHandler}
+                id="change"
+                style={{ display: "none" }}
+              ></input>
+            </div>
+          )}
           <br />
           <button type="submit" className={styles.btn}>
             등록

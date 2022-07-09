@@ -8,7 +8,43 @@
   background-color: white;
   transform: translateX(-50%);
   margin-left: 50%;
+
+  font-size: 1rem;
 }
 .input {
-  width: 90%;
+  width: 100%;
+  border: solid rgb(231, 231, 231) 0.1pt;
+}
+.uploadBtn {
+  padding: 4px 10px;
+  border-radius: 4px;
+  background-color: rgb(66, 170, 255);
+  color: white;
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+.label {
+  font-weight: bolder;
+  font-size: 1.2rem;
+}
+
+.category {
+  border: 0;
+  font-weight: bolder;
+  font-size: 1.2rem;
+  transform: translateX(-50%);
+  margin-left: 50%;
+  cursor: pointer;
+}
+
+.backBtn {
+  color: #03b3ff;
+  font-weight: bolder;
+  font-size: 1.2rem;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  cursor: pointer;
 }
