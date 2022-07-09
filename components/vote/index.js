@@ -7,13 +7,11 @@ import {
   arrayUnion,
   collection,
   doc,
-  getDoc,
   getDocs,
   getFirestore,
   query,
   setDoc,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -37,20 +35,16 @@ const Vote = () => {
   const [agree, setAgree] = useState([]);
   const [alternative, setAlternative] = useState([]);
   const [disagree, setDisagree] = useState([]);
-  const agendaObj = Object.assign({}, agenda);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const [votewhere, setVotewhere] = useState(0);
   const [ivoted, setIvoted] = useState(false);
   const [iam, setIam] = useState("");
 
-  console.log(agenda[0]);
-
   useEffect(() => {
-    voteId();
     if (login) {
       updateUser();
     }
-  }, []);
+  }, [agree]);
 
   useEffect(() => {
     voteId();
@@ -71,10 +65,6 @@ const Vote = () => {
     setAlternative(data[0]?.alternative);
     setDisagree(data[0]?.disagreeUser);
   };
-
-  console.log(agree);
-  console.log(alternative);
-  console.log(disagree);
 
   const agreeCount = async () => {
     const q = query(doc(db, "agenda", `${router.query.id}`, "vote", id));
@@ -137,6 +127,10 @@ const Vote = () => {
     } else {
       console.log("투표 안 한 유저입니다.");
     }
+    console.log(agree);
+    console.log(alternative);
+    console.log(disagree);
+    console.log(votewhere);
   };
 
   const agreeHandler = () => {
@@ -152,7 +146,6 @@ const Vote = () => {
       });
     } else {
       setClickCount(true);
-      console.log("로그인 하세요!");
     }
   };
 
@@ -167,13 +160,10 @@ const Vote = () => {
         numAlternative: alternative.length,
         numDisagree: disagree.length,
       });
-      console.log("중립 투표!");
     } else {
       setClickCount(true);
-      console.log("로그인 하세요!");
     }
   };
-  console.log(votewhere);
 
   const disagreeHandler = () => {
     setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
@@ -186,11 +176,8 @@ const Vote = () => {
         numAlternative: alternative.length,
         numDisagree: disagree.length,
       });
-      console.log("반대 투표!");
-      console.log(votewhere);
     } else {
       setClickCount(true);
-      console.log("로그인 하세요!");
     }
   };
 
