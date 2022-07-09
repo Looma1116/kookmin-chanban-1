@@ -18,6 +18,7 @@ import AgendaCard from "../components/agendaCard";
 import styles from "../styles/Home.module.css";
 import { useRecoilState } from "recoil";
 import { searchIsClicked } from "../components/recoil/recoil";
+import logo from "../public/logo@4x.png";
 
 export default function Home() {
   const db = getFirestore();
@@ -65,7 +66,9 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1>Welcome to Kookmin-Chanban!</h1>
+        <span className={styles.logoContainer}>
+          <Image src={logo} alt="국민찬반" height={75} width={270} />
+        </span>
         <div className={styles.cardSection}>
           {agendas.map((data) => {
             return (
