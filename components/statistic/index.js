@@ -22,6 +22,10 @@ const Statistic = (props) => {
     offset.push((acc[i] / total) * diameter);
   });
 
+  const mouseOverHandler = () => {
+    console.log(dataset);
+  };
+
   return (
     <div className={styles.statistic}>
       <svg viewBox="0 0 100 100">
@@ -34,6 +38,7 @@ const Statistic = (props) => {
           strokeWidth="10"
           strokeDasharray={`${fillSpace[0]} ${emptySpace[0]}`}
           strokeDashoffset={String(-offset[0])}
+          onMouseOver={mouseOverHandler}
         />
         <circle
           cx="50"
@@ -44,6 +49,7 @@ const Statistic = (props) => {
           strokeWidth="10"
           strokeDasharray={`${fillSpace[1]} ${emptySpace[1]}`}
           strokeDashoffset={String(-offset[1])}
+          onMouseOver={mouseOverHandler}
         />
         <circle
           cx="50"
@@ -54,12 +60,14 @@ const Statistic = (props) => {
           strokeWidth="10"
           strokeDasharray={`${fillSpace[2]} ${emptySpace[2]}`}
           strokeDashoffset={String(-offset[2])}
+          onMouseOver={mouseOverHandler}
         />
       </svg>
-      <div>
+      <div className={styles.detail}>
         찬성:
         {Math.round((props.agree / total) * 100)}% ({props.agree}) 중립:
-        {Math.round((props.alternative / total) * 100)}% ({props.alternative}) 반대:
+        {Math.round((props.alternative / total) * 100)}% ({props.alternative})
+        반대:
         {Math.round((props.disagree / total) * 100)}% ({props.disagree})
       </div>
     </div>

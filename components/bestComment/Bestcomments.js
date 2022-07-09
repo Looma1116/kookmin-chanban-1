@@ -1,6 +1,9 @@
 import styles from "./Bestcomments.module.css";
 
 const Bestcomments = (props) => {
+  const likeHandler = () => {
+    console.log("댓글 좋아요!");
+  };
   function Icon() {
     if (props.op === 1) {
       return (
@@ -10,6 +13,7 @@ const Bestcomments = (props) => {
           viewBox="0 0 16 12"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          onClick={likeHandler}
         >
           <path
             d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
@@ -27,6 +31,7 @@ const Bestcomments = (props) => {
           viewBox="0 0 16 12"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          onClick={likeHandler}
         >
           <path
             d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
@@ -44,6 +49,7 @@ const Bestcomments = (props) => {
           viewBox="0 0 16 12"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          onClick={likeHandler}
         >
           <path
             d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
@@ -56,13 +62,22 @@ const Bestcomments = (props) => {
   }
   return (
     <div className={styles.card}>
-      <span className={styles.author}>{props.com[0]?.authorLevel}</span>
-      <span className={styles.name}>{props.com[0]?.authorName}</span>
-      <span className={styles.like}>
-        <Icon />
-        {props.com[0]?.like}
-      </span>
-      <div>{props.com[0]?.article}</div>
+      <header className={styles.header}>
+        <span className={styles.author}>
+          {props.com[0]?.authorLevel}&nbsp;{" "}
+        </span>
+        <div className={styles.name}>{props.com[0]?.authorName}</div>
+        <div className={styles.like}>
+          <Icon />
+          &nbsp;
+          {props.com[0]?.like}
+        </div>
+      </header>
+      <p>
+        {props.com[0]?.article.length > 55
+          ? `${props.com[0]?.article.slice(0, 55)}...`
+          : props.com[0]?.article}
+      </p>
     </div>
   );
 };
