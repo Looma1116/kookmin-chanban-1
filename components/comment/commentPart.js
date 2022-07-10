@@ -22,6 +22,7 @@ import {
 } from "firebase/firestore";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getAuth } from "firebase/auth";
+import styles from "../bestComment/Bestcomments.module.css";
 
 const comment = () => {
   const router = useRouter();
@@ -56,7 +57,6 @@ const comment = () => {
     setComment(a);
     console.log(comment);
   };
-  
 
   // const likeClickHandler = async ({ id, like }) => {
   //   console.log(id);
@@ -143,13 +143,13 @@ const comment = () => {
     <div>
       {comment.map((data) => {
         return (
-          <div>
+          <div className={styles.comment}>
             <div key={data.id}>
               {async () => {
                 click = false;
               }}
-              <span>{data.authorName} </span>
-              <span>{data.authorLevel}</span>
+              <span>{data.authorLevel} </span>
+              <div className={styles.name}>{data.authorName}</div>
               {/* <span
                 onClick={() => {
                   clickHandler({ id: data.id });
@@ -165,7 +165,11 @@ const comment = () => {
                 {match(data.id)}
                 {likeClick ? data.like + 1 : data.like}
               </span> */}
-              <div>{data.article}</div>
+              <p>
+                {data.article.length > 55
+                  ? `${data.article.slice(0, 55)}...`
+                  : data.article}
+              </p>
             </div>
           </div>
         );

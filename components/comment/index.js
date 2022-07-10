@@ -16,7 +16,7 @@ import {
   commentState,
   loginState,
   userState,
-  voteState
+  voteState,
 } from "../recoil/recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
 import LogInModal from "../modal/login";
@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import CommentSec from "./commentSec";
 import CommentPart from "./commentPart";
 import { useRouter } from "next/router";
+import styles from "./comment.module.css";
 
 const Comment = () => {
   const auth = getAuth();
@@ -52,7 +53,10 @@ const Comment = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     if (logIn) {
-      const q = query(collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),where("story","==",`${router.query.id}`));
+      const q = query(
+        collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
+        where("story", "==", `${router.query.id}`)
+      );
       console.log(q);
       console.log("쿼리 출력!");
       await addDoc(
@@ -101,22 +105,33 @@ const Comment = () => {
     <div>
       <CommentSec />
       <CommentPart />
-      <form onSubmit={submitHandler}>
-        <input
-          type="text"
-          placeholder={
-            logIn
-              ? `${auth.currentUser.displayName}님, 성숙한 사회를 만들어주셔서 고맙습니다!`
-              : "로그인을 해주세요."
-          }
-          onChange={onChangeHandler}
-          value={comment}
-          onKeyUp={onKeyPress}
-          onFocus={clickHandler}
-          disabled = {(logIn)?(vote=="")?false:(vote===commentSort)?false:true:false}
-        />
-        <button>게시</button>
-      </form>
+      <div>
+        <form onSubmit={submitHandler} className={styles.submit}>
+          <input
+            type="text"
+            className={styles.input}
+            placeholder={
+              logIn
+                ? `${auth.currentUser.displayName}님, 성숙한 사회를 만들어주셔서 고맙습니다!`
+                : "로그인을 해주세요."
+            }
+            onChange={onChangeHandler}
+            value={comment}
+            onKeyUp={onKeyPress}
+            onFocus={clickHandler}
+            disabled={
+              logIn
+                ? vote == ""
+                  ? false
+                  : vote === commentSort
+                  ? false
+                  : true
+                : false
+            }
+          />
+          <button className={styles.button}>게시</button>
+        </form>
+      </div>
     </div>
   );
 };

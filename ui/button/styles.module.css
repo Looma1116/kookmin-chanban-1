@@ -1,4 +1,6 @@
 .agree {
+  display: block;
+  margin: auto;
   transition: 0.5s;
 }
 
@@ -7,6 +9,8 @@
 }
 
 .alternative {
+  display: block;
+  margin: auto;
   transition: 0.5s;
 }
 
@@ -15,6 +19,8 @@
 }
 
 .disagree {
+  display: block;
+  margin: auto;
   transition: 0.5s;
 }
 
