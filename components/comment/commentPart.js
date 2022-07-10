@@ -58,49 +58,38 @@ const comment = () => {
     console.log(comment);
   };
 
-  function Author({level}) {
+  function Author({ level }) {
     if (commentS === "agreeComment") {
-      return (
-        <span className={styles.agreeauthor}>
-          &nbsp;{level}&nbsp;
-        </span>
-      );
+      return <span className={styles.agreeauthor}>&nbsp;{level}&nbsp;</span>;
     } else if (commentS === "alternativeComment") {
-      return (
-        <span className={styles.alterauthor}>
-          &nbsp;{level}&nbsp;
-        </span>
-      );
+      return <span className={styles.alterauthor}>&nbsp;{level}&nbsp;</span>;
     } else if (commentS === "disagreeComment") {
-      return (
-        <span className={styles.disagreeauthor}>
-          &nbsp;{level}&nbsp;
-        </span>
-      );
+      return <span className={styles.disagreeauthor}>&nbsp;{level}&nbsp;</span>;
     }
   }
 
   return (
     <div className={styles.commentlist}>
-      {comment.map((data) => {
-        return (
-          <div className={styles.card}>
-            <div key={data.id}>
-              {async () => {
-                click = false;
-              }}
-              <header className={styles.header}>
-                <Author level={data.authorLevel} />
-                <div className={styles.name}>&nbsp;{data.authorName}</div>
-              </header>
-              {/* <span
+      {comment != "" ? (
+        comment.map((data) => {
+          return (
+            <div className={styles.card}>
+              <div key={data.id}>
+                {async () => {
+                  click = false;
+                }}
+                <header className={styles.header}>
+                  <Author level={data.authorLevel} />
+                  <div className={styles.name}>&nbsp;{data.authorName}</div>
+                </header>
+                {/* <span
                 onClick={() => {
                   clickHandler({ id: data.id });
                 }}
               >
                 {match({id:data.id}) ? data.like + 1 : data.like}
               </span> */}
-              {/* <span
+                {/* <span
                 onClick={() => {
                   likeClickHandler({ id: data.id, like: data.like });
                 }}
@@ -108,13 +97,19 @@ const comment = () => {
                 {match(data.id)}
                 {likeClick ? data.like + 1 : data.like}
               </span> */}
-              <textarea className={styles.textArea}>
-                {data.article}
-              </textarea>
+                <textarea className={styles.textArea}>{data.article}</textarea>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })
+      ) : (
+        <div className={styles.card}>
+          <pre className={styles.textArea}>
+            댓글이 없습니다.
+            첫 댓글의 주인공이 되주세요!
+          </pre>
+        </div>
+      )}
     </div>
   );
 };
