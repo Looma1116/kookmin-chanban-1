@@ -140,7 +140,7 @@ const comment = () => {
   //   }
   // };
   return (
-    <div>
+    <div className={styles.commentlist}>
       {comment.map((data) => {
         return (
           <div className={styles.comment}>

@@ -80,9 +80,11 @@ const BestComment = () => {
   return (
     <div>
       <h2 className={styles.title}>대표의견</h2>
-      <Bestcomments com={sortedAgree} op={1} />
-      <Bestcomments com={sortedAlter} op={2} />
-      <Bestcomments com={sortedDisagree} op={3} />
+      <div className={styles.cardlist}>
+        <Bestcomments com={sortedAgree} op={1} />
+        <Bestcomments com={sortedAlter} op={2} />
+        <Bestcomments com={sortedDisagree} op={3} />
+      </div>
     </div>
   );
 };
