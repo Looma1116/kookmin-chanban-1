@@ -12,7 +12,7 @@ const searchIcon = () => {
   };
   return (
     <div>
-      <BsSearch onClick={clickHandler} />
+      <BsSearch className={styles.icon}onClick={clickHandler} />
     </div>
   );
 };
