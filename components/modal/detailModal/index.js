@@ -138,12 +138,12 @@ const Detail = ({ nick, age, gender, token, level, exp, secondTry }) => {
               </select>
             </div>
             <div>
-              <button className={styles.submit} type="submit">
+              <button className={styles.submitbtn} type="submit">
                 완료
               </button>
               {secondTry ? (
                 <button
-                  className={styles.submit}
+                  className={styles.cancelbtn}
                   onClick={() => {
                     setShowModal(false);
                   }}

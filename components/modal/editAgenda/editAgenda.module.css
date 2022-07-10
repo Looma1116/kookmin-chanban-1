@@ -54,6 +54,9 @@
   margin-left: 50%;
   cursor: pointer;
 }
+.category:focus{
+  outline: none;
+}
 
 .backBtn {
   color: #03b3ff;

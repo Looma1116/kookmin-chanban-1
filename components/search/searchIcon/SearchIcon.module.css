@@ -13,3 +13,6 @@
   background-color:transparent;
   pointer-events: painted;  
 }
+.icon{
+    cursor: pointer;
+}

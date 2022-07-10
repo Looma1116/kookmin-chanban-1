@@ -16,9 +16,9 @@ const Sort = () => {
         value={sortOption}
         onChange={changeHandler}
       >
-        <option value="7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;주간</option>
-        <option value="30">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;월간</option>
-        <option value="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;일간</option>
+        <option value="7">주간</option>
+        <option value="30">월간</option>
+        <option value="1">일간</option>
       </select>
     </div>
   );
