@@ -64,6 +64,76 @@
   margin-top: 3rem;
   margin-right: 1rem;
 }
+
+.submitbtn {
+  width: 40%;
+  text-align: center;
+  margin-top: 3rem;
+  margin-right: 1rem;
+  box-sizing: border-box;
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid rgb(34, 66, 153);
+  border-radius: 0.6em;
+  color: rgb(34, 66, 153);
+  cursor: pointer;
+  align-self: center;
+  font-size: 1rem;
+  padding: 1.2em 2.8em;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+
+}
+.submitbtn:hover
+   {
+    color: #fff;
+    outline: 0;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+    box-shadow: 0 0 40px 40px rgb(34, 66, 153) inset;
+  }
+.submitbtn:focus {
+  color: #fff;
+  outline: 0;
+  transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+  box-shadow: 0 0 40px 40px rgb(34, 66, 153) inset;
+}
+  .cancelbtn {
+    width: 40%;
+    text-align: center;
+    margin-top: 3rem;
+    margin-right: 1rem;
+    box-sizing: border-box;
+    appearance: none;
+    background-color: transparent;
+    border: 2px solid red;
+    border-radius: 0.6em;
+    color: red;
+    cursor: pointer;
+    align-self: center;
+    font-size: 1rem;
+    padding: 1.2em 2.8em;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+  
+  }
+  .cancelbtn:hover
+     {
+      color: #fff;
+      outline: 0;
+      transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+      box-shadow: 0 0 40px 40px red inset;
+    }
+    .cancelbtn:focus
+     {
+      color: #fff;
+      outline: 0;
+      transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+      box-shadow: 0 0 40px 40px red inset;
+    }
 @media (max-width: 767px) and (max-height: 920px) {
   .title {
     font-size: 2rem;
