@@ -66,3 +66,7 @@ export const likeClickState = atom({
   key: "likeClickState",
   default : false,
 })
+export const categoryIsClickedState = atom({
+  key : "categoryIsClickedState",
+  default: false,
+})
