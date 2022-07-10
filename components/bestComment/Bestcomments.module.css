@@ -73,3 +73,16 @@
   max-height: 70px;
   overflow: hidden;
 }
+.textArea{
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-radius: 8px;
+
+  padding: 0.5rem;
+  max-height: 70px;
+  border: none;
+  width: 100%;
+}
+/* .textArea::-webkit-scrollbar {
+  display: none;
+} */
