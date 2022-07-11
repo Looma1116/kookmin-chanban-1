@@ -25,7 +25,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { getAuth } from "firebase/auth";
 import styles from "../bestComment/Bestcomments.module.css";
 
-const comment = () => {
+const comment = ({isSubmit}) => {
   const router = useRouter();
   const auth = getAuth();
   const db = getFirestore();
@@ -38,29 +38,28 @@ const comment = () => {
   let [click, setClick] = useState(false);
   const community = useRecoilValue(communityState);
   const [commentData, setCommentData] = useRecoilState(commentDataState);
+  let a = [];
 
   useEffect(() => {
+    console.log(isSubmit);
     setComment([]);
     commentFetch();
     console.log(commentS);
     console.log(commentData);
-  }, [commentS]);
+  }, [commentS, isSubmit]);
 
   const commentFetch = async () => {
     console.log(commentS);
     let snapShot = await getDocs(
       collection(db, `${community}`, `${router.query.id}`, `${commentS}`)
     );
+    a = [];
 
-    const a = snapShot.docs.map((doc) => {({
-      id: doc.id,
-      ...doc.data(),
-    }
-    )
-  {
-    console.log(doc.data());
-  }});
-  console.log(a);
+    snapShot.docs.forEach((doc) => {
+      a.push({ id: doc.id, ...doc.data() });
+    });
+
+    console.log(a);
     setCommentData(a);
     console.log(commentData);
   };
@@ -97,8 +96,7 @@ const comment = () => {
       ) : (
         <div className={styles.card}>
           <pre className={styles.textArea}>
-            댓글이 없습니다.
-            첫 댓글의 주인공이 되주세요!
+            댓글이 없습니다. 첫 댓글의 주인공이 되주세요!
           </pre>
         </div>
       )}
