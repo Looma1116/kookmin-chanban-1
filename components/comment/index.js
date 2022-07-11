@@ -14,6 +14,7 @@ import { getAuth } from "firebase/auth";
 import {
   clickCountState,
   commentState,
+  communityState,
   loginState,
   userState,
   voteState,
@@ -36,6 +37,7 @@ const Comment = () => {
   const [user, setUser] = useRecoilState(userState);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const vote = useRecoilValue(voteState);
+  const community = useRecoilValue(communityState);
 
   useEffect(() => {
     if (logIn) {
@@ -44,7 +46,7 @@ const Comment = () => {
       console.log(user);
     }
     document.activeElement.blur();
-  }, [logIn]);
+  }, [logIn, comment]);
   const clickHandler = () => {
     if (!logIn) {
       setClickCount(true);
@@ -59,8 +61,10 @@ const Comment = () => {
       );
       console.log(q);
       console.log("쿼리 출력!");
+      console.log(comment);
+      console.log(community);
       await addDoc(
-        collection(db, "agenda", `${router.query.id}`, `${commentSort}`),
+        collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
         {
           article: `${comment}`,
           author: auth.currentUser.uid,
@@ -72,6 +76,8 @@ const Comment = () => {
           id: auth.currentUser.uid,
         }
       );
+      console.log(comment);
+      console.log(community);
       console.log("답변완료!");
       // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
     }
