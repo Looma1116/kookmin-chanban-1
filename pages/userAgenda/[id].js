@@ -19,6 +19,7 @@ import Modal from "react-modal";
 import Comment from "../../components/comment";
 import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
+import UserVote from "../../components/vote/userVote";
 
 // HpwvymAsOmqwAPEuTrIs
 
@@ -64,7 +65,7 @@ const Agenda = () => {
           <Article />
           <News />
           <BestComment />
-          <Vote />
+          <UserVote />
           <Comment />
           {clickCount ? <LogInModal /> : null}
         </div>
