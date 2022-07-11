@@ -1,5 +1,6 @@
 import {
   categoryIsClickedState,
+  communityState,
   searchIsClicked,
 } from "../components/recoil/recoil";
 import Category from "../components/dropdown/category";
@@ -9,13 +10,18 @@ import FetchData from "../components/fetchdata";
 import Search from "../components/search";
 import SearchIcon from "../components/search/searchIcon";
 import EditAgenda from "../components/modal/editAgenda";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import CategoryIcon from "../components/dropdown/categoryIcon";
+import { useEffect } from "react";
 
 const Community = () => {
   console.log("community");
+  const [community, setCommunity] = useRecoilState(communityState);
   const isClicked = useRecoilValue(searchIsClicked);
   const categoryIsClicked = useRecoilValue(categoryIsClickedState);
+  useEffect(() => {
+    setCommunity("userAgenda");
+  }, []);
 
   return (
     <div>
