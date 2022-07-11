@@ -10,7 +10,11 @@ import {
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Article from "../../components/article";
-import { agendaState, clickCountState } from "../../components/recoil/recoil";
+import {
+  agendaState,
+  clickCountState,
+  communityState,
+} from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
 import Vote from "../../components/vote";
@@ -19,7 +23,6 @@ import Modal from "react-modal";
 import Comment from "../../components/comment";
 import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
-import UserVote from "../../components/vote/userVote";
 
 // HpwvymAsOmqwAPEuTrIs
 
@@ -30,6 +33,11 @@ const Agenda = () => {
   const [isFetched, setIsFetched] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const clickCount = useRecoilValue(clickCountState);
+  const [community, setCommunity] = useRecoilState(communityState);
+
+  useEffect(() => {
+    setCommunity("userAgenda");
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -65,7 +73,7 @@ const Agenda = () => {
           <Article />
           <News />
           <BestComment />
-          <UserVote />
+          <Vote />
           <Comment />
           {clickCount ? <LogInModal /> : null}
         </div>

@@ -21,10 +21,11 @@ import {
   loginState,
   agendaState,
   clickCountState,
+  communityState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
 
-const Vote = () => {
+const UserVote = () => {
   const auth = getAuth();
   const [vote, setVote] = useRecoilState(voteState);
   const login = useRecoilValue(loginState);
@@ -39,6 +40,7 @@ const Vote = () => {
   const [votewhere, setVotewhere] = useState(0);
   const [ivoted, setIvoted] = useState(false);
   const [iam, setIam] = useState("");
+  const community = useRecoilValue(communityState);
 
   useEffect(() => {
     if (login) {
@@ -54,7 +56,7 @@ const Vote = () => {
   }, [login, ivoted]);
 
   const voteId = async () => {
-    const q = query(collection(db, "agenda", `${router.query.id}`, "vote"));
+    const q = query(collection(db, community, `${router.query.id}`, "vote"));
     const snapshot = await getDocs(q);
     let data = [];
     snapshot.docs.forEach((doc) => {
@@ -67,21 +69,21 @@ const Vote = () => {
   };
 
   const agreeCount = async () => {
-    const q = query(doc(db, "agenda", `${router.query.id}`, "vote", id));
+    const q = query(doc(db, community, `${router.query.id}`, "vote", id));
     await updateDoc(q, {
       agreeUser: arrayUnion(`${auth.currentUser.uid}`),
     });
   };
 
   const alterCount = async () => {
-    const q = query(doc(db, "agenda", `${router.query.id}`, "vote", id));
+    const q = query(doc(db, community, `${router.query.id}`, "vote", id));
     await updateDoc(q, {
       alternative: arrayUnion(auth.currentUser.uid),
     });
   };
 
   const disagreeCount = async () => {
-    const q = query(doc(db, "agenda", `${router.query.id}`, "vote", id));
+    const q = query(doc(db, community, `${router.query.id}`, "vote", id));
     await updateDoc(q, {
       disagreeUser: arrayUnion(auth.currentUser.uid),
     });
@@ -106,7 +108,7 @@ const Vote = () => {
   };
 
   const updateAgenda = async ({ numAgree, numAlternative, numDisagree }) => {
-    await updateDoc(doc(db, "agenda", router.query.id), {
+    await updateDoc(doc(db, community, router.query.id), {
       numAgree: numAgree,
       numAlternative: numAlternative,
       numDisagree: numDisagree,
@@ -125,12 +127,8 @@ const Vote = () => {
       setVotewhere(3);
       setIam("반대");
     } else {
-      console.log("투표 안 한 유저입니다.");
+      console.log("투표 해주세요.");
     }
-    console.log(agree);
-    console.log(alternative);
-    console.log(disagree);
-    console.log(votewhere);
   };
 
   const agreeHandler = () => {
@@ -140,9 +138,9 @@ const Vote = () => {
       agreeCount();
       updateVote();
       updateAgenda({
-        numAgree: agree?.length,
-        numAlternative: alternative?.length,
-        numDisagree: disagree?.length,
+        numAgree: agree ? agree.length : 0,
+        numAlternative: alternative ? alternative.length : 0,
+        numDisagree: disagree ? disagree.length : 0,
       });
     } else {
       setClickCount(true);
@@ -156,9 +154,9 @@ const Vote = () => {
       alterCount();
       updateVote();
       updateAgenda({
-        numAgree: agree?.length,
-        numAlternative: alternative?.length,
-        numDisagree: disagree?.length,
+        numAgree: agree ? agree.length : 0,
+        numAlternative: alternative ? alternative.length : 0,
+        numDisagree: disagree ? disagree.length : 0,
       });
     } else {
       setClickCount(true);
@@ -172,9 +170,9 @@ const Vote = () => {
       disagreeCount();
       updateVote();
       updateAgenda({
-        numAgree: agree?.length,
-        numAlternative: alternative?.length,
-        numDisagree: disagree?.length,
+        numAgree: agree ? agree.length : 0,
+        numAlternative: alternative ? alternative.length : 0,
+        numDisagree: disagree ? disagree.length : 0,
       });
     } else {
       setClickCount(true);
@@ -196,9 +194,9 @@ const Vote = () => {
         <div>
           <h2 className={styles.title}>{iam}을(를) 선택 하셨습니다!</h2>
           <Statistic
-            agree={agree.length}
-            alternative={alternative.length}
-            disagree={disagree.length}
+            agree={agree ? agree.length : 0}
+            alternative={alternative ? alternative.length : 0}
+            disagree={disagree ? disagree.length : 0}
           />
         </div>
       )}
@@ -206,4 +204,4 @@ const Vote = () => {
   );
 };
 
-export default Vote;
+export default UserVote;
