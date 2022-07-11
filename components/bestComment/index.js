@@ -83,36 +83,32 @@ const BestComment = () => {
 
   return (
     <div>
-      {sortedAgree.length == 0 &&
-      sortedAlter.length == 0 &&
-      sortedDisagree.length == 0 ? null : (
-        <div>
-          <h2 className={styles.title}>대표의견</h2>
-          <div className={styles.cardlist}>
-            {sortedAgree != "" ? (
-              <Bestcomments com={sortedAgree} op={1} />
-            ) : (
-              <div className={styles.empty}>
-                <p>아직 대표의견이 없습니다. 이 자리를 차지하세요!</p>
-              </div>
-            )}
-            {sortedAlter != "" ? (
-              <Bestcomments com={sortedAlter} op={2} />
-            ) : (
-              <div className={styles.empty}>
-                <p>아직 대표의견이 없습니다. 이 자리를 차지하세요!</p>
-              </div>
-            )}
-            {sortedDisagree != "" ? (
-              <Bestcomments com={sortedDisagree} op={3} />
-            ) : (
-              <div className={styles.empty}>
-                <p>아직 대표의견이 없습니다. 이 자리를 차지하세요!</p>
-              </div>
-            )}
-          </div>
+      <div>
+        <h2 className={styles.title}>대표의견</h2>
+        <div className={styles.cardlist}>
+          {sortedAgree != "" ? (
+            <Bestcomments com={sortedAgree} op={1} />
+          ) : (
+            <div className={styles.empty}>
+              <p>아직 대표의견이 없습니다. 이 자리를 차지하세요!</p>
+            </div>
+          )}
+          {sortedAlter != "" ? (
+            <Bestcomments com={sortedAlter} op={2} />
+          ) : (
+            <div className={styles.empty}>
+              <p>아직 대표의견이 없습니다. 이 자리를 차지하세요!</p>
+            </div>
+          )}
+          {sortedDisagree != "" ? (
+            <Bestcomments com={sortedDisagree} op={3} />
+          ) : (
+            <div className={styles.empty}>
+              <p>아직 대표의견이 없습니다. 이 자리를 차지하세요!</p>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
