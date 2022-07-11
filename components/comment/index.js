@@ -38,6 +38,7 @@ const Comment = () => {
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const vote = useRecoilValue(voteState);
   const community = useRecoilValue(communityState);
+  const [submit, setSubmit] = useState(false);
 
   useEffect(() => {
     if (logIn) {
@@ -45,15 +46,17 @@ const Comment = () => {
       console.log("유저정보임");
       console.log(user);
     }
+    commentFetch();
     document.activeElement.blur();
-  }, [logIn, comment]);
+  }, [logIn, submit]);
+
   const clickHandler = () => {
     if (!logIn) {
       setClickCount(true);
     }
   };
-  const submitHandler = async (e) => {
-    e.preventDefault();
+
+  const commentFetch = async () => {
     if (logIn) {
       const q = query(
         collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
@@ -79,12 +82,19 @@ const Comment = () => {
       console.log(comment);
       console.log(community);
       console.log("답변완료!");
-      // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
     }
   };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    setSubmit((prev) => !prev);
+    // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
+  };
+
   const onChangeHandler = (e) => {
     setComment(e.target.value);
   };
+
   const onKeyPress = (e) => {
     if (e.key === "Enter") {
       submitHandler(e);
