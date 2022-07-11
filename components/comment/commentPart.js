@@ -6,6 +6,7 @@ import {
   loginState,
   clickCountState,
   likeClickState,
+  communityState,
 } from "../recoil/recoil";
 import {
   collection,
@@ -35,6 +36,7 @@ const comment = () => {
   let likeClickCommentId = [];
   const [likeClick, setLikeClick] = useRecoilState(likeClickState);
   let [click, setClick] = useState(false);
+  const community = useRecoilValue(communityState);
 
   useEffect(() => {
     setComment([]);
@@ -45,7 +47,7 @@ const comment = () => {
 
   const commentFetch = async () => {
     let commentQuery = query(
-      collection(db, "agenda", `${router.query.id}`, `${commentS}`)
+      collection(db, `${community}`, `${router.query.id}`, `${commentS}`)
     );
     console.log(commentS);
     let snapShot = await getDocs(commentQuery);
@@ -82,22 +84,7 @@ const comment = () => {
                   <Author level={data.authorLevel} />
                   <div className={styles.name}>&nbsp;{data.authorName}</div>
                 </header>
-                {/* <span
-                onClick={() => {
-                  clickHandler({ id: data.id });
-                }}
-              >
-                {match({id:data.id}) ? data.like + 1 : data.like}
-              </span> */}
-                {/* <span
-                onClick={() => {
-                  likeClickHandler({ id: data.id, like: data.like });
-                }}
-              >
-                {match(data.id)}
-                {likeClick ? data.like + 1 : data.like}
-              </span> */}
-                <textarea className={styles.textArea}>{data.article}</textarea>
+                <div className={styles.textArea}>{data.article}</div>
               </div>
             </div>
           );

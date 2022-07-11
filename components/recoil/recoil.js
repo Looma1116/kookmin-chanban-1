@@ -70,3 +70,7 @@ export const categoryIsClickedState = atom({
   key : "categoryIsClickedState",
   default: false,
 })
+export const communityState = atom({
+  key : "communityState",
+  default: "agenda",
+})

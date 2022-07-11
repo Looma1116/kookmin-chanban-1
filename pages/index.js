@@ -16,8 +16,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import AgendaCard from "../components/agendaCard";
 import styles from "../styles/Home.module.css";
-import { useRecoilState } from "recoil";
-import { searchIsClicked } from "../components/recoil/recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { commentState, searchIsClicked } from "../components/recoil/recoil";
 import logo from "../public/logo@4x.png";
 
 export default function Home() {
@@ -25,6 +25,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [agendas, setAgendas] = useState([]);
   const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
+  const [community,setCommunity] = useRecoilState(commentState);
 
   // 투표수 상위 10개 내림차순
   const agendaRef = query(collection(db, "agenda"));
@@ -33,6 +34,7 @@ export default function Home() {
   useEffect(() => {
     setIsClicked(false);
     fetchData();
+    setCommunity("agenda");
   }, []);
 
   const fetchData = async () => {
