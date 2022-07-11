@@ -39,6 +39,7 @@ const Comment = () => {
   const vote = useRecoilValue(voteState);
   const community = useRecoilValue(communityState);
   const [submit, setSubmit] = useState(false);
+  const [isVoted, setIsVoted] = useState(false);
 
   useEffect(() => {
     if (logIn) {
@@ -125,7 +126,7 @@ const Comment = () => {
   return (
     <div>
       <CommentSec />
-      <CommentPart isSubmit={submit}/>
+      <CommentPart isSubmit={submit}/>{/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
       <div>
         <form onSubmit={submitHandler} className={styles.submit}>
           <input

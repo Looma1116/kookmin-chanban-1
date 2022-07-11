@@ -90,6 +90,10 @@ const UserVote = () => {
   };
 
   const updateVote = async () => {
+    let voteWhere = "";
+    if(vote=="agreeComment"){voteWhere = "agree"}
+    else if(vote=="disagreeComment"){voteWhere = "disagree"}
+    else{voteWhere = "alternative"}
     await setDoc(
       doc(
         db,
@@ -103,6 +107,7 @@ const UserVote = () => {
         joined: new Date(),
         story: agenda[0].id,
         title: agenda[0].title,
+        vote: `${voteWhere}`,
       }
     );
   };
