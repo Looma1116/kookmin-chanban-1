@@ -136,9 +136,9 @@ const UserVote = () => {
       agreeCount();
       updateVote();
       updateAgenda({
-        numAgree: agree?.length,
-        numAlternative: alternative?.length,
-        numDisagree: disagree?.length,
+        numAgree: agree ? agree.length : 0,
+        numAlternative: alternative ? alternative.length : 0,
+        numDisagree: disagree ? disagree.length : 0,
       });
     } else {
       setClickCount(true);
@@ -152,9 +152,9 @@ const UserVote = () => {
       alterCount();
       updateVote();
       updateAgenda({
-        numAgree: agree?.length,
-        numAlternative: alternative?.length,
-        numDisagree: disagree?.length,
+        numAgree: agree ? agree.length : 0,
+        numAlternative: alternative ? alternative.length : 0,
+        numDisagree: disagree ? disagree.length : 0,
       });
     } else {
       setClickCount(true);
@@ -168,9 +168,9 @@ const UserVote = () => {
       disagreeCount();
       updateVote();
       updateAgenda({
-        numAgree: agree?.length,
-        numAlternative: alternative?.length,
-        numDisagree: disagree?.length,
+        numAgree: agree ? agree.length : 0,
+        numAlternative: alternative ? alternative.length : 0,
+        numDisagree: disagree ? disagree.length : 0,
       });
     } else {
       setClickCount(true);
