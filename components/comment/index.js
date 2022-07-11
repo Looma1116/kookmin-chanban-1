@@ -82,6 +82,7 @@ const Comment = () => {
       console.log(comment);
       console.log(community);
       console.log("답변완료!");
+      setComment("");
     }
   };
 
@@ -120,7 +121,7 @@ const Comment = () => {
   return (
     <div>
       <CommentSec />
-      <CommentPart />
+      <CommentPart isSubmit={submit}/>
       <div>
         <form onSubmit={submitHandler} className={styles.submit}>
           <input
