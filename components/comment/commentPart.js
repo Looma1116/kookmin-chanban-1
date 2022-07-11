@@ -37,27 +37,32 @@ const comment = () => {
   const [likeClick, setLikeClick] = useRecoilState(likeClickState);
   let [click, setClick] = useState(false);
   const community = useRecoilValue(communityState);
+  const [commentData, setCommentData] = useRecoilState(commentDataState);
 
   useEffect(() => {
     setComment([]);
     commentFetch();
     console.log(commentS);
-    console.log(comment);
+    console.log(commentData);
   }, [commentS]);
 
   const commentFetch = async () => {
-    let commentQuery = query(
+    console.log(commentS);
+    let snapShot = await getDocs(
       collection(db, `${community}`, `${router.query.id}`, `${commentS}`)
     );
-    console.log(commentS);
-    let snapShot = await getDocs(commentQuery);
 
-    const a = snapShot.docs.map((doc) => ({
+    const a = snapShot.docs.map((doc) => {({
       id: doc.id,
       ...doc.data(),
-    }));
-    setComment(a);
-    console.log(comment);
+    }
+    )
+  {
+    console.log(doc.data());
+  }});
+  console.log(a);
+    setCommentData(a);
+    console.log(commentData);
   };
 
   function Author({ level }) {
@@ -72,8 +77,8 @@ const comment = () => {
 
   return (
     <div className={styles.commentlist}>
-      {comment != "" ? (
-        comment.map((data) => {
+      {commentData != "" ? (
+        commentData.map((data) => {
           return (
             <div className={styles.card}>
               <div key={data.id}>
