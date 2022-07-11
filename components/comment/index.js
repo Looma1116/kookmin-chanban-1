@@ -39,6 +39,7 @@ const Comment = () => {
   const vote = useRecoilValue(voteState);
   const community = useRecoilValue(communityState);
   const [submit, setSubmit] = useState(false);
+  const [isVoted, setIsVoted] = useState(false);
 
   useEffect(() => {
     if (logIn) {
@@ -58,15 +59,19 @@ const Comment = () => {
 
   const commentFetch = async () => {
     if (logIn) {
-      const q = query(
-        collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
-        where("story", "==", `${router.query.id}`)
+      const q = setDoc( // 파이어베이스 user/wroteComment 추가
+        doc(db, "user", `${auth.currentUser.uid}`, "wroteComment", `${router.query.id}`),{
+          article:`${comment}`,
+          like: 0,
+          story: `${router.query.id}`,
+          wrote: new Date(),
+        }
       );
       console.log(q);
       console.log("쿼리 출력!");
       console.log(comment);
       console.log(community);
-      await addDoc(
+      await addDoc( // 파이어베이스 아젠다부분에 댓글 추가
         collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
         {
           article: `${comment}`,
@@ -121,7 +126,7 @@ const Comment = () => {
   return (
     <div>
       <CommentSec />
-      <CommentPart isSubmit={submit}/>
+      <CommentPart isSubmit={submit}/>{/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
       <div>
         <form onSubmit={submitHandler} className={styles.submit}>
           <input
