@@ -58,15 +58,19 @@ const Comment = () => {
 
   const commentFetch = async () => {
     if (logIn) {
-      const q = query(
-        collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
-        where("story", "==", `${router.query.id}`)
+      const q = setDoc( // 파이어베이스 user/wroteComment 추가
+        doc(db, "user", `${auth.currentUser.uid}`, "wroteComment", `${router.query.id}`),{
+          article:`${comment}`,
+          like: 0,
+          story: `${router.query.id}`,
+          wrote: new Date(),
+        }
       );
       console.log(q);
       console.log("쿼리 출력!");
       console.log(comment);
       console.log(community);
-      await addDoc(
+      await addDoc( // 파이어베이스 아젠다부분에 댓글 추가
         collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
         {
           article: `${comment}`,
