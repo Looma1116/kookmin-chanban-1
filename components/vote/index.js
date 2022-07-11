@@ -115,13 +115,13 @@ const Vote = () => {
   };
 
   const updateUser = async () => {
-    if (agree.indexOf(auth.currentUser.uid) >= 0) {
+    if (agree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(1);
       setIam("찬성");
-    } else if (alternative.indexOf(auth.currentUser.uid) >= 0) {
+    } else if (alternative?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(2);
       setIam("중립");
-    } else if (disagree.indexOf(auth.currentUser.uid) >= 0) {
+    } else if (disagree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(3);
       setIam("반대");
     } else {
@@ -140,9 +140,9 @@ const Vote = () => {
       agreeCount();
       updateVote();
       updateAgenda({
-        numAgree: agree.length,
-        numAlternative: alternative.length,
-        numDisagree: disagree.length,
+        numAgree: agree?.length,
+        numAlternative: alternative?.length,
+        numDisagree: disagree?.length,
       });
     } else {
       setClickCount(true);
