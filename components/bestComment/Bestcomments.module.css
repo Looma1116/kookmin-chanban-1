@@ -2,9 +2,18 @@
   border-radius: 8px;
   box-shadow: 0px 2px 6px 0px rgb(194, 194, 194);
   margin-bottom: 0.5rem;
-  padding: 0.5rem;
+  padding: 1rem;
   max-height: 100px;
   overflow: hidden;
+}
+
+.empty {
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px 0px rgb(194, 194, 194);
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .title {
@@ -73,7 +82,7 @@
   max-height: 70px;
   overflow: hidden;
 }
-.textArea{
+.textArea {
   overflow-x: hidden;
   overflow-y: auto;
   border-radius: 8px;
