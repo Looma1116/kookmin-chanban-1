@@ -1,3 +1,32 @@
+.login {
+  position: absolute;
+  inset: 40px;
+  border: 1px solid rgb(204, 204, 204);
+  background: rgb(255, 255, 255);
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.close {
+  display: inline-block;
+  padding: 1em 2em;
+  border-radius: 0;
+  color: #b2876f;
+  font-weight: bold;
+  font-size: 0.678rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  background-position: 1% 50%;
+  background-size: 400% 300%;
+  border: 1px solid #b2876f;
+}
+
 .modal {
   display: none;
   position: fixed;
