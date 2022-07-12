@@ -106,7 +106,7 @@ const JoinedAgenda = ({ user }) => {
           닫기
         </button>
         <div className={styles.in}>
-          <Image src={Images} />
+          <MdOutlineHowToVote size="2.5rem" color="#2373EB" />
           <div className={styles.title}>참여한 찬반</div>
         </div>
         <div className={styles.card}>

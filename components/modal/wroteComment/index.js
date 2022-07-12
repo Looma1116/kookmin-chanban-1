@@ -16,6 +16,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { BiCommentDetail } from "react-icons/bi";
 const WroteComment = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
   const [wroteComment, setWroteComment] = useState([]);
@@ -45,7 +46,7 @@ const WroteComment = ({ user }) => {
   return (
     <div>
       <div className={styles.out} onClick={() => setShowModal(true)}>
-        <Image src={Images} />
+        <BiCommentDetail size="2.5rem" color="#FF0000" />
         <div className={styles.name}>남긴 목소리</div>
       </div>
       <Modal show={showModal}>
@@ -57,7 +58,7 @@ const WroteComment = ({ user }) => {
           닫기
         </button>
         <div className={styles.in}>
-          <Image src={Images} />
+          <BiCommentDetail size="2.5rem" color="#FF0000" />
           <div className={styles.title}>남긴 목소리</div>
         </div>
         <div className={styles.card}>
