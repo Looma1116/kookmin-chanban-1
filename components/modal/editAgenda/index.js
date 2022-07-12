@@ -61,7 +61,7 @@ const EditAgenda = () => {
     const createdAt = new Date();
     const agenda = {
       uid: auth.currentUser.uid,
-      author: user[0].name,
+      author: auth.currentUser.displayName,
       title: event.target.title.value,
       subTitle: event.target.subTitle.value,
       article: event.target.article.value,
