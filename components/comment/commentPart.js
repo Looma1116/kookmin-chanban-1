@@ -29,7 +29,6 @@ const comment = ({isSubmit}) => {
   const router = useRouter();
   const auth = getAuth();
   const db = getFirestore();
-  let [comment, setComment] = useRecoilState(commentDataState);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const commentS = useRecoilValue(commentState);
   const logIn = useRecoilValue(loginState);
@@ -37,12 +36,12 @@ const comment = ({isSubmit}) => {
   const [likeClick, setLikeClick] = useRecoilState(likeClickState);
   let [click, setClick] = useState(false);
   const community = useRecoilValue(communityState);
-  const [commentData, setCommentData] = useRecoilState(commentDataState);
+  let [commentData, setCommentData] = useRecoilState(commentDataState);
   let a = [];
 
   useEffect(() => {
     console.log(isSubmit);
-    setComment([]);
+    setCommentData([]);
     commentFetch();
     console.log(commentS);
     console.log(commentData);
