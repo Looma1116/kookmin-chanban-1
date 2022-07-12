@@ -24,17 +24,19 @@ const Community = () => {
   }, []);
 
   return (
-    <div>
-      <h1 className={styles.title}>시민 찬반</h1>
-      <div className={styles.topMenu}>
-        <CategoryIcon />
-        <Sort />
-        <SearchIcon />
+    <div className={styles.container}>
+      <div className={styles.agenda}>
+        <h1 className={styles.title}>시민 찬반</h1>
+        <div className={styles.topMenu}>
+          <CategoryIcon />
+          <Sort />
+          <SearchIcon />
+        </div>
+        {isClicked ? <Search /> : <div />}
+        {categoryIsClicked ? <Category /> : <div />}
+        <EditAgenda />
+        <FetchData />
       </div>
-      {isClicked ? <Search /> : <div />}
-      {categoryIsClicked ? <Category /> : <div />}
-      <EditAgenda />
-      <FetchData />
     </div>
   );
 };
