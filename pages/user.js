@@ -38,7 +38,7 @@ export default function User() {
   const [exp, setExp] = useState(0);
   const text = useRecoilValue(loginState);
   const auth = getAuth();
-  const [isClicked,setIsClicked] = useRecoilState(searchIsClicked);
+  const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
   useEffect(() => {
     setIsClicked(false);
     const authUnsubscribe = onAuthStateChanged(auth, (user) => {
