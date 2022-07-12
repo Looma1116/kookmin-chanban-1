@@ -17,7 +17,7 @@ const KakaoLogout = () => {
       // 중복 initialization 방지
       if (!kakao.isInitialized()) {
         // 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
-        kakao.init("18647889c10275cb15e3718a64e04b7f");
+        kakao.init(process.env.Kakao);
       }
     }
   }, []);
