@@ -4,7 +4,7 @@
 
 .main {
   min-height: 100vh;
-  padding: 4rem 0;
+  padding: 2rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -19,20 +19,30 @@
 .cardSection {
   width: 20rem;
 }
-.title{
+.title {
   text-align: center;
-  color: #00CD52;
+  color: #00cd52;
 }
-.topMenu{
-    display: flex;
-    margin: 0 auto;
-    justify-content: space-between;
-    padding-left: 3%;
-    padding-right: 3%;
+.topMenu {
+  display: flex;
+  margin: 0 auto;
+  justify-content: space-between;
+  padding-left: 3%;
+  padding-right: 3%;
 }
-.category{
-    text-align: left;
+.category {
+  text-align: left;
 }
-.search{
-    text-align: right;
+.search {
+  text-align: right;
+}
+.container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.agenda {
+  max-width: 410px;
+  margin-bottom: 3.5rem;
 }
