@@ -42,14 +42,16 @@ const Comment = () => {
   const [isVoted, setIsVoted] = useState(false);
 
   useEffect(() => {
+    commentFetch();
+  }, [submit]);
+  useEffect(()=>{
     if (logIn) {
       userFetch();
       console.log("유저정보임");
       console.log(user);
+      document.activeElement.blur();
     }
-    commentFetch();
-    document.activeElement.blur();
-  }, [logIn, submit]);
+  },[logIn])
 
   const clickHandler = () => {
     if (!logIn) {
