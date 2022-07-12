@@ -40,6 +40,7 @@ const Agenda = () => {
   }, []);
 
   useEffect(() => {
+    setCommunity("agenda");
     fetchData();
   }, [isFetched, clickCount]);
 
