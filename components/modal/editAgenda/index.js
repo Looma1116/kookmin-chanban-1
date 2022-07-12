@@ -96,6 +96,15 @@ const EditAgenda = () => {
     await addDoc(wroteAgendaCollection, agendaInfo);
     setEditModalIsOpen(false);
     router.push(`/userAgenda/${id}`);
+    await addDoc(
+      // 파이어베이스 아젠다부분에 댓글 추가
+      collection(db, "userAgenda", `${id}`, "vote"),
+      {
+        agreeUser: [],
+        disagreeUser: [],
+        alternative: [],
+      }
+    );
   };
 
   return (
