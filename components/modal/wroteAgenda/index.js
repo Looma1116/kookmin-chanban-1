@@ -4,6 +4,7 @@ import Card from "../../../ui/Card/Card";
 import Image from "next/image";
 import Images from "../../../public/wrote.png";
 import styles from "../joinedAgenda/JoinedAgenda.module.css";
+import { BiAddToQueue } from "react-icons/bi";
 import {
   collection,
   getFirestore,
@@ -37,7 +38,7 @@ const WroteAgenda = ({ user }) => {
   return (
     <div>
       <div className={styles.out} onClick={() => setShowModal(true)}>
-        <Image src={Images} />
+        <BiAddToQueue size="2.5rem" color="#FFC700" />
         <div className={styles.name}>제시한 찬반</div>
       </div>
       <Modal show={showModal}>
@@ -49,7 +50,7 @@ const WroteAgenda = ({ user }) => {
           닫기
         </button>
         <div className={styles.in}>
-          <Image src={Images} />
+          <BiAddToQueue size="2.5rem" color="#FFC700" />
           <div className={styles.title}>제시한 찬반</div>
         </div>
         <div className={styles.card}>
