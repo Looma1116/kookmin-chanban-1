@@ -41,9 +41,6 @@ const Comment = () => {
   const [submit, setSubmit] = useState(false);
   const [isVoted, setIsVoted] = useState(false);
 
-  useEffect(() => {
-    commentFetch();
-  }, [submit]);
   useEffect(()=>{
     if (logIn) {
       userFetch();
@@ -73,6 +70,7 @@ const Comment = () => {
       console.log("쿼리 출력!");
       console.log(comment);
       console.log(community);
+      console.log(user);
       await addDoc( // 파이어베이스 아젠다부분에 댓글 추가
         collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
         {
@@ -96,6 +94,7 @@ const Comment = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setSubmit((prev) => !prev);
+    commentFetch();
     // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
   };
 
