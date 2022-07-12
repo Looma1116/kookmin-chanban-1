@@ -19,7 +19,7 @@ const Title = () => {
       </span>
       <div className={styles.content}>
         <h2>{agenda[0]?.title}!</h2>
-        <h3>국민 여러분의 생각은? 지금 바로 참여하세요!</h3>
+        <h3>{agenda[0]?.subTitle}</h3>
       </div>
     </div>
   );
