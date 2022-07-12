@@ -108,7 +108,7 @@ const EditAgenda = () => {
   };
 
   return (
-    <>
+    <div className={styles.new}>
       <button
         onClick={
           auth.currentUser != null
@@ -204,7 +204,7 @@ const EditAgenda = () => {
           <div>로그인</div>
         </form>
       </Modal>
-    </>
+    </div>
   );
 };
 
