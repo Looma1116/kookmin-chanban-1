@@ -20,7 +20,7 @@ const EditAgenda = () => {
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
   const [warningModalIsOpen, setWarningModalIsOpen] = useState(false);
   const [image, setImage] = useState(null);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("정치");
   const [user, setUser] = useRecoilState(userState);
 
   const auth = getAuth();
