@@ -1,0 +1,38 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-evenly;
+  margin-top: 4rem;
+}
+.king {
+  color: tomato;
+  font-size: 5rem;
+  position: relative;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  margin: 1rem;
+}
+
+.shit {
+  margin-top: 4rem;
+  display: inline-block;
+  width: 10rem;
+  height: 10rem;
+  border: 10px solid black;
+  border-radius: 50%;
+  border-top-color: tomato;
+  animation: spin 1s ease-in-out infinite;
+  background-color: white;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .body {
+    flex: 1;
+  }
+}
