@@ -4,7 +4,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { useState } from "react";
 import styles from "./Category.module.css";
 
-const category = () => {
+const Category = () => {
   const [category, setCategory] = useRecoilState(categoryState);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -44,4 +44,4 @@ const category = () => {
   );
 };
 
-export default category;
+export default Category;

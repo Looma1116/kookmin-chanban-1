@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import { useState } from "react";
 import styles from "./commentSec.module.css";
 
-const commentSec = () => {
+const CommentSec = () => {
   const [agreeState, setAgreeState] = useRecoilState(commentState);
   const [agreeSelected, setAgreeSelected] = useState(false);
   const [alterSelected, setAlterSelected] = useState(false);
@@ -60,4 +60,4 @@ const commentSec = () => {
   );
 };
 
-export default commentSec;
+export default CommentSec;

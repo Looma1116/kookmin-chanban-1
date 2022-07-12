@@ -25,7 +25,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { getAuth } from "firebase/auth";
 import styles from "../bestComment/Bestcomments.module.css";
 
-const comment = ({isSubmit}) => {
+const CommentPart = ({isSubmit}) => {
   const router = useRouter();
   const auth = getAuth();
   const db = getFirestore();
@@ -103,4 +103,4 @@ const comment = ({isSubmit}) => {
   );
 };
 
-export default comment;
+export default CommentPart;
