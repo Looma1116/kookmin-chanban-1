@@ -72,7 +72,7 @@ const Agenda = () => {
         <div className={styles.agenda}>
           <Title />
           <Article />
-          <News />
+          {/* <News /> */}
           <BestComment />
           <Vote />
           <Comment />
