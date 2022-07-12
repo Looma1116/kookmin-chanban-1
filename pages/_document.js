@@ -4,7 +4,10 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+        <script
+          src="https://developers.kakao.com/sdk/js/kakao.js"
+          async
+        ></script>
       </Head>
       <body>
         <Main />
