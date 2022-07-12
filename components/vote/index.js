@@ -45,8 +45,13 @@ const UserVote = () => {
   useEffect(() => {
     if (login) {
       updateUser();
+      updateAgenda({
+        numAgree: agree ? agree.length : 0,
+        numAlternative: alternative ? alternative.length : 0,
+        numDisagree: disagree ? disagree.length : 0,
+      });
     }
-  }, [agree]);
+  }, [agree, alternative, disagree]);
 
   useEffect(() => {
     voteId();
@@ -108,6 +113,7 @@ const UserVote = () => {
   };
 
   const updateAgenda = async ({ numAgree, numAlternative, numDisagree }) => {
+    console.log(numAgree, numAlternative, numDisagree);
     await updateDoc(doc(db, community, router.query.id), {
       numAgree: numAgree,
       numAlternative: numAlternative,
@@ -133,8 +139,8 @@ const UserVote = () => {
 
   const agreeHandler = () => {
     setVote("agreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
-    setIvoted(true);
     if (login) {
+      setIvoted(true);
       agreeCount();
       updateVote();
       updateAgenda({
@@ -149,8 +155,8 @@ const UserVote = () => {
 
   const alterHandler = () => {
     setVote("alternativeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
-    setIvoted(true);
     if (login) {
+      setIvoted(true);
       alterCount();
       updateVote();
       updateAgenda({
@@ -165,8 +171,8 @@ const UserVote = () => {
 
   const disagreeHandler = () => {
     setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
-    setIvoted(true);
     if (login) {
+      setIvoted(true);
       disagreeCount();
       updateVote();
       updateAgenda({
