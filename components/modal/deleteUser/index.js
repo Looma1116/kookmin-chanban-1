@@ -14,7 +14,7 @@ import DisagreeBtn from "../../../ui/button/disagreeBtn";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { loginState } from "../../recoil/recoil";
-const index = ({ onClick }) => {
+const DeleteUser = ({ onClick }) => {
   const [login, setLogin] = useRecoilState(loginState);
   const [showModal, setShowModal] = useState(false);
   const handleClick = (e) => {
@@ -64,4 +64,4 @@ const index = ({ onClick }) => {
     </div>
   );
 };
-export default index;
+export default DeleteUser;
