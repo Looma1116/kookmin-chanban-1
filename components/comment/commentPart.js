@@ -77,9 +77,9 @@ const CommentPart = ({isSubmit}) => {
     <div className={styles.commentlist}>
       {commentData != "" ? (
         commentData.map((data) => {
-          return (
-            <div className={styles.card}>
-              <div key={data.id}>
+           return (
+            <div key={Math.random()} className={styles.card}>
+              <div>
                 {async () => {
                   click = false;
                 }}
