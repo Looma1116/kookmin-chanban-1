@@ -58,19 +58,23 @@ export const nickState = atom({
   key: "nick",
   default: "",
 });
-export const loadingState=atom({
+export const loadingState = atom({
   key: "load",
-  default:false,
-})
+  default: false,
+});
 export const likeClickState = atom({
   key: "likeClickState",
-  default : false,
-})
-export const categoryIsClickedState = atom({
-  key : "categoryIsClickedState",
   default: false,
-})
+});
+export const categoryIsClickedState = atom({
+  key: "categoryIsClickedState",
+  default: false,
+});
 export const communityState = atom({
-  key : "communityState",
+  key: "communityState",
   default: "agenda",
-})
+});
+export const hideState = atom({
+  key: "hideState",
+  default: false,
+});

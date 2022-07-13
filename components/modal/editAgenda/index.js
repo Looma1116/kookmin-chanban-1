@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
-import { loginState, userState } from "../../recoil/recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  clickCountState,
+  hideState,
+  loginState,
+  userState,
+} from "../../recoil/recoil";
 
 import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
 import {
@@ -22,10 +27,17 @@ const EditAgenda = () => {
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState("정치");
   const [user, setUser] = useRecoilState(userState);
-  const [hide, setHide] = useState(false);
+  const [hide, setHide] = useRecoilState(hideState);
+  const [clickCount, setClickCount] = useRecoilState(clickCountState);
+  const login = useRecoilValue(loginState);
 
   const auth = getAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    setHide(false);
+  }, [login]);
+
   const imageHandler = ({ target: { files } }) => {
     console.log(image);
 
@@ -108,23 +120,20 @@ const EditAgenda = () => {
     );
   };
 
+  const registerHandler = () => {
+    if (login) {
+      setEditModalIsOpen(true);
+      setHide(true);
+    } else {
+      setClickCount(true);
+      setHide(true);
+    }
+  };
+
   return (
     <div className={styles.new}>
       {hide ? null : (
-        <button
-          onClick={
-            auth.currentUser != null
-              ? () => {
-                  setEditModalIsOpen(true);
-                  setHide(true);
-                }
-              : () => {
-                  setWarningModalIsOpen(true);
-                  setHide(true);
-                }
-          }
-          className={styles.btn}
-        >
+        <button onClick={registerHandler} className={styles.btn}>
           새 글
         </button>
       )}
