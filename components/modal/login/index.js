@@ -1,17 +1,19 @@
 import Modal from "react-modal";
 import LogIn from "../../KAKAO/login";
 import { useState } from "react";
-import { clickCountState } from "../../recoil/recoil";
+import { clickCountState, hideState } from "../../recoil/recoil";
 import { useRecoilState } from "recoil";
 import styles from "./loginModal.module.css";
 
 const Login = () => {
   const [modalIsOpen, setModalIsOpen] = useState(true);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
+  const [hide, setHide] = useRecoilState(hideState);
 
   const outHandler = () => {
     setModalIsOpen(false);
     setClickCount(false);
+    setHide(false);
   };
 
   return (
