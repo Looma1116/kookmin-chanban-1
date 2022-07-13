@@ -22,6 +22,7 @@ const EditAgenda = () => {
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState("정치");
   const [user, setUser] = useRecoilState(userState);
+  const [hide, setHide] = useState(false);
 
   const auth = getAuth();
   const router = useRouter();
@@ -109,26 +110,37 @@ const EditAgenda = () => {
 
   return (
     <div className={styles.new}>
-      <button
-        onClick={
-          auth.currentUser != null
-            ? () => {
-                setEditModalIsOpen(true);
-              }
-            : () => {
-                setWarningModalIsOpen(true);
-              }
-        }
-        className={styles.btn}
-      >
-        새 글
-      </button>
+      {hide ? null : (
+        <button
+          onClick={
+            auth.currentUser != null
+              ? () => {
+                  setEditModalIsOpen(true);
+                  setHide(true);
+                }
+              : () => {
+                  setWarningModalIsOpen(true);
+                  setHide(true);
+                }
+          }
+          className={styles.btn}
+        >
+          새 글
+        </button>
+      )}
       <Modal
+        className={styles.modal}
         isOpen={editModalIsOpen}
-        onRequestClose={() => setEditModalIsOpen(false)}
+        onRequestClose={() => {
+          setEditModalIsOpen(false);
+          setHide(false);
+        }}
       >
         <button
-          onClick={() => setEditModalIsOpen(false)}
+          onClick={() => {
+            setEditModalIsOpen(false);
+            setHide(false);
+          }}
           className={styles.backBtn}
         >
           뒤로
@@ -155,7 +167,7 @@ const EditAgenda = () => {
           <textarea
             name="article"
             rows="10"
-            className={styles.input}
+            className={styles.textinput}
           ></textarea>
           <br />
           <br />
@@ -189,16 +201,26 @@ const EditAgenda = () => {
             </div>
           )}
           <br />
-          <button type="submit" className={styles.btn}>
+          <button type="submit" className={styles.btn_upload}>
             등록
           </button>
         </form>
       </Modal>
       <Modal
         isOpen={warningModalIsOpen}
-        onRequestClose={() => setWarningModalIsOpen(false)}
+        onRequestClose={() => {
+          setWarningModalIsOpen(false);
+          setHide(false);
+        }}
       >
-        <button onClick={() => setWarningModalIsOpen(false)}>닫기</button>
+        <button
+          onClick={() => {
+            setWarningModalIsOpen(false);
+            setHide(false);
+          }}
+        >
+          닫기
+        </button>
         <form onSubmit={onSubmitHandler}>
           <div>3초만에 시민찬반에 참여해보세요!</div>
           <div>로그인</div>
