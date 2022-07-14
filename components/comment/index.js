@@ -16,6 +16,7 @@ import {
   commentState,
   communityState,
   isVotedState,
+  isWrotedState,
   loginState,
   userState,
   voteState,
@@ -41,6 +42,7 @@ const Comment = () => {
   const community = useRecoilValue(communityState);
   const [submit, setSubmit] = useState(false);
   const isVoted = useRecoilValue(isVotedState);
+  const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
 
   useEffect(() => {
     if (logIn) {
@@ -103,8 +105,13 @@ const Comment = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    setSubmit((prev) => !prev);
-    commentSend();
+    alert("댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?");
+    if (isWroted) {
+      alert("댓글을 이미 1번 작성하셨습니다.");
+    } else {
+      setSubmit((prev) => !prev);
+      commentSend();
+    }
     // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
   };
 
@@ -132,6 +139,26 @@ const Comment = () => {
     console.log(a);
 
     setUser(a);
+
+    let commentQ = query(
+      doc(
+        db,
+        "user",
+        `${auth.currentUser.uid}`,
+        "wroteComment",
+        `${router.query.id}`
+      )
+    );
+    let co = [];
+    let commentSnapShot = await getDoc(commentQ);
+    console.log(commentQ);
+    console.log(commentSnapShot);
+    if (commentSnapShot.data() == null) {
+      console.log("작성된 댓글이 없음");
+    } else {
+      console.log(commentSnapShot.data());
+      setIsWroted(true);
+    }
   };
 
   return (
