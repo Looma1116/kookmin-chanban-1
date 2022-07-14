@@ -16,6 +16,7 @@ import {
   commentState,
   communityState,
   isVotedState,
+  isWrotedState,
   loadingState,
   voteState,
 } from "../../components/recoil/recoil";
@@ -42,12 +43,14 @@ const Agenda = () => {
   const [isVoted, setIsVoted] = useRecoilState(isVotedState);
   const [vote, setVote] = useRecoilState(voteState);
   const [comment,setComment] = useRecoilState(commentState);
+  const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
 
   useEffect(() => {
     setCommunity("agenda");
     setIsVoted(false);
     setComment("alternativeComment");
     setVote("alternativeComment");
+    setIsWroted(false);
   }, []);
 
   useEffect(() => {
