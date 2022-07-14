@@ -57,7 +57,7 @@ const Comment = () => {
     }
   };
 
-  const commentFetch = async () => {
+  const commentSend = async () => {
     if (logIn) {
       const q = setDoc(
         // 파이어베이스 user/wroteComment 추가
@@ -104,7 +104,7 @@ const Comment = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setSubmit((prev) => !prev);
-    commentFetch();
+    commentSend();
     // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
   };
 
