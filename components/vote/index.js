@@ -24,6 +24,7 @@ import {
   communityState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
+import Loading from "../modal/loading";
 
 const UserVote = () => {
   const auth = getAuth();
@@ -41,6 +42,7 @@ const UserVote = () => {
   const [ivoted, setIvoted] = useState(false);
   const [iam, setIam] = useState("");
   const community = useRecoilValue(communityState);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (login) {
@@ -50,6 +52,7 @@ const UserVote = () => {
         numAlternative: alternative ? alternative.length : 0,
         numDisagree: disagree ? disagree.length : 0,
       });
+      setLoading(false);
     }
   }, [agree, alternative, disagree]);
 
@@ -96,9 +99,13 @@ const UserVote = () => {
 
   const updateVote = async () => {
     let voteWhere = "";
-    if(vote=="agreeComment"){voteWhere = "agree"}
-    else if(vote=="disagreeComment"){voteWhere = "disagree"}
-    else{voteWhere = "alternative"}
+    if (vote == "agreeComment") {
+      voteWhere = "agree";
+    } else if (vote == "disagreeComment") {
+      voteWhere = "disagree";
+    } else {
+      voteWhere = "alternative";
+    }
     await setDoc(
       doc(
         db,
@@ -192,7 +199,7 @@ const UserVote = () => {
 
   return (
     <>
-      {votewhere == 0 ? (
+      {votewhere === 0 ? (
         <div>
           <h2 className={styles.title}>사람들은 어떻게 생각할까요?</h2>
           <div className={styles.vote}>
@@ -200,6 +207,10 @@ const UserVote = () => {
             <AlternativeBtn onClick={alterHandler} />
             <DisagreeBtn onClick={disagreeHandler} />
           </div>
+        </div>
+      ) : loading ? (
+        <div>
+          <h2 className={styles.title}>투표 결과를 불러오는 중입니다...</h2>
         </div>
       ) : (
         <div>
