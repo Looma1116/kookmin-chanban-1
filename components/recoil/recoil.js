@@ -83,3 +83,7 @@ export const isVotedState = atom({
   key: "isVotedState",
   default: false,
 })
+export const isWrotedState = atom({
+  key: "isWrotedState",
+  default: false,
+})
