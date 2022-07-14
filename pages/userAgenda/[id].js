@@ -13,7 +13,10 @@ import Article from "../../components/article";
 import {
   agendaState,
   clickCountState,
+  commentState,
   communityState,
+  isVotedState,
+  voteState,
 } from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
@@ -34,9 +37,15 @@ const Agenda = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const clickCount = useRecoilValue(clickCountState);
   const [community, setCommunity] = useRecoilState(communityState);
+  const [isVoted, setIsVoted] = useRecoilState(isVotedState);
+  const [vote, setVote] = useRecoilState(voteState);
+  const [comment, setComment] = useRecoilState(commentState);
 
   useEffect(() => {
     setCommunity("userAgenda");
+    setIsVoted(false);
+        setComment("alternativeComment");
+        setVote("alternativeComment");
     console.log(community);
   }, []);
 

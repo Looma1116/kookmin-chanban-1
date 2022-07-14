@@ -15,6 +15,7 @@ import {
   clickCountState,
   commentState,
   communityState,
+  isVotedState,
   loginState,
   userState,
   voteState,
@@ -39,16 +40,16 @@ const Comment = () => {
   const vote = useRecoilValue(voteState);
   const community = useRecoilValue(communityState);
   const [submit, setSubmit] = useState(false);
-  const [isVoted, setIsVoted] = useState(false);
+  const isVoted = useRecoilValue(isVotedState);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (logIn) {
       userFetch();
       console.log("유저정보임");
       console.log(user);
       document.activeElement.blur();
     }
-  },[logIn])
+  }, [logIn]);
 
   const clickHandler = () => {
     if (!logIn) {
@@ -58,9 +59,17 @@ const Comment = () => {
 
   const commentFetch = async () => {
     if (logIn) {
-      const q = setDoc( // 파이어베이스 user/wroteComment 추가
-        doc(db, "user", `${auth.currentUser.uid}`, "wroteComment", `${router.query.id}`),{
-          article:`${comment}`,
+      const q = setDoc(
+        // 파이어베이스 user/wroteComment 추가
+        doc(
+          db,
+          "user",
+          `${auth.currentUser.uid}`,
+          "wroteComment",
+          `${router.query.id}`
+        ),
+        {
+          article: `${comment}`,
           like: 0,
           story: `${router.query.id}`,
           wrote: new Date(),
@@ -71,7 +80,8 @@ const Comment = () => {
       console.log(comment);
       console.log(community);
       console.log(user);
-      await addDoc( // 파이어베이스 아젠다부분에 댓글 추가
+      await addDoc(
+        // 파이어베이스 아젠다부분에 댓글 추가
         collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
         {
           article: `${comment}`,
@@ -127,7 +137,8 @@ const Comment = () => {
   return (
     <div>
       <CommentSec />
-      <CommentPart isSubmit={submit}/>{/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
+      <CommentPart isSubmit={submit} />
+      {/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
       <div>
         <form onSubmit={submitHandler} className={styles.submit}>
           <input
@@ -135,7 +146,11 @@ const Comment = () => {
             className={styles.input}
             placeholder={
               logIn
-                ? `${auth.currentUser.displayName}님, 성숙한 사회를 만들어주셔서 고맙습니다!`
+                ? isVoted
+                  ? vote == commentSort
+                    ? `${auth.currentUser.displayName}님의 소중한 의견이 필요합니다!`
+                    : `${auth.currentUser.displayName}님은 다른 입장에 투표를 하였습니다!`
+                  : `${auth.currentUser.displayName}님, 먼저 투표를 진행해주세요!`
                 : "로그인을 해주세요."
             }
             onChange={onChangeHandler}
@@ -144,12 +159,12 @@ const Comment = () => {
             onFocus={clickHandler}
             disabled={
               logIn
-                ? vote == ""
-                  ? false
-                  : vote === commentSort
-                  ? false
-                  : true
-                : false
+                ? isVoted
+                  ? vote == commentSort
+                    ? false
+                    : true //투표상태랑 내가 작성하려는 comment부분이랑 다를 때
+                  : true // 투표를 안했을 때
+                : false //로그인을 안했을 때
             }
           />
           <button className={styles.button}>게시</button>
