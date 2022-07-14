@@ -14,6 +14,7 @@ import {
   agendaState,
   clickCountState,
   communityState,
+  loadingState,
 } from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
@@ -23,6 +24,7 @@ import Modal from "react-modal";
 import Comment from "../../components/comment";
 import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
+import Loading from "../../components/modal/loading";
 
 // HpwvymAsOmqwAPEuTrIs
 
@@ -67,18 +69,22 @@ const Agenda = () => {
     }
   };
   return (
-    <div className={styles.container}>
-      {isFetched ? (
-        <div className={styles.agenda}>
-          <Title />
-          <Article />
-          {/* <News /> */}
-          <BestComment />
-          <Vote />
-          <Comment />
-          {clickCount ? <LogInModal /> : null}
-        </div>
-      ) : null}
+    <div>
+      <div className={styles.container}>
+        {isFetched ? (
+          <div className={styles.agenda}>
+            <Title />
+            <Article />
+            {/* <News /> */}
+            <BestComment />
+            <Vote />
+            <Comment />
+            {clickCount ? <LogInModal /> : null}
+          </div>
+        ) : (
+          <Loading />
+        )}
+      </div>
     </div>
   );
 };
