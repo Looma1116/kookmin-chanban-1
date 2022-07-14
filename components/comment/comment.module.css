@@ -16,3 +16,6 @@
   font-family: "Noto Sans KR";
   background: #ffc700;
 }
+.input:disabled{
+  background: rgb(230, 229, 229);
+}
