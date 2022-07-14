@@ -1,5 +1,5 @@
-import { commentState } from "../recoil/recoil";
-import { useRecoilState } from "recoil";
+import { commentState, voteState } from "../recoil/recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useEffect, useState } from "react";
 import styles from "./commentSec.module.css";
 
@@ -8,13 +8,27 @@ const CommentSec = () => {
   const [agreeSelected, setAgreeSelected] = useState(false);
   const [alterSelected, setAlterSelected] = useState(false);
   const [disagreeSelected, setDisagreeSelected] = useState(false);
+  const vote = useRecoilValue(voteState);
 
-  useEffect(()=>{
-    setAgreeState("alternativeComment");
-    setAgreeSelected(false);
-    setAlterSelected(true);
-    setDisagreeSelected(false);
-  }, [])
+  useEffect(() => { //자신이 투표한 상태로 comment 부분 자동 선택
+    console.log(vote);
+    if (vote == "agreeComment") {
+      setAgreeState(`${vote}`);
+      setAgreeSelected(true);
+      setAlterSelected(false);
+      setDisagreeSelected(false);
+    } else if (vote == "disagreeComment") {
+      setAgreeState(`${vote}`);
+      setAgreeSelected(false);
+      setAlterSelected(false);
+      setDisagreeSelected(true);
+    } else {
+      setAgreeState("alternativeComment");
+      setAgreeSelected(false);
+      setAlterSelected(true);
+      setDisagreeSelected(false);
+    }
+  }, [vote]);
 
   const agreeClickHandler = (e) => {
     e.preventDefault();
