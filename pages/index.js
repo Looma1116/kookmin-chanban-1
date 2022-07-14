@@ -18,14 +18,14 @@ import AgendaCard from "../components/agendaCard";
 import styles from "../styles/Home.module.css";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { communityState, searchIsClicked } from "../components/recoil/recoil";
-import logo from "../public/logo@4x.png";
+import logo from "../public/국민찬반.svg";
 
 export default function Home() {
   const db = getFirestore();
   const [isLoaded, setIsLoaded] = useState(false);
   const [agendas, setAgendas] = useState([]);
   const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
-  const [community,setCommunity] = useRecoilState(communityState);
+  const [community, setCommunity] = useRecoilState(communityState);
 
   // 투표수 상위 10개 내림차순
   const agendaRef = query(collection(db, "agenda"));
