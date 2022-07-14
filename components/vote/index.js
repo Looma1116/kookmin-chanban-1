@@ -22,6 +22,7 @@ import {
   agendaState,
   clickCountState,
   communityState,
+  isVotedState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
 import Loading from "../modal/loading";
@@ -140,14 +141,17 @@ const UserVote = () => {
     if (agree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(1);
       setIsVoted(true);
+      setVote("agreeComment");
       setIam("찬성");
     } else if (alternative?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(2);
       setIsVoted(true);
+      setVote("alternativeComment");
       setIam("중립");
     } else if (disagree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(3);
       setIsVoted(true);
+      setVote("disagreeComment");
       setIam("반대");
     } else {
       console.log("투표 해주세요.");

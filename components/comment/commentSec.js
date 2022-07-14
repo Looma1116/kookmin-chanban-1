@@ -1,6 +1,6 @@
 import { commentState } from "../recoil/recoil";
 import { useRecoilState } from "recoil";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./commentSec.module.css";
 
 const CommentSec = () => {
@@ -8,6 +8,13 @@ const CommentSec = () => {
   const [agreeSelected, setAgreeSelected] = useState(false);
   const [alterSelected, setAlterSelected] = useState(false);
   const [disagreeSelected, setDisagreeSelected] = useState(false);
+
+  useEffect(()=>{
+    setAgreeState("alternativeComment");
+    setAgreeSelected(false);
+    setAlterSelected(true);
+    setDisagreeSelected(false);
+  }, [])
 
   const agreeClickHandler = (e) => {
     e.preventDefault();
