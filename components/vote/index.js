@@ -43,6 +43,7 @@ const UserVote = () => {
   const [iam, setIam] = useState("");
   const community = useRecoilValue(communityState);
   const [loading, setLoading] = useState(true);
+  const [isVoted, setIsVoted] = useRecoilState(isVotedState);
 
   useEffect(() => {
     if (login) {
@@ -122,6 +123,7 @@ const UserVote = () => {
         vote: `${voteWhere}`,
       }
     );
+    setIsVoted(true);
   };
 
   const updateAgenda = async ({ numAgree, numAlternative, numDisagree }) => {
@@ -137,12 +139,15 @@ const UserVote = () => {
   const updateUser = async () => {
     if (agree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(1);
+      setIsVoted(true);
       setIam("찬성");
     } else if (alternative?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(2);
+      setIsVoted(true);
       setIam("중립");
     } else if (disagree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(3);
+      setIsVoted(true);
       setIam("반대");
     } else {
       console.log("투표 해주세요.");

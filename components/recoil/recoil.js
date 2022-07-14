@@ -78,3 +78,8 @@ export const hideState = atom({
   key: "hideState",
   default: false,
 });
+
+export const isVotedState = atom({
+  key: "isVotedState",
+  default: false,
+})
