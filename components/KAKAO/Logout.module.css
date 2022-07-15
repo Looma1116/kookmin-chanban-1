@@ -1,7 +1,6 @@
 .image {
   text-align: center;
   margin-left: 50%;
-  transform: translateX(-50%);
 }
 .kakao {
   background-color: #fee500;
@@ -16,4 +15,5 @@
   justify-content: space-evenly;
   padding-left: 10px;
   padding-right: 10px;
+  transform: translateX(-50%);
 }
