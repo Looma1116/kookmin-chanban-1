@@ -4,6 +4,7 @@ import DisagreeBtn from "../../ui/button/disagreeBtn";
 import styles from "./Vote.module.css";
 import { getAuth } from "firebase/auth";
 import {
+  arrayRemove,
   arrayUnion,
   collection,
   doc,
@@ -206,8 +207,39 @@ const UserVote = () => {
     }
   };
 
+  const deleteVote = async () => {
+    if (votewhere === 1) {
+      const q = query(doc(db, community, router.query.id, "vote", id));
+      await updateDoc(q, {
+        agreeUser: arrayRemove(auth.currentUser.uid),
+      });
+    } else if (votewhere === 2) {
+      const q = query(doc(db, community, `${router.query.id}`, "vote", id));
+      await updateDoc(q, {
+        alternative: arrayRemove(`${auth.currentUser.uid}`),
+      });
+    } else if (votewhere === 3) {
+      const q = query(doc(db, community, `${router.query.id}`, "vote", id));
+      await updateDoc(q, {
+        disagreeUser: arrayRemove(`${auth.currentUser.uid}`),
+      });
+    }
+    setVotewhere(0);
+  };
+
+  const voteChangeHandler = () => {
+    deleteVote();
+    setIvoted(false);
+  };
+
+  console.log(agree);
+  console.log(alternative);
+  console.log(disagree);
+  console.log(votewhere);
+  console.log(ivoted);
+
   return (
-    <>
+    <div className={styles.voting}>
       {votewhere === 0 ? (
         <div>
           <h2 className={styles.title}>사람들은 어떻게 생각할까요?</h2>
@@ -229,9 +261,10 @@ const UserVote = () => {
             alternative={alternative ? alternative.length : 0}
             disagree={disagree ? disagree.length : 0}
           />
+          <button onClick={voteChangeHandler}>바꾸기</button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
