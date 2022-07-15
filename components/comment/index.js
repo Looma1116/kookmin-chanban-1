@@ -106,12 +106,10 @@ const Comment = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     alert("댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?");
-    if (isWroted) {
-      alert("댓글을 이미 1번 작성하셨습니다.");
-    } else {
-      setSubmit((prev) => !prev);
-      commentSend();
-    }
+
+    setSubmit((prev) => !prev);
+    commentSend();
+
     // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
   };
 
@@ -154,7 +152,7 @@ const Comment = () => {
     console.log(commentQ);
     console.log(commentSnapShot);
     if (commentSnapShot.data() == null) {
-      console.log("작성된 댓글이 없음");
+      console.log("내가 작성한 댓글이 없음");
     } else {
       console.log(commentSnapShot.data());
       setIsWroted(true);
@@ -173,7 +171,9 @@ const Comment = () => {
             className={styles.input}
             placeholder={
               logIn
-                ? isVoted
+                ? isWroted
+                  ? `${auth.currentUser.displayName}님은 이미 댓글을 1회 작성하셨습니다.`
+                  : isVoted
                   ? vote == commentSort
                     ? `${auth.currentUser.displayName}님의 소중한 의견이 필요합니다!`
                     : `${auth.currentUser.displayName}님은 다른 입장에 투표를 하였습니다!`
@@ -186,7 +186,9 @@ const Comment = () => {
             onFocus={clickHandler}
             disabled={
               logIn
-                ? isVoted
+                ? isWroted
+                  ? true
+                  : isVoted
                   ? vote == commentSort
                     ? false
                     : true //투표상태랑 내가 작성하려는 comment부분이랑 다를 때
