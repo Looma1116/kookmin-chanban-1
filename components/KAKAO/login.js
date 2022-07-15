@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
-import Images from "../../public/1.png";
+import kakao from "../../public/kakao_login_medium_narrow.png";
+import talk from "../../public/talk.png";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { clickCountState, loginState } from "../recoil/recoil";
@@ -83,7 +84,11 @@ const KakaoLogin = () => {
         <div className={styles.main}>
           <div className={styles.write}>1초만에 카카오 로그인 하기</div>
           <a id="custom-login-btn" onClick={loginWithKakao}>
-            <Image src={Images} />
+            <div className={styles.kakao}>
+              <Image src={talk} width="24" height="22" />
+              카카오 로그인
+            </div>
+            {/* <Image src={kakao} /> */}
           </a>
         </div>
       ) : (

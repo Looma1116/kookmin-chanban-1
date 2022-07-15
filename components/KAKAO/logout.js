@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-import Images from "../../public/1.png";
+import talk from "../../public/talk.png";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { loginState } from "../recoil/recoil";
@@ -36,7 +36,10 @@ const KakaoLogout = () => {
   };
   return (
     <span onClick={handleLogout} className={styles.image}>
-      <Image src={LogoutPng} />
+      <div className={styles.kakao}>
+        <Image src={talk} width="24" height="22" />
+        카카오 연결 해제
+      </div>
     </span>
   );
 };
