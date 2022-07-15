@@ -7,6 +7,7 @@ import {
   arrayRemove,
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   getFirestore,
@@ -227,16 +228,24 @@ const UserVote = () => {
     setVotewhere(0);
   };
 
-  const voteChangeHandler = () => {
-    deleteVote();
-    setIvoted(false);
+  const deleteComment = async () => {
+    await deleteDoc(
+      doc(db, "user", auth.currentUser.uid, "wroteComment", router.query.id)
+    );
   };
 
-  console.log(agree);
-  console.log(alternative);
-  console.log(disagree);
-  console.log(votewhere);
-  console.log(ivoted);
+  const deleteUserinfo = async () => {
+    await deleteDoc(
+      doc(db, "user", auth.currentUser.uid, "joinedAgenda", router.query.id)
+    );
+  };
+
+  const voteChangeHandler = () => {
+    deleteVote();
+    deleteComment();
+    deleteUserinfo();
+    setIvoted(false);
+  };
 
   return (
     <div className={styles.voting}>
@@ -254,7 +263,7 @@ const UserVote = () => {
           <h2 className={styles.title}>투표 결과를 불러오는 중입니다...</h2>
         </div>
       ) : (
-        <div>
+        <div className={styles.statistic}>
           <h2 className={styles.title}>{iam}을(를) 선택 하셨습니다!</h2>
           <Statistic
             agree={agree ? agree.length : 0}
