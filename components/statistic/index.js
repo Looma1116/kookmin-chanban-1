@@ -1,4 +1,6 @@
+import Change from "../vote/change";
 import styles from "./Statistic.module.css";
+
 const Statistic = (props) => {
   const radius = 40;
   const diameter = 2 * Math.PI * radius;
@@ -28,7 +30,7 @@ const Statistic = (props) => {
 
   return (
     <div className={styles.statistic}>
-      <svg viewBox="0 0 100 100">
+      <svg viewBox="0 0 100 100" width="150" height="150">
         <circle
           cx="50"
           cy="50"
@@ -65,10 +67,13 @@ const Statistic = (props) => {
       </svg>
       <div className={styles.detail}>
         찬성:
-        {Math.round((props.agree / total) * 100)}% ({props.agree}) 중립:
-        {Math.round((props.alternative / total) * 100)}% ({props.alternative})
+        {Math.round((props.agree / total) * 100)}% {props.agree}명<br /> 중립:
+        {Math.round((props.alternative / total) * 100)}% {props.alternative}명
+        <br />
         반대:
-        {Math.round((props.disagree / total) * 100)}% ({props.disagree})
+        {Math.round((props.disagree / total) * 100)}% {props.disagree}명
+        <br />
+        <Change onClick={props.onClick} />
       </div>
     </div>
   );
