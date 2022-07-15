@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRecoilState } from "recoil";
 import { loginState } from "../recoil/recoil";
 import { getAuth } from "firebase/auth";
-import LogoutPng from "../../public/logout.png";
 import styles from "./Logout.module.css";
 const KakaoLogout = () => {
   const auth = getAuth();
