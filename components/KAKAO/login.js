@@ -1,6 +1,5 @@
 import React from "react";
 import { useEffect } from "react";
-import kakao from "../../public/kakao_login_medium_narrow.png";
 import talk from "../../public/talk.png";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
