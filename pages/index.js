@@ -38,7 +38,6 @@ export async function getStaticProps() {
 
   let agendas = [];
 
-  console.log("45");
   agendaSnapshot.forEach(async (document) => {
     console.log(document.id);
     agendas.push({
@@ -48,9 +47,6 @@ export async function getStaticProps() {
   });
 
   const agendasData = JSON.stringify(agendas);
-  console.log("45");
-  console.log(agendasData);
-  console.log("45");
 
   return {
     props: {
@@ -77,9 +73,6 @@ export default function Home({ agendasData }) {
     setCommunity("agenda");
   }, []);
 
-  console.log("123");
-  console.log(agendasData);
-  console.log("123");
   let agendas = JSON.parse(agendasData);
   // const fetchData = async () => {
   //   const agendaSnapshot = await getDocs(q);
