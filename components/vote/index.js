@@ -9,7 +9,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   getFirestore,
   query,
@@ -77,6 +76,7 @@ const UserVote = () => {
     snapshot.docs.forEach((doc) => {
       data.push({ ...doc.data(), id: doc.id });
     });
+    console.log(data[0]);
     setId(data[0]?.id);
     setAgree(data[0]?.agreeUser);
     setAlternative(data[0]?.alternative);
@@ -143,17 +143,20 @@ const UserVote = () => {
   };
 
   const updateUser = async () => {
-    if (agree?.indexOf(auth.currentUser.uid) >= 0) {
+    if (votewhere == 1 || agree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(1);
       setIsVoted(true);
       setVote("agreeComment");
       setIam("찬성");
-    } else if (alternative?.indexOf(auth.currentUser.uid) >= 0) {
+    } else if (
+      votewhere == 2 ||
+      alternative?.indexOf(auth.currentUser.uid) >= 0
+    ) {
       setVotewhere(2);
       setIsVoted(true);
       setVote("alternativeComment");
       setIam("중립");
-    } else if (disagree?.indexOf(auth.currentUser.uid) >= 0) {
+    } else if (votewhere == 3 || disagree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(3);
       setIsVoted(true);
       setVote("disagreeComment");
@@ -166,6 +169,7 @@ const UserVote = () => {
   const agreeHandler = () => {
     setVote("agreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
+      setLoading(true);
       setIvoted(true);
       agreeCount();
       updateVote();
@@ -182,6 +186,7 @@ const UserVote = () => {
   const alterHandler = () => {
     setVote("alternativeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
+      setLoading(true);
       setIvoted(true);
       alterCount();
       updateVote();
@@ -198,6 +203,7 @@ const UserVote = () => {
   const disagreeHandler = () => {
     setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
+      setLoading(true);
       setIvoted(true);
       disagreeCount();
       updateVote();
@@ -236,7 +242,7 @@ const UserVote = () => {
       doc(db, "user", auth.currentUser.uid, "wroteComment", router.query.id)
     );
     if (iam === "찬성") {
-      const agreeCommentRef = await collection(
+      const agreeCommentRef = collection(
         db,
         community,
         router.query.id,
@@ -244,12 +250,10 @@ const UserVote = () => {
       );
       console.log(agreeCommentRef);
 
-      const q = await query(
+      const q = query(
         agreeCommentRef,
         where("author", "==", `${auth.currentUser.uid}`)
       );
-
-      console.log("heelo");
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (document) => {
