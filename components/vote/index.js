@@ -9,11 +9,13 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
   query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -25,9 +27,9 @@ import {
   clickCountState,
   communityState,
   isVotedState,
+  isWrotedState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
-import Loading from "../modal/loading";
 
 const UserVote = () => {
   const auth = getAuth();
@@ -47,6 +49,7 @@ const UserVote = () => {
   const community = useRecoilValue(communityState);
   const [loading, setLoading] = useState(true);
   const [isVoted, setIsVoted] = useRecoilState(isVotedState);
+  const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
 
   useEffect(() => {
     if (login) {
@@ -232,6 +235,37 @@ const UserVote = () => {
     await deleteDoc(
       doc(db, "user", auth.currentUser.uid, "wroteComment", router.query.id)
     );
+    if (iam === "찬성") {
+      const agreeCommentRef = await collection(
+        db,
+        community,
+        router.query.id,
+        "agreeComment"
+      );
+      console.log(agreeCommentRef);
+
+      const q = await query(
+        agreeCommentRef,
+        where("author", "==", `${auth.currentUser.uid}`)
+      );
+
+      console.log("heelo");
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (document) => {
+        // doc.data() is never undefined for query doc snapshots
+
+        const commentRef = doc(
+          db,
+          community,
+          router.query.id,
+          "agreeComment",
+          document.id
+        );
+        await updateDoc(commentRef, { hide: true });
+      });
+    }
+    setIsWroted(false);
   };
 
   const deleteUserinfo = async () => {
@@ -245,6 +279,7 @@ const UserVote = () => {
     deleteComment();
     deleteUserinfo();
     setIvoted(false);
+    setIsVoted(false);
   };
 
   return (
@@ -269,8 +304,8 @@ const UserVote = () => {
             agree={agree ? agree.length : 0}
             alternative={alternative ? alternative.length : 0}
             disagree={disagree ? disagree.length : 0}
+            onClick={voteChangeHandler}
           />
-          <button onClick={voteChangeHandler}>바꾸기</button>
         </div>
       )}
     </div>
