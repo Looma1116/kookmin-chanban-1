@@ -9,7 +9,7 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore";
-import { getApps, initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,15 +57,9 @@ export async function getStaticProps() {
 }
 
 export default function Home({ agendasData }) {
-  const db = getFirestore();
-  const [isLoaded, setIsLoaded] = useState(false);
-  // const [agendas, setAgendas] = useState([]);
+  // const db = getFirestore();
   const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
   const [community, setCommunity] = useRecoilState(communityState);
-
-  // 투표수 상위 10개 내림차순
-  const agendaRef = query(collection(db, "agenda"));
-  const q = query(agendaRef, orderBy("numVote", "desc"), limit(10));
 
   useEffect(() => {
     setIsClicked(false);
@@ -74,27 +68,6 @@ export default function Home({ agendasData }) {
   }, []);
 
   let agendas = JSON.parse(agendasData);
-  // const fetchData = async () => {
-  //   const agendaSnapshot = await getDocs(q);
-  //   console.log("agendaSnapshot done!");
-  //   const voteData = {};
-  //   agendaSnapshot.forEach(async (document) => {
-  //     //const voteRef = collection(db, "agenda", document.id, "vote");
-  //     console.log("voteRef done!");
-
-  //     setAgendas(
-  //       agendas.concat({
-  //         id: document.id,
-  //         ...document.data(),
-  //       })
-  //     );
-  //   });
-  //   if (!isLoaded) {
-  //     setIsLoaded(true);
-  //     console.log("datas are loaded!");
-  //   }
-  // };
-  // console.log(agendas);
 
   return (
     <div className={styles.container}>
@@ -125,40 +98,3 @@ export default function Home({ agendasData }) {
     </div>
   );
 }
-
-/*
-export async function getStaticProps() {
-  // 투표수 상위 10개 내림차순
-  const agendaRef = query(collection(db, "agenda"));
-  const q = query(agendaRef, orderBy("numVote", "desc"), limit(10));
-  const agendaSnapshot = await getDocs(q);
-  console.log("agendaSnapshot done!");
-
-  let voteData = {};
-  let agendas = [];
-
-  agendaSnapshot.forEach(async (document) => {
-    const voteRef = collection(db, "agenda", document.id, "vote");
-    console.log("voteRef done!");
-
-    const voteSnapshot = await getDocs(voteRef);
-    voteSnapshot.forEach((voteDoc) => {
-      voteData = voteDoc.data();
-    });
-    agendas.concat({
-      id: document.id,
-      ...document.data(),
-      numAgree: voteData.numAgree,
-      numAlternative: voteData.numAlternative,
-      numDisagree: voteData.numDisagree,
-    });
-    console.log(agendas);
-  });
-
-  return {
-    props: {
-      agendas,
-    },
-  };
-}
-*/
