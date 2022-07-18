@@ -16,8 +16,44 @@ import CategoryIcon from "../components/dropdown/categoryIcon";
 import { useEffect } from "react";
 import Modal from "react-modal";
 import LogInModal from "../components/modal/login";
+import {
+  getFirestore,
+  collection,
+  query,
+  doc,
+  where,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
 
-const Community = () => {
+export async function getStaticProps() {
+  let agenda = [];
+  const db = getFirestore();
+  const wroteAgendaRef = query(collection(db, "userAgenda"));
+
+  const testSnapshot = await getDocs(wroteAgendaRef);
+
+  testSnapshot.forEach((doc) => {
+    const timeStamp = new Date();
+    const diffDate = timeStamp.getTime() - doc.data().created.seconds * 1000;
+    const dateDays = parseInt(Math.abs(diffDate / (1000 * 3600 * 24))); // 차이 일수 계산
+
+    if (dateDays <= 7) {
+      agenda.push({ ...doc.data(), id: doc.id });
+    }
+  });
+
+  const agendasData = JSON.stringify(agenda);
+
+  return {
+    props: {
+      agendasData,
+    },
+    revalidate: 15,
+  };
+}
+
+const Community = ({ agendasData }) => {
   console.log("community");
   const [community, setCommunity] = useRecoilState(communityState);
   const isClicked = useRecoilValue(searchIsClicked);
@@ -25,7 +61,7 @@ const Community = () => {
   const clickCount = useRecoilValue(clickCountState);
 
   console.log(clickCount);
-
+  const fetchedData = JSON.parse(agendasData);
   useEffect(() => {
     setCommunity("userAgenda");
   }, []);
@@ -42,7 +78,7 @@ const Community = () => {
         {isClicked ? <Search /> : <div />}
         {categoryIsClicked ? <Category /> : <div />}
         <EditAgenda />
-        <FetchData />
+        <FetchData fetchedData={fetchedData} />
         {clickCount ? <LogInModal /> : null}
       </div>
     </div>
