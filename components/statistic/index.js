@@ -85,11 +85,7 @@ const Statistic = (props) => {
               />
             </svg>
             <span>{Math.round((props.agree / total) * 100)}%</span>
-            <span>
-              {" "}
-              {props.agree}
-              명<br />
-            </span>
+            <span>{props.agree}명</span>
           </div>
           <div className={styles.result}>
             <svg
@@ -110,7 +106,7 @@ const Statistic = (props) => {
               />
             </svg>
             <span>{Math.round((props.alternative / total) * 100)}%</span>
-            <span> {props.alternative}명</span>
+            <span>{props.alternative}명</span>
           </div>
           <div className={styles.result}>
             <svg
@@ -131,7 +127,7 @@ const Statistic = (props) => {
               />
             </svg>
             <span>{Math.round((props.disagree / total) * 100)}%</span>
-            <span> {props.disagree}명</span>
+            <span>{props.disagree}명</span>
           </div>
         </div>
         <div className={styles.button}>
