@@ -6,7 +6,6 @@ import {
   getDocs,
   getDoc,
   setDoc,
-  set,
   addDoc,
   where,
 } from "firebase/firestore";
@@ -61,14 +60,13 @@ const Comment = () => {
 
   const commentSend = async () => {
     if (logIn) {
-      const q = setDoc(
+      const q = addDoc(
         // 파이어베이스 user/wroteComment 추가
-        doc(
+        collection(
           db,
           "user",
           `${auth.currentUser.uid}`,
           "wroteComment",
-          `${router.query.id}`
         ),
         {
           article: `${comment}`,
@@ -139,23 +137,24 @@ const Comment = () => {
     setUser(a);
 
     let commentQ = query(
-      doc(
+      collection(
         db,
         "user",
         `${auth.currentUser.uid}`,
         "wroteComment",
-        `${router.query.id}`
-      )
+      ),where("story","==", `${router.query.id}`)
     );
-    let co = [];
-    let commentSnapShot = await getDoc(commentQ);
+    let commentSnapShot = await getDocs(commentQ);
     console.log(commentQ);
     console.log(commentSnapShot);
-    if (commentSnapShot.data() == null) {
+    if(commentSnapShot.docs.length==0){
       console.log("내가 작성한 댓글이 없음");
-    } else {
-      console.log(commentSnapShot.data());
-      setIsWroted(true);
+    }
+    else{
+      commentSnapShot.docs.forEach((doc) => {
+        console.log(doc.data());
+        setIsWroted(true);
+      });
     }
   };
 
