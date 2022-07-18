@@ -94,3 +94,11 @@
   outline: none;
   padding: 20px;
 }
+
+@media (min-width: 768px) {
+  .modal {
+    width: 700px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+} ;

@@ -7,8 +7,7 @@ const AgendaCard = ({ props }) => {
   const percentAlternative =
     (parseInt(props.numAlternative) / totalNumVote) * 100;
   const percentDisagree = (parseInt(props.numDisagree) / totalNumVote) * 100;
-  console.log(props);
-  console.log("아젠다카드 실행");
+
   return (
     <div
       style={{
