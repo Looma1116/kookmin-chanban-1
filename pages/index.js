@@ -20,10 +20,50 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { communityState, searchIsClicked } from "../components/recoil/recoil";
 import logo from "../public/국민찬반.svg";
 
-export default function Home() {
+export async function getStaticProps() {
+  initializeApp({
+    apiKey: process.env.apiKey,
+    authDomain: process.env.authDomain,
+    projectId: process.env.projectId,
+    storageBucket: process.env.storageBucket,
+    messagingSenderId: process.env.messagingSenderId,
+    appId: process.env.appId,
+    measurementId: process.env.measurementId,
+  });
+  const db = getFirestore();
+  // 투표수 상위 10개 내림차순
+  const agendaRef = query(collection(db, "agenda"));
+  const q = query(agendaRef, orderBy("numVote", "desc"), limit(10));
+  const agendaSnapshot = await getDocs(q);
+
+  let agendas = [];
+
+  console.log("45");
+  agendaSnapshot.forEach(async (document) => {
+    console.log(document.id);
+    agendas.push({
+      id: document.id,
+      ...document.data(),
+    });
+  });
+
+  const agendasData = JSON.stringify(agendas);
+  console.log("45");
+  console.log(agendasData);
+  console.log("45");
+
+  return {
+    props: {
+      agendasData,
+    },
+    revalidate: 15,
+  };
+}
+
+export default function Home({ agendasData }) {
   const db = getFirestore();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [agendas, setAgendas] = useState([]);
+  // const [agendas, setAgendas] = useState([]);
   const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
   const [community, setCommunity] = useRecoilState(communityState);
 
@@ -33,31 +73,35 @@ export default function Home() {
 
   useEffect(() => {
     setIsClicked(false);
-    fetchData();
+    // fetchData();
     setCommunity("agenda");
   }, []);
 
-  const fetchData = async () => {
-    const agendaSnapshot = await getDocs(q);
-    console.log("agendaSnapshot done!");
-    const voteData = {};
-    agendaSnapshot.forEach(async (document) => {
-      //const voteRef = collection(db, "agenda", document.id, "vote");
-      console.log("voteRef done!");
+  console.log("123");
+  console.log(agendasData);
+  console.log("123");
+  let agendas = JSON.parse(agendasData);
+  // const fetchData = async () => {
+  //   const agendaSnapshot = await getDocs(q);
+  //   console.log("agendaSnapshot done!");
+  //   const voteData = {};
+  //   agendaSnapshot.forEach(async (document) => {
+  //     //const voteRef = collection(db, "agenda", document.id, "vote");
+  //     console.log("voteRef done!");
 
-      setAgendas(
-        agendas.concat({
-          id: document.id,
-          ...document.data(),
-        })
-      );
-    });
-    if (!isLoaded) {
-      setIsLoaded(true);
-      console.log("datas are loaded!");
-    }
-  };
-  console.log(agendas);
+  //     setAgendas(
+  //       agendas.concat({
+  //         id: document.id,
+  //         ...document.data(),
+  //       })
+  //     );
+  //   });
+  //   if (!isLoaded) {
+  //     setIsLoaded(true);
+  //     console.log("datas are loaded!");
+  //   }
+  // };
+  // console.log(agendas);
 
   return (
     <div className={styles.container}>
@@ -72,7 +116,7 @@ export default function Home() {
           <Image src={logo} alt="국민찬반" height={75} width={270} />
         </span>
         <div className={styles.cardSection}>
-          {agendas.map((data) => {
+          {agendas?.map((data) => {
             return (
               <div key={data.id}>
                 <Link href={`/agenda/${data.id}`}>
