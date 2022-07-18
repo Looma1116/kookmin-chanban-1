@@ -1,4 +1,3 @@
-import Change from "../vote/change";
 import styles from "./Statistic.module.css";
 
 const Statistic = (props) => {
@@ -66,14 +65,80 @@ const Statistic = (props) => {
         />
       </svg>
       <div className={styles.detail}>
-        찬성:
-        {Math.round((props.agree / total) * 100)}% {props.agree}명<br /> 중립:
-        {Math.round((props.alternative / total) * 100)}% {props.alternative}명
-        <br />
-        반대:
-        {Math.round((props.disagree / total) * 100)}% {props.disagree}명
-        <br />
-        <Change onClick={props.onClick} />
+        <div>
+          <div className={styles.result}>
+            <svg
+              width="32"
+              height="7"
+              viewBox="0 0 32 7"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line
+                x1="3"
+                y1="3.80768"
+                x2="28.8774"
+                y2="3.80768"
+                stroke="#2373EB"
+                strokeWidth="6"
+                strokeLinecap="round"
+              />
+            </svg>
+            <span>{Math.round((props.agree / total) * 100)}%</span>
+            <span>
+              {" "}
+              {props.agree}
+              명<br />
+            </span>
+          </div>
+          <div className={styles.result}>
+            <svg
+              width="32"
+              height="7"
+              viewBox="0 0 32 7"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line
+                x1="3"
+                y1="3.26923"
+                x2="28.8774"
+                y2="3.26923"
+                stroke="#FFC700"
+                strokeWidth="6"
+                strokeLinecap="round"
+              />
+            </svg>
+            <span>{Math.round((props.alternative / total) * 100)}%</span>
+            <span> {props.alternative}명</span>
+          </div>
+          <div className={styles.result}>
+            <svg
+              width="32"
+              height="7"
+              viewBox="0 0 32 7"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line
+                x1="3"
+                y1="3.03845"
+                x2="28.8774"
+                y2="3.03845"
+                stroke="#FF0000"
+                strokeWidth="6"
+                strokeLinecap="round"
+              />
+            </svg>
+            <span>{Math.round((props.disagree / total) * 100)}%</span>
+            <span> {props.disagree}명</span>
+          </div>
+        </div>
+        <div className={styles.button}>
+          <button className={styles.change} onClick={props.onClick}>
+            바꾸기
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -5,5 +5,30 @@
 }
 
 .detail {
+  width: 90%;
   font-weight: bold;
+  display: grid;
+  grid-template-rows: 4fr 1fr;
+}
+
+.result {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  place-items: center;
+}
+
+.button {
+  text-align: right;
+  margin-right: 10%;
+}
+
+.change {
+  font-weight: bold;
+  border: none;
+  background: none;
+  color: gray;
+}
+
+.change:hover {
+  cursor: pointer;
 }
