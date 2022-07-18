@@ -16,8 +16,7 @@
 } */
 
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-  .info,
-  .graph {
+  .info {
     -webkit-backdrop-filter: contrast(90%);
     backdrop-filter: contrast(90%);
     background-color: rgba(0, 0, 0, 0.5);
@@ -28,7 +27,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
+  height: 100%;
 }
 
 .info * {
@@ -42,17 +41,17 @@
   font-size: 1.15rem;
 }
 .graph {
-  height: 100%;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
+  height: 0.3rem;
 }
 .graph * {
+  height: 100%;
   position: relative;
-  bottom: 0px;
+  top: 0px;
   margin: 0px;
   padding: 0px;
-  height: 0.3rem;
 }
 
 .agree {
