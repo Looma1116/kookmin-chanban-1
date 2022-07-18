@@ -1,17 +1,6 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDoc,
-  getFirestore,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, getFirestore, updateDoc } from "firebase/firestore";
 import Loading from "../components/modal/loading/index";
 import { useEffect, useState, useRef } from "react";
 import {
@@ -22,11 +11,11 @@ import {
 } from "../components/recoil/recoil";
 import KakaoLogin from "../components/KAKAO/login";
 import JoinedAgenda from "../components/modal/joinedAgenda";
-import axios from "axios";
 import WroteAgenda from "../components/modal/wroteAgenda";
 import WroteComment from "../components/modal/wroteComment";
 import UserInfo from "../components/modal/userInfo";
 import styles from "../styles/User.module.css";
+
 export default function User() {
   const [change, setChange] = useRecoilState(changeState);
   const [loading, setLoading] = useRecoilState(loadingState);
@@ -39,6 +28,7 @@ export default function User() {
   const text = useRecoilValue(loginState);
   const auth = getAuth();
   const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
+
   useEffect(() => {
     setIsClicked(false);
     const authUnsubscribe = onAuthStateChanged(auth, (user) => {
@@ -67,15 +57,15 @@ export default function User() {
           }
           setLogin(true);
           setLoading(false);
-        }, 2000);
+        }, 100);
       }
     });
   }, [change]);
   console.log(change);
-  // const handleLogout = async () => {
-  //   const del = await auth.signOut();
-  //   setLogin(false);
-  // };
+  const handleLogout = async () => {
+    const del = await auth.signOut();
+    setLogin(false);
+  };
   console.log(nickname);
   if (loading) return <Loading />;
   if (!login) return <KakaoLogin />;

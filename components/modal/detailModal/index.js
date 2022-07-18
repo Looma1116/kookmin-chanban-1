@@ -77,7 +77,9 @@ const Detail = ({ nick, age, gender, token, level, exp, secondTry }) => {
     }
     setClickCount(false);
     setLogin(true);
-    setChange(!change);
+    if (secondTry) {
+      setChange(!change);
+    }
     setShowModal(false);
   };
   console.log(name);
