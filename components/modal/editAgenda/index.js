@@ -152,7 +152,7 @@ const EditAgenda = () => {
           }}
           className={styles.backBtn}
         >
-          뒤로
+          닫기
         </button>
         <form onSubmit={onSubmitHandler}>
           <select
