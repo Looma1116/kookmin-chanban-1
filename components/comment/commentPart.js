@@ -24,6 +24,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getAuth } from "firebase/auth";
 import styles from "../bestComment/Bestcomments.module.css";
+import LikePart from "./likePart";
 
 const CommentPart = ({isSubmit}) => {
   const router = useRouter();
@@ -78,19 +79,20 @@ const CommentPart = ({isSubmit}) => {
       {commentData != "" ? (
         commentData.map((data) => {
            return (
-            <div key={Math.random()} className={styles.card}>
-              <div>
-                {async () => {
-                  click = false;
-                }}
-                <header className={styles.header}>
-                  <Author level={data.authorLevel} />
-                  <div className={styles.name}>&nbsp;{data.authorName}</div>
-                </header>
-                <div className={styles.textArea}>{data.article}</div>
-              </div>
-            </div>
-          );
+             <div key={Math.random()} className={styles.card}>
+               <div>
+                 {async () => {
+                   click = false;
+                 }}
+                 <header className={styles.header}>
+                   <Author level={data.authorLevel} />
+                   <div className={styles.name}>&nbsp;{data.authorName}</div>
+                   {/* <LikePart like={data.like} likeClick={likeClick}/> */}
+                 </header>
+                 <div className={styles.textArea}>{data.article}</div>
+               </div>
+             </div>
+           );
         })
       ) : (
         <div className={styles.card}>
