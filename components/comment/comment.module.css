@@ -2,20 +2,91 @@
   display: grid;
   grid-template-columns: 4fr 1fr;
   height: 50px;
-  border: 1px solid #ffc700;
 }
 
-.input {
-  border: 1px solid #ffc700;
+.agreein {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #2373eb;
+  border-radius: 1px;
 }
 
-.button {
+.alterin {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #ffc700;
+  border-radius: 1px;
+}
+
+.disagreein {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #ff0000;
+  border-radius: 1px;
+}
+
+.agree {
   border: none;
   color: #ffffff;
   font-weight: bold;
-  font-family: "Noto Sans KR";
+  background: #2373eb;
+}
+
+.alter {
+  border: none;
+  color: #ffffff;
+  font-weight: bold;
   background: #ffc700;
 }
-.input:disabled{
-  background: rgb(230, 229, 229);
+
+.disagree {
+  border: none;
+  color: #ffffff;
+  font-weight: bold;
+  background: #ff0000;
+}
+
+.agreein:disabled {
+  width: 100%;
+  height: 100%;
+  border: 2px solid gray;
+  border-radius: 1px;
+}
+
+.agree:disabled {
+  border: none;
+  color: #ffffff;
+  font-weight: bold;
+  background: gray;
+  cursor: not-allowed;
+}
+
+.alterin:disabled {
+  width: 100%;
+  height: 100%;
+  border: 2px solid gray;
+  border-radius: 1px;
+}
+
+.alter:disabled {
+  border: none;
+  color: #ffffff;
+  font-weight: bold;
+  background: gray;
+  cursor: not-allowed;
+}
+
+.disagreein:disabled {
+  width: 100%;
+  height: 100%;
+  border: 2px solid gray;
+  border-radius: 1px;
+}
+
+.disagree:disabled {
+  border: none;
+  color: #ffffff;
+  font-weight: bold;
+  background: gray;
+  cursor: not-allowed;
 }
