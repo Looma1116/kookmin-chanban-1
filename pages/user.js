@@ -5,8 +5,10 @@ import Loading from "../components/modal/loading/index";
 import { useEffect, useState, useRef } from "react";
 import {
   changeState,
+  levelState,
   loadingState,
   loginState,
+  nickState,
   searchIsClicked,
 } from "../components/recoil/recoil";
 import KakaoLogin from "../components/KAKAO/login";
@@ -20,8 +22,8 @@ export default function User() {
   const [change, setChange] = useRecoilState(changeState);
   const [loading, setLoading] = useRecoilState(loadingState);
   const [login, setLogin] = useRecoilState(loginState);
-  const [nickname, setNickname] = useState("");
-  const [level, setLevel] = useState(0);
+  const [nickname, setNickname] = useRecoilState(nickState);
+  const [level, setLevel] = useRecoilState(levelState);
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [exp, setExp] = useState(0);
@@ -33,11 +35,9 @@ export default function User() {
     setIsClicked(false);
     const authUnsubscribe = onAuthStateChanged(auth, (user) => {
       if (user === null) {
-        setLogin(false);
-        setLoading(false);
       } else {
         console.log(user);
-        setLoading(true);
+
         setTimeout(async () => {
           const db = getFirestore();
           const d = await getDoc(doc(db, "user", user.uid));
@@ -46,7 +46,7 @@ export default function User() {
           setAge(d.data().age);
           setGender(d.data().gender);
           setExp(d.data().exp);
-          console.log(nickname);
+
           if (exp >= 100) {
             setLevel(level + 1);
             setExp(exp - 100);
@@ -56,16 +56,12 @@ export default function User() {
             });
           }
           setLogin(true);
-          setLoading(false);
-        }, 100);
+        }, 1000);
       }
     });
   }, [change]);
+  console.log(login);
   console.log(change);
-  const handleLogout = async () => {
-    const del = await auth.signOut();
-    setLogin(false);
-  };
   console.log(nickname);
   if (loading) return <Loading />;
   if (!login) return <KakaoLogin />;

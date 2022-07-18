@@ -3,6 +3,14 @@ export const loginState = atom({
   key: "loginState",
   default: false,
 });
+export const levelState = atom({
+  key: "levelState",
+  default: 1,
+});
+export const nickState = atom({
+  key: "nickState",
+  default: "",
+});
 export const categoryState = atom({
   key: "categoryState",
   default: "전체",
@@ -54,10 +62,6 @@ export const changeState = atom({
   key: "change",
   default: false,
 });
-export const nickState = atom({
-  key: "nick",
-  default: "",
-});
 export const loadingState = atom({
   key: "load",
   default: false,
@@ -82,8 +86,8 @@ export const hideState = atom({
 export const isVotedState = atom({
   key: "isVotedState",
   default: false,
-})
+});
 export const isWrotedState = atom({
   key: "isWrotedState",
   default: false,
-})
+});
