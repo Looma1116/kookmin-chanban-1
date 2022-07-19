@@ -35,15 +35,16 @@ import Loading from "../../components/modal/loading";
 const Agenda = () => {
   const router = useRouter();
   const db = getFirestore();
-  const [agenda, setAgenda] = useRecoilState(agendaState);
+
   const [isFetched, setIsFetched] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
   const clickCount = useRecoilValue(clickCountState);
   const [community, setCommunity] = useRecoilState(communityState);
   const [isVoted, setIsVoted] = useRecoilState(isVotedState);
   const [vote, setVote] = useRecoilState(voteState);
-  const [comment,setComment] = useRecoilState(commentState);
+  const [comment, setComment] = useRecoilState(commentState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
+
+  const [agenda, setAgenda] = useState(null);
 
   useEffect(() => {
     setCommunity("agenda");
@@ -51,18 +52,20 @@ const Agenda = () => {
     setComment("alternativeComment");
     setVote("alternativeComment");
     setIsWroted(false);
+    checkIn();
   }, []);
 
   useEffect(() => {
-    setCommunity("agenda");
     fetchData();
   }, [isFetched, clickCount]);
 
-  const openModal = () => {
-    setModalOpen(true);
-  };
-  const closeModal = () => {
-    setModalOpen(false);
+  const checkIn = () => {
+    if (router.query.agenda === undefined) {
+      fetchData();
+    } else {
+      setAgenda(JSON.parse(router.query.agenda));
+      console.log(agenda);
+    }
   };
 
   const fetchData = async () => {
@@ -75,27 +78,33 @@ const Agenda = () => {
     snapshot.docs.forEach((doc) => {
       data.push({ ...doc.data(), id: doc.id });
     });
-    setAgenda(data);
-    if (!isFetched) {
-      setIsFetched(true);
-    }
+    console.log(data);
+    setAgenda(data[0]);
+    setIsFetched(true);
   };
+
   return (
-    <div>
-      <div className={styles.container}>
-        {isFetched ? (
-          <div className={styles.agenda}>
-            <Title />
-            <Article />
+    <div className={styles.container}>
+      <div className={styles.agenda}>
+        {agenda ? (
+          <div>
+            <Title
+              title={agenda.title}
+              subTitle={agenda.subTitle}
+              imageUrl={agenda.imageUrl}
+            />
+            <Article article={agenda.article} />
             {/* <News /> */}
             <BestComment />
-            <Vote />
-            <Comment />
+            <Vote
+              id={agenda.id}
+              title={agenda.title}
+              category={agenda.category}
+            />
+            {/*<Comment />*/}
             {clickCount ? <LogInModal /> : null}
           </div>
-        ) : (
-          <Loading />
-        )}
+        ) : null}
       </div>
     </div>
   );

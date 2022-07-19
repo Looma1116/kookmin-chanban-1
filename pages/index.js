@@ -85,7 +85,13 @@ export default function Home({ agendasData }) {
           {agendas?.map((data) => {
             return (
               <div key={data.id}>
-                <Link href={`/agenda/${data.id}`}>
+                <Link
+                  href={{
+                    pathname: `/agenda/${data.id}`,
+                    query: { agenda: JSON.stringify(data) },
+                  }}
+                  as={`/agenda/${data.id}`}
+                >
                   <a>
                     <AgendaCard props={data} />
                   </a>

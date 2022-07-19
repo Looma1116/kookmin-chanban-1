@@ -2,13 +2,15 @@ import { useRecoilValue } from "recoil";
 import { agendaState } from "../recoil/recoil";
 import Router from "next/router";
 import styles from "./Title.module.css";
+import { useEffect, useState } from "react";
 
-const Title = () => {
+const Title = ({ title, subTitle, imageUrl }) => {
   const agenda = useRecoilValue(agendaState);
+
   return (
     <div
       style={{
-        backgroundImage: `url(${agenda[0]?.imageUrl})`,
+        backgroundImage: `url(${imageUrl})`,
         backgroundSize: "cover",
         backgroundPositionY: "50%",
       }}
@@ -18,8 +20,8 @@ const Title = () => {
         뒤로
       </span>
       <div className={styles.content}>
-        <h2>{agenda[0]?.title}!</h2>
-        <h3>{agenda[0]?.subTitle}</h3>
+        <h2>{title}</h2>
+        <h3>{subTitle}</h3>
       </div>
     </div>
   );
