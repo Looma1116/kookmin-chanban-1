@@ -24,6 +24,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getAuth } from "firebase/auth";
 import styles from "../bestComment/Bestcomments.module.css";
+import LikePart from "./likePart";
 
 const CommentPart = ({ isSubmit }) => {
   const router = useRouter();
@@ -55,6 +56,7 @@ const CommentPart = ({ isSubmit }) => {
     a = [];
 
     snapShot.docs.forEach((doc) => {
+      console.log(doc.id);
       a.push({ id: doc.id, ...doc.data() });
     });
 
@@ -86,7 +88,7 @@ const CommentPart = ({ isSubmit }) => {
                 <header className={styles.header}>
                   <Author level={data.authorLevel} />
                   <div className={styles.name}>&nbsp;{data.authorName}</div>
-                  {/* <LikePart like={data.like} likeClick={likeClick}/> */}
+                  <LikePart commentData={data}/>
                 </header>
                 <div className={styles.textArea}>{data.article}</div>
               </div>

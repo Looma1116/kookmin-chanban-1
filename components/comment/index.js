@@ -158,6 +158,7 @@ const Comment = () => {
         <form onSubmit={submitHandler} className={styles.submit}>
           <div className={styles.input}>
             <input
+              required
               type="text"
               className={
                 commentSort == "agreeComment"
