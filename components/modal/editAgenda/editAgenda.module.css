@@ -62,11 +62,12 @@
 
 .category {
   border: 0;
-  font-weight: bolder;
+  font-weight: bold;
   font-size: 1.2rem;
   transform: translateX(-50%);
   margin-left: 50%;
   cursor: pointer;
+  margin-bottom: 0.5rem;
 }
 .category:focus {
   outline: none;
@@ -93,3 +94,11 @@
   outline: none;
   padding: 20px;
 }
+
+@media (min-width: 768px) {
+  .modal {
+    width: 700px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+} ;
