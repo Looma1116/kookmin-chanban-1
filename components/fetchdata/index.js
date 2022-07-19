@@ -76,7 +76,12 @@ const FetchData = ({ fetchedData }) => {
           {agenda?.map((data) => {
             return (
               <div key={data.id}>
-                <Link href={`/userAgenda/${data.id}`}>
+                <Link
+                  href={{
+                    pathname: `/userAgenda/${data.id}`,
+                    query: { agenda: JSON.stringify(data) },
+                  }}
+                >
                   <a>
                     <AgendaCard props={data} />
                   </a>
