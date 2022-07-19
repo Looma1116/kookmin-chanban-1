@@ -1,53 +1,44 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDoc,
-  getFirestore,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, getFirestore, updateDoc } from "firebase/firestore";
 import Loading from "../components/modal/loading/index";
 import { useEffect, useState, useRef } from "react";
 import {
   changeState,
+  levelState,
   loadingState,
   loginState,
+  nickState,
   searchIsClicked,
 } from "../components/recoil/recoil";
 import KakaoLogin from "../components/KAKAO/login";
 import JoinedAgenda from "../components/modal/joinedAgenda";
-import axios from "axios";
 import WroteAgenda from "../components/modal/wroteAgenda";
 import WroteComment from "../components/modal/wroteComment";
 import UserInfo from "../components/modal/userInfo";
 import styles from "../styles/User.module.css";
+
 export default function User() {
   const [change, setChange] = useRecoilState(changeState);
   const [loading, setLoading] = useRecoilState(loadingState);
   const [login, setLogin] = useRecoilState(loginState);
-  const [nickname, setNickname] = useState("");
-  const [level, setLevel] = useState(0);
+  const [nickname, setNickname] = useRecoilState(nickState);
+  const [level, setLevel] = useRecoilState(levelState);
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
+  const [deleted, setDeleted] = useState(false);
   const [exp, setExp] = useState(0);
   const text = useRecoilValue(loginState);
   const auth = getAuth();
   const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
+
   useEffect(() => {
     setIsClicked(false);
     const authUnsubscribe = onAuthStateChanged(auth, (user) => {
       if (user === null) {
-        setLogin(false);
-        setLoading(false);
       } else {
         console.log(user);
-        setLoading(true);
+
         setTimeout(async () => {
           const db = getFirestore();
           const d = await getDoc(doc(db, "user", user.uid));
@@ -56,7 +47,7 @@ export default function User() {
           setAge(d.data().age);
           setGender(d.data().gender);
           setExp(d.data().exp);
-          console.log(nickname);
+          setDeleted(d.data().deleted);
           if (exp >= 100) {
             setLevel(level + 1);
             setExp(exp - 100);
@@ -65,20 +56,18 @@ export default function User() {
               exp: exp,
             });
           }
-          setLogin(true);
           setLoading(false);
+          setLogin(true);
         }, 2000);
       }
     });
   }, [change]);
+  console.log(login);
   console.log(change);
-  // const handleLogout = async () => {
-  //   const del = await auth.signOut();
-  //   setLogin(false);
-  // };
   console.log(nickname);
   if (loading) return <Loading />;
   if (!login) return <KakaoLogin />;
+  // if (deleted) return </>
   return (
     <div className={styles.main}>
       <h1 className={styles.title}>{`${nickname}님`}</h1>

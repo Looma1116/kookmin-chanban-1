@@ -6,7 +6,6 @@ import {
   getDocs,
   getDoc,
   setDoc,
-  set,
   addDoc,
   where,
 } from "firebase/firestore";
@@ -61,15 +60,9 @@ const Comment = () => {
 
   const commentSend = async () => {
     if (logIn) {
-      const q = setDoc(
+      const q = addDoc(
         // 파이어베이스 user/wroteComment 추가
-        doc(
-          db,
-          "user",
-          `${auth.currentUser.uid}`,
-          "wroteComment",
-          `${router.query.id}`
-        ),
+        collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
         {
           article: `${comment}`,
           like: 0,
@@ -93,7 +86,6 @@ const Comment = () => {
           hide: false,
           like: 0, // 나중에 반응형으로 교체해야함
           wrote: new Date(),
-          id: auth.currentUser.uid,
         }
       );
       console.log(comment);
@@ -139,25 +131,23 @@ const Comment = () => {
     setUser(a);
 
     let commentQ = query(
-      doc(
-        db,
-        "user",
-        `${auth.currentUser.uid}`,
-        "wroteComment",
-        `${router.query.id}`
-      )
+      collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
+      where("story", "==", `${router.query.id}`)
     );
-    let co = [];
-    let commentSnapShot = await getDoc(commentQ);
+    let commentSnapShot = await getDocs(commentQ);
     console.log(commentQ);
     console.log(commentSnapShot);
-    if (commentSnapShot.data() == null) {
+    if (commentSnapShot.docs.length == 0) {
       console.log("내가 작성한 댓글이 없음");
     } else {
-      console.log(commentSnapShot.data());
-      setIsWroted(true);
+      commentSnapShot.docs.forEach((doc) => {
+        console.log(doc.data());
+        setIsWroted(true);
+      });
     }
   };
+
+  console.log(commentSort); // 어디를 선택하였는가
 
   return (
     <div>
@@ -166,24 +156,53 @@ const Comment = () => {
       {/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
       <div>
         <form onSubmit={submitHandler} className={styles.submit}>
-          <input
-            type="text"
-            className={styles.input}
-            placeholder={
-              logIn
-                ? isWroted
-                  ? `${auth.currentUser.displayName}님은 이미 댓글을 1회 작성하셨습니다.`
-                  : isVoted
-                  ? vote == commentSort
-                    ? `${auth.currentUser.displayName}님의 소중한 의견이 필요합니다!`
-                    : `${auth.currentUser.displayName}님은 다른 입장에 투표를 하였습니다!`
-                  : `${auth.currentUser.displayName}님, 먼저 투표를 진행해주세요!`
-                : "로그인을 해주세요."
+          <div className={styles.input}>
+            <input
+              required
+              type="text"
+              className={
+                commentSort == "agreeComment"
+                  ? styles.agreein
+                  : commentSort == "alternativeComment"
+                  ? styles.alterin
+                  : styles.disagreein
+              }
+              placeholder={
+                logIn
+                  ? isWroted
+                    ? `${auth.currentUser.displayName}님은 이미 댓글을 1회 작성하셨습니다.`
+                    : isVoted
+                    ? vote == commentSort
+                      ? `${auth.currentUser.displayName}님의 소중한 의견이 필요합니다!`
+                      : `${auth.currentUser.displayName}님은 다른 입장에 투표를 하였습니다!`
+                    : `${auth.currentUser.displayName}님, 먼저 투표를 진행해주세요!`
+                  : "로그인을 해주세요."
+              }
+              onChange={onChangeHandler}
+              value={comment}
+              onKeyUp={onKeyPress}
+              onFocus={clickHandler}
+              disabled={
+                logIn
+                  ? isWroted
+                    ? true
+                    : isVoted
+                    ? vote == commentSort
+                      ? false
+                      : true //투표상태랑 내가 작성하려는 comment부분이랑 다를 때
+                    : true // 투표를 안했을 때
+                  : false //로그인을 안했을 때
+              }
+            />
+          </div>
+          <button
+            className={
+              commentSort == "agreeComment"
+                ? styles.agree
+                : commentSort == "alternativeComment"
+                ? styles.alter
+                : styles.disagree
             }
-            onChange={onChangeHandler}
-            value={comment}
-            onKeyUp={onKeyPress}
-            onFocus={clickHandler}
             disabled={
               logIn
                 ? isWroted
@@ -195,8 +214,9 @@ const Comment = () => {
                   : true // 투표를 안했을 때
                 : false //로그인을 안했을 때
             }
-          />
-          <button className={styles.button}>게시</button>
+          >
+            게시
+          </button>
         </form>
       </div>
     </div>

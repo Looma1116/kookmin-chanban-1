@@ -5,7 +5,7 @@
 }
 
 .agree:hover {
-  padding: 1rem;
+  cursor: pointer;
 }
 
 .alternative {
@@ -15,7 +15,7 @@
 }
 
 .alternative:hover {
-  padding: 1rem;
+  cursor: pointer;
 }
 
 .disagree {
@@ -25,5 +25,5 @@
 }
 
 .disagree:hover {
-  padding: 1rem;
+  cursor: pointer;
 }

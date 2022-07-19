@@ -61,6 +61,7 @@ const Detail = ({ nick, age, gender, token, level, exp, secondTry }) => {
       const db = getFirestore();
       const auth = getAuth();
       console.log(auth);
+      setLoading(true);
       if (auth.currentUser === null) {
         await signInWithCustomToken(auth, token);
       }
@@ -77,20 +78,24 @@ const Detail = ({ nick, age, gender, token, level, exp, secondTry }) => {
     }
     setClickCount(false);
     setLogin(true);
-    setChange(!change);
+    if (secondTry) {
+      setChange(!change);
+    }
     setShowModal(false);
   };
   console.log(name);
-  return (
+  return ( 
     <div className={styles.out}>
-      <div
-        className={styles.name}
-        onClick={() => {
-          setShowModal(true);
-        }}
-      >
-        회원정보수정
-      </div>
+      {secondTry ? (
+        <div
+          className={styles.name}
+          onClick={() => {
+            setShowModal(true);
+          }}
+        >
+          회원정보수정
+        </div>
+      ) : null}
       <Modal show={showModal}>
         <div className={styles.modal}>
           <h3 className={styles.title}>회원 정보 등록</h3>

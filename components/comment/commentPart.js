@@ -24,8 +24,9 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getAuth } from "firebase/auth";
 import styles from "../bestComment/Bestcomments.module.css";
+import LikePart from "./likePart";
 
-const CommentPart = ({isSubmit}) => {
+const CommentPart = ({ isSubmit }) => {
   const router = useRouter();
   const auth = getAuth();
   const db = getFirestore();
@@ -55,6 +56,7 @@ const CommentPart = ({isSubmit}) => {
     a = [];
 
     snapShot.docs.forEach((doc) => {
+      console.log(doc.id);
       a.push({ id: doc.id, ...doc.data() });
     });
 
@@ -77,7 +79,7 @@ const CommentPart = ({isSubmit}) => {
     <div className={styles.commentlist}>
       {commentData != "" ? (
         commentData.map((data) => {
-           return (
+          return (
             <div key={Math.random()} className={styles.card}>
               <div>
                 {async () => {
@@ -86,6 +88,7 @@ const CommentPart = ({isSubmit}) => {
                 <header className={styles.header}>
                   <Author level={data.authorLevel} />
                   <div className={styles.name}>&nbsp;{data.authorName}</div>
+                  <LikePart commentData={data}/>
                 </header>
                 <div className={styles.textArea}>{data.article}</div>
               </div>

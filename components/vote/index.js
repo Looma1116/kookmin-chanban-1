@@ -14,6 +14,7 @@ import {
   query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -25,9 +26,9 @@ import {
   clickCountState,
   communityState,
   isVotedState,
+  isWrotedState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
-import Loading from "../modal/loading";
 
 const UserVote = () => {
   const auth = getAuth();
@@ -47,6 +48,7 @@ const UserVote = () => {
   const community = useRecoilValue(communityState);
   const [loading, setLoading] = useState(true);
   const [isVoted, setIsVoted] = useRecoilState(isVotedState);
+  const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
 
   useEffect(() => {
     if (login) {
@@ -74,6 +76,7 @@ const UserVote = () => {
     snapshot.docs.forEach((doc) => {
       data.push({ ...doc.data(), id: doc.id });
     });
+    console.log(data[0]);
     setId(data[0]?.id);
     setAgree(data[0]?.agreeUser);
     setAlternative(data[0]?.alternative);
@@ -140,17 +143,20 @@ const UserVote = () => {
   };
 
   const updateUser = async () => {
-    if (agree?.indexOf(auth.currentUser.uid) >= 0) {
+    if (votewhere == 1 || agree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(1);
       setIsVoted(true);
       setVote("agreeComment");
       setIam("찬성");
-    } else if (alternative?.indexOf(auth.currentUser.uid) >= 0) {
+    } else if (
+      votewhere == 2 ||
+      alternative?.indexOf(auth.currentUser.uid) >= 0
+    ) {
       setVotewhere(2);
       setIsVoted(true);
       setVote("alternativeComment");
       setIam("중립");
-    } else if (disagree?.indexOf(auth.currentUser.uid) >= 0) {
+    } else if (votewhere == 3 || disagree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(3);
       setIsVoted(true);
       setVote("disagreeComment");
@@ -163,6 +169,7 @@ const UserVote = () => {
   const agreeHandler = () => {
     setVote("agreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
+      setLoading(true);
       setIvoted(true);
       agreeCount();
       updateVote();
@@ -179,6 +186,7 @@ const UserVote = () => {
   const alterHandler = () => {
     setVote("alternativeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
+      setLoading(true);
       setIvoted(true);
       alterCount();
       updateVote();
@@ -195,6 +203,7 @@ const UserVote = () => {
   const disagreeHandler = () => {
     setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
+      setLoading(true);
       setIvoted(true);
       disagreeCount();
       updateVote();
@@ -232,6 +241,35 @@ const UserVote = () => {
     await deleteDoc(
       doc(db, "user", auth.currentUser.uid, "wroteComment", router.query.id)
     );
+    if (iam === "찬성") {
+      const agreeCommentRef = collection(
+        db,
+        community,
+        router.query.id,
+        "agreeComment"
+      );
+      console.log(agreeCommentRef);
+
+      const q = query(
+        agreeCommentRef,
+        where("author", "==", `${auth.currentUser.uid}`)
+      );
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (document) => {
+        // doc.data() is never undefined for query doc snapshots
+
+        const commentRef = doc(
+          db,
+          community,
+          router.query.id,
+          "agreeComment",
+          document.id
+        );
+        await updateDoc(commentRef, { hide: true });
+      });
+    }
+    setIsWroted(false);
   };
 
   const deleteUserinfo = async () => {
@@ -245,6 +283,7 @@ const UserVote = () => {
     deleteComment();
     deleteUserinfo();
     setIvoted(false);
+    setIsVoted(false);
   };
 
   return (
@@ -269,8 +308,8 @@ const UserVote = () => {
             agree={agree ? agree.length : 0}
             alternative={alternative ? alternative.length : 0}
             disagree={disagree ? disagree.length : 0}
+            onClick={voteChangeHandler}
           />
-          <button onClick={voteChangeHandler}>바꾸기</button>
         </div>
       )}
     </div>
