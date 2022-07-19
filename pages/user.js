@@ -26,6 +26,7 @@ export default function User() {
   const [level, setLevel] = useRecoilState(levelState);
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
+  const [deleted, setDeleted] = useState(false);
   const [exp, setExp] = useState(0);
   const text = useRecoilValue(loginState);
   const auth = getAuth();
@@ -46,7 +47,7 @@ export default function User() {
           setAge(d.data().age);
           setGender(d.data().gender);
           setExp(d.data().exp);
-
+          setDeleted(d.data().deleted);
           if (exp >= 100) {
             setLevel(level + 1);
             setExp(exp - 100);
@@ -55,8 +56,9 @@ export default function User() {
               exp: exp,
             });
           }
+          setLoading(false);
           setLogin(true);
-        }, 1000);
+        }, 2000);
       }
     });
   }, [change]);
@@ -65,6 +67,7 @@ export default function User() {
   console.log(nickname);
   if (loading) return <Loading />;
   if (!login) return <KakaoLogin />;
+  // if (deleted) return </>
   return (
     <div className={styles.main}>
       <h1 className={styles.title}>{`${nickname}님`}</h1>

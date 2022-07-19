@@ -27,6 +27,7 @@ const DeleteUser = ({ onClick }) => {
     const auth = getAuth();
     await updateDoc(doc(db, "user", auth.currentUser.uid), {
       deleted: true,
+      deletedTime: new Date(),
     });
     const apiServer =
       "https://asia-northeast1-peoplevoice-fcea9.cloudfunctions.net/app/delete";
