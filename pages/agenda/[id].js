@@ -46,6 +46,8 @@ const Agenda = () => {
 
   const [agenda, setAgenda] = useState(null);
 
+  console.log(agenda);
+
   useEffect(() => {
     setCommunity("agenda");
     setIsVoted(false);
@@ -94,8 +96,9 @@ const Agenda = () => {
             <Article article={agenda.article} />
             {/* <News /> */}
             <BestComment />
+
             <Vote agenda={agenda} />
-            {/* <Comment /> */}
+            <Comment />
             {clickCount ? <LogInModal /> : null}
           </div>
         ) : null}

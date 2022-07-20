@@ -95,3 +95,6 @@
 /* .textArea::-webkit-scrollbar {
   display: none;
 } */
+.likeBtn{
+  color: green;
+}

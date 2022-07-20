@@ -18,6 +18,7 @@ import {
   isWrotedState,
   loginState,
   userState,
+  commentDataState,
   voteState,
 } from "../recoil/recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -42,20 +43,42 @@ const Comment = () => {
   const [submit, setSubmit] = useState(false);
   const isVoted = useRecoilValue(isVotedState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
+    let [commentData, setCommentData] = useRecoilState(commentDataState);
+    let a =[];
 
   useEffect(() => {
     if (logIn) {
       userFetch();
-      console.log("유저정보임");
+      console.log("유저정보 패치");
       console.log(user);
       document.activeElement.blur();
     }
   }, [logIn]);
+  useEffect(()=>{
+    console.log("댓글 패치");
+    commentFetch();
+  }, [commentSort])
 
   const clickHandler = () => {
     if (!logIn) {
       setClickCount(true);
     }
+  };
+  const commentFetch = async () => {
+    console.log(commentSort);
+    let snapShot = await getDocs(
+      collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),where("hide","==","false")
+    );
+    a = [];
+
+    snapShot.docs.forEach(async(doc) => {
+      console.log(doc.id);
+      await a.push({ id: doc.id, ...doc.data() });
+    });
+
+    console.log(a);
+    setCommentData(a);
+    console.log(commentData);
   };
 
   const commentSend = async () => {
@@ -152,7 +175,7 @@ const Comment = () => {
   return (
     <div>
       <CommentSec />
-      <CommentPart isSubmit={submit} />
+      <CommentPart isSubmit={submit} commentData={commentData}/>
       {/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
       <div>
         <form onSubmit={submitHandler} className={styles.submit}>
