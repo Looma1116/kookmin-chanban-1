@@ -81,6 +81,7 @@ const FetchData = ({ fetchedData }) => {
                     pathname: `/userAgenda/${data.id}`,
                     query: { agenda: JSON.stringify(data) },
                   }}
+                  as={`/userAgenda/${data.id}`}
                 >
                   <a>
                     <AgendaCard props={data} />
