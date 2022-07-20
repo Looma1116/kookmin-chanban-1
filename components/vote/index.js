@@ -23,7 +23,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   voteState,
   loginState,
-  agendaState,
   clickCountState,
   communityState,
   isVotedState,
@@ -35,7 +34,6 @@ const UserVote = ({
   agenda: { category, id, title, numAgree, numAlternative, numDisagree },
 }) => {
   const auth = getAuth();
-  const [vote, setVote] = useRecoilState(voteState);
   const login = useRecoilValue(loginState);
   const db = getFirestore();
   const router = useRouter();
@@ -49,12 +47,14 @@ const UserVote = ({
   const [iam, setIam] = useState("");
   const community = useRecoilValue(communityState);
   const [loading, setLoading] = useState(true);
-  const [isVoted, setIsVoted] = useRecoilState(isVotedState);
-  const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
   const [nAgree, setNAgree] = useState(numAgree);
   const [nAlter, setNAlter] = useState(numAlternative);
   const [nDisagree, setNDisagree] = useState(numDisagree);
   const [revote, setRevote] = useState(false);
+
+  const [vote, setVote] = useRecoilState(voteState);
+  const [isVoted, setIsVoted] = useRecoilState(isVotedState);
+  const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
 
   console.log(iam);
   console.log(votewhere);
@@ -300,6 +300,21 @@ const UserVote = ({
         );
         await updateDoc(commentRef, { hide: true });
       });
+      const userRef = query(
+        collection(db, "user", auth.currentUser.uid, "wroteComment"),
+        where("story", "==", router.query.id)
+      );
+      const userSnapshot = await getDocs(userRef);
+      userSnapshot.forEach(async (item) => {
+        const userTime = doc(
+          db,
+          "user",
+          auth.currentUser.uid,
+          "wroteComment",
+          item.id
+        );
+        await updateDoc(userTime, { hide: true });
+      });
     } else if (vote === "alternativeComment") {
       const agreeCommentRef = collection(
         db,
@@ -307,7 +322,6 @@ const UserVote = ({
         router.query.id,
         "alternativeComment"
       );
-      console.log(agreeCommentRef);
 
       const q = query(
         agreeCommentRef,
@@ -325,6 +339,22 @@ const UserVote = ({
           document.id
         );
         await updateDoc(commentRef, { hide: true });
+      });
+
+      const userRef = query(
+        collection(db, "user", auth.currentUser.uid, "wroteComment"),
+        where("story", "==", router.query.id)
+      );
+      const userSnapshot = await getDocs(userRef);
+      userSnapshot.forEach(async (item) => {
+        const userTime = doc(
+          db,
+          "user",
+          auth.currentUser.uid,
+          "wroteComment",
+          item.id
+        );
+        await updateDoc(userTime, { hide: true });
       });
     } else if (vote === "disagreeComment") {
       const agreeCommentRef = collection(
@@ -352,9 +382,25 @@ const UserVote = ({
         );
         await updateDoc(commentRef, { hide: true });
       });
+      const userRef = query(
+        collection(db, "user", auth.currentUser.uid, "wroteComment"),
+        where("story", "==", router.query.id)
+      );
+      const userSnapshot = await getDocs(userRef);
+      userSnapshot.forEach(async (item) => {
+        const userTime = doc(
+          db,
+          "user",
+          auth.currentUser.uid,
+          "wroteComment",
+          item.id
+        );
+        await updateDoc(userTime, { hide: true });
+      });
     }
 
     setIsWroted(false);
+    setIsVoted(false);
   };
 
   const deleteUserinfo = async () => {
@@ -369,7 +415,6 @@ const UserVote = ({
     deleteComment();
     deleteUserinfo();
     setIvoted(false);
-    setIsVoted(false);
   };
 
   return (
