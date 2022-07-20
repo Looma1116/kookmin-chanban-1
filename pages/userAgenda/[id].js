@@ -33,7 +33,7 @@ import LogInModal from "../../components/modal/login";
 const Agenda = () => {
   const router = useRouter();
   const db = getFirestore();
-  const [agenda, setAgenda] = useRecoilState(agendaState);
+  const [agenda, setAgenda] = useState(null);
   const [isFetched, setIsFetched] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const clickCount = useRecoilValue(clickCountState);
@@ -43,25 +43,27 @@ const Agenda = () => {
   const [comment, setComment] = useRecoilState(commentState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
 
+  console.log(agenda);
+
   useEffect(() => {
     setCommunity("userAgenda");
     setIsVoted(false);
     setComment("alternativeComment");
     setVote("alternativeComment");
     setIsWroted(false);
-    console.log(community);
+    checkIn();
   }, []);
 
   useEffect(() => {
-    setCommunity("userAgenda");
     fetchData();
   }, [isFetched, clickCount]);
 
-  const openModal = () => {
-    setModalOpen(true);
-  };
-  const closeModal = () => {
-    setModalOpen(false);
+  const checkIn = () => {
+    if (router.query.agenda === undefined) {
+      fetchData();
+    } else {
+      setAgenda(JSON.parse(router.query.agenda));
+    }
   };
 
   const fetchData = async () => {
@@ -74,20 +76,22 @@ const Agenda = () => {
     snapshot.docs.forEach((doc) => {
       data.push({ ...doc.data(), id: doc.id });
     });
-    setAgenda(data);
-    if (!isFetched) {
-      setIsFetched(true);
-    }
+    setAgenda(data[0]);
+    setIsFetched(true);
   };
   return (
     <div className={styles.container}>
-      {isFetched ? (
+      {agenda ? (
         <div className={styles.agenda}>
-          <Title />
-          <Article />
+          <Title
+            title={agenda.title}
+            subTitle={agenda.subTitle}
+            imageUrl={agenda.imageUrl}
+          />
+          <Article article={agenda.article} />
           {/* <News /> */}
           <BestComment />
-          <Vote />
+          <Vote agenda={agenda} />
           <Comment />
           {clickCount ? <LogInModal /> : null}
         </div>
