@@ -96,7 +96,6 @@ const Agenda = () => {
             <Article article={agenda.article} />
             {/* <News /> */}
             <BestComment />
-
             <Vote agenda={agenda} />
             <Comment />
             {clickCount ? <LogInModal /> : null}
