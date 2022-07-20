@@ -43,8 +43,8 @@ const Comment = () => {
   const [submit, setSubmit] = useState(false);
   const isVoted = useRecoilValue(isVotedState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
-    let [commentData, setCommentData] = useRecoilState(commentDataState);
-    let a =[];
+  let [commentData, setCommentData] = useRecoilState(commentDataState);
+  let a = [];
 
   useEffect(() => {
     if (logIn) {
@@ -54,10 +54,13 @@ const Comment = () => {
       document.activeElement.blur();
     }
   }, [logIn]);
-  useEffect(()=>{
+  useEffect(() => {
+    if (logIn) {
+      userFetch();
+    }
     console.log("댓글 패치");
     commentFetch();
-  }, [commentSort])
+  }, [commentSort, isVoted, isWroted]);
 
   const clickHandler = () => {
     if (!logIn) {
@@ -66,13 +69,15 @@ const Comment = () => {
   };
   const commentFetch = async () => {
     console.log(commentSort);
-    let snapShot = await getDocs(
-      collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),where("hide","==","false")
+    let q = query(
+      collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
+      where("hide", "==", false)
     );
+    let snapShot = await getDocs(q);
     a = [];
 
-    snapShot.docs.forEach(async(doc) => {
-      console.log(doc.id);
+    snapShot.docs.forEach(async (doc) => {
+      console.log(doc.data());
       await a.push({ id: doc.id, ...doc.data() });
     });
 
@@ -91,6 +96,7 @@ const Comment = () => {
           like: 0,
           story: `${router.query.id}`,
           wrote: new Date(),
+          hide: false,
         }
       );
       console.log(q);
@@ -124,6 +130,7 @@ const Comment = () => {
 
     setSubmit((prev) => !prev);
     commentSend();
+    setIsWroted(true);
 
     // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
   };
@@ -154,28 +161,32 @@ const Comment = () => {
     setUser(a);
 
     let commentQ = query(
+      // 댓글을 작성했는지 확인 하는 부분
       collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
-      where("story", "==", `${router.query.id}`)
+      where("story", "==", `${router.query.id}`),
+      where("hide", "==", false)
     );
     let commentSnapShot = await getDocs(commentQ);
     console.log(commentQ);
-    console.log(commentSnapShot);
+    console.log(commentSnapShot.docs.length);
+    commentSnapShot.docs.forEach((doc) => {
+      console.log(doc.data());
+    });
     if (commentSnapShot.docs.length == 0) {
       console.log("내가 작성한 댓글이 없음");
+      setIsWroted(false);
     } else {
       commentSnapShot.docs.forEach((doc) => {
         console.log(doc.data());
-        setIsWroted(true);
       });
+      setIsWroted(true);
     }
   };
-
-  console.log(commentSort); // 어디를 선택하였는가
 
   return (
     <div>
       <CommentSec />
-      <CommentPart isSubmit={submit} commentData={commentData}/>
+      <CommentPart isSubmit={submit} commentData={commentData} />
       {/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
       <div>
         <form onSubmit={submitHandler} className={styles.submit}>
