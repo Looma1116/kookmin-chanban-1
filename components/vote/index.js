@@ -27,16 +27,17 @@ import {
   communityState,
   isVotedState,
   isWrotedState,
+  loadingState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
 
-const UserVote = () => {
+const UserVote = ({ category, id, title }) => {
   const auth = getAuth();
   const [vote, setVote] = useRecoilState(voteState);
   const login = useRecoilValue(loginState);
   const db = getFirestore();
   const router = useRouter();
-  const [id, setId] = useState("");
+  const [docId, setDocId] = useState("");
   const agenda = useRecoilValue(agendaState);
   const [agree, setAgree] = useState([]);
   const [alternative, setAlternative] = useState([]);
@@ -71,34 +72,35 @@ const UserVote = () => {
 
   const voteId = async () => {
     const q = query(collection(db, community, `${router.query.id}`, "vote"));
+    console.log("1");
     const snapshot = await getDocs(q);
     let data = [];
     snapshot.docs.forEach((doc) => {
       data.push({ ...doc.data(), id: doc.id });
     });
     console.log(data[0]);
-    setId(data[0]?.id);
+    setDocId(data[0]?.id);
     setAgree(data[0]?.agreeUser);
     setAlternative(data[0]?.alternative);
     setDisagree(data[0]?.disagreeUser);
   };
 
   const agreeCount = async () => {
-    const q = query(doc(db, community, `${router.query.id}`, "vote", id));
+    const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
     await updateDoc(q, {
       agreeUser: arrayUnion(`${auth.currentUser.uid}`),
     });
   };
 
   const alterCount = async () => {
-    const q = query(doc(db, community, `${router.query.id}`, "vote", id));
+    const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
     await updateDoc(q, {
       alternative: arrayUnion(auth.currentUser.uid),
     });
   };
 
   const disagreeCount = async () => {
-    const q = query(doc(db, community, `${router.query.id}`, "vote", id));
+    const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
     await updateDoc(q, {
       disagreeUser: arrayUnion(auth.currentUser.uid),
     });
@@ -122,10 +124,10 @@ const UserVote = () => {
         router.query.id
       ),
       {
-        category: agenda[0].category,
+        category: category,
         joined: new Date(),
-        story: agenda[0].id,
-        title: agenda[0].title,
+        story: id,
+        title: title,
         vote: `${voteWhere}`,
       }
     );
@@ -144,23 +146,23 @@ const UserVote = () => {
 
   const updateUser = async () => {
     if (votewhere == 1 || agree?.indexOf(auth.currentUser.uid) >= 0) {
+      setIam("찬성을");
       setVotewhere(1);
       setIsVoted(true);
       setVote("agreeComment");
-      setIam("찬성");
     } else if (
       votewhere == 2 ||
       alternative?.indexOf(auth.currentUser.uid) >= 0
     ) {
+      setIam("중립을");
       setVotewhere(2);
       setIsVoted(true);
       setVote("alternativeComment");
-      setIam("중립");
     } else if (votewhere == 3 || disagree?.indexOf(auth.currentUser.uid) >= 0) {
+      setIam("반대를");
       setVotewhere(3);
       setIsVoted(true);
       setVote("disagreeComment");
-      setIam("반대");
     } else {
       console.log("투표 해주세요.");
     }
@@ -219,17 +221,17 @@ const UserVote = () => {
 
   const deleteVote = async () => {
     if (votewhere === 1) {
-      const q = query(doc(db, community, router.query.id, "vote", id));
+      const q = query(doc(db, community, router.query.id, "vote", docId));
       await updateDoc(q, {
         agreeUser: arrayRemove(auth.currentUser.uid),
       });
     } else if (votewhere === 2) {
-      const q = query(doc(db, community, `${router.query.id}`, "vote", id));
+      const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
       await updateDoc(q, {
         alternative: arrayRemove(`${auth.currentUser.uid}`),
       });
     } else if (votewhere === 3) {
-      const q = query(doc(db, community, `${router.query.id}`, "vote", id));
+      const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
       await updateDoc(q, {
         disagreeUser: arrayRemove(`${auth.currentUser.uid}`),
       });
@@ -303,7 +305,7 @@ const UserVote = () => {
         </div>
       ) : (
         <div className={styles.statistic}>
-          <h2 className={styles.title}>{iam}을(를) 선택 하셨습니다!</h2>
+          <h2 className={styles.title}>{iam} 선택 하셨습니다!</h2>
           <Statistic
             agree={agree ? agree.length : 0}
             alternative={alternative ? alternative.length : 0}
