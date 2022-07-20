@@ -77,10 +77,6 @@ const BestComment = () => {
     return b.like - a.like;
   });
 
-  console.log(agree);
-  console.log(sortedAlter.length);
-  console.log(sortedDisagree);
-
   return (
     <div>
       <div>

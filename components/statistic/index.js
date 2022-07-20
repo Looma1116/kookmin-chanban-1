@@ -24,7 +24,7 @@ const Statistic = (props) => {
   });
 
   const mouseOverHandler = () => {
-    console.log(dataset);
+    // console.log(dataset);
   };
 
   return (
