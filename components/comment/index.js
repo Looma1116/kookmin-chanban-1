@@ -160,23 +160,40 @@ const Comment = () => {
 
     setUser(a);
 
-    let commentQ = query(
-      // 댓글을 작성했는지 확인 하는 부분
-      collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
-      where("story", "==", `${router.query.id}`),
+    // let commentQ = query(
+    //   // 댓글을 작성했는지 확인 하는 부분
+    //   collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
+    //   where("story", "==", `${router.query.id}`),
+    //   where("hide", "==", false)
+    // );
+    // let commentSnapShot = await getDocs(commentQ);
+    // console.log(commentQ);
+    // console.log(commentSnapShot.docs.length);
+    // commentSnapShot.docs.forEach((doc) => {
+    //   console.log(doc.data());
+    // });
+    // if (commentSnapShot.docs.length == 0) {
+    //   console.log("내가 작성한 댓글이 없음");
+    //   setIsWroted(false);
+    // } else {
+    //   commentSnapShot.docs.forEach((doc) => {
+    //     console.log(doc.data());
+    //   });
+    //   setIsWroted(true);
+    // }
+    let CQ = query(
+      collection(db, community, router.query.id, commentSort),
+      where("author", "==", `${auth.currentUser.uid}`),
       where("hide", "==", false)
     );
-    let commentSnapShot = await getDocs(commentQ);
-    console.log(commentQ);
-    console.log(commentSnapShot.docs.length);
-    commentSnapShot.docs.forEach((doc) => {
-      console.log(doc.data());
-    });
-    if (commentSnapShot.docs.length == 0) {
+    let CSnapShot = await getDocs(CQ);
+
+    if(CSnapShot.docs.length==0){
       console.log("내가 작성한 댓글이 없음");
       setIsWroted(false);
-    } else {
-      commentSnapShot.docs.forEach((doc) => {
+    }
+    else{
+      CSnapShot.docs.forEach((doc) => {
         console.log(doc.data());
       });
       setIsWroted(true);
