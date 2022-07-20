@@ -305,7 +305,7 @@ const UserVote = ({
         db,
         community,
         router.query.id,
-        "agreeComment"
+        "alternativeComment"
       );
       console.log(agreeCommentRef);
 
@@ -321,7 +321,7 @@ const UserVote = ({
           db,
           community,
           router.query.id,
-          "agreeComment",
+          "alternativeComment",
           document.id
         );
         await updateDoc(commentRef, { hide: true });
@@ -331,7 +331,7 @@ const UserVote = ({
         db,
         community,
         router.query.id,
-        "agreeComment"
+        "disagreeComment"
       );
       console.log(agreeCommentRef);
 
@@ -347,7 +347,7 @@ const UserVote = ({
           db,
           community,
           router.query.id,
-          "agreeComment",
+          "disagreeComment",
           document.id
         );
         await updateDoc(commentRef, { hide: true });
