@@ -274,7 +274,59 @@ const UserVote = ({
     await deleteDoc(
       doc(db, "user", auth.currentUser.uid, "wroteComment", router.query.id)
     );
-    if (iam === "찬성") {
+    if (vote === "agreeComment") {
+      const agreeCommentRef = collection(
+        db,
+        community,
+        router.query.id,
+        "agreeComment"
+      );
+      console.log(agreeCommentRef);
+
+      const q = query(
+        agreeCommentRef,
+        where("author", "==", `${auth.currentUser.uid}`)
+      );
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (document) => {
+        // doc.data() is never undefined for query doc snapshots
+        const commentRef = doc(
+          db,
+          community,
+          router.query.id,
+          "agreeComment",
+          document.id
+        );
+        await updateDoc(commentRef, { hide: true });
+      });
+    } else if (vote === "alternativeComment") {
+      const agreeCommentRef = collection(
+        db,
+        community,
+        router.query.id,
+        "agreeComment"
+      );
+      console.log(agreeCommentRef);
+
+      const q = query(
+        agreeCommentRef,
+        where("author", "==", `${auth.currentUser.uid}`)
+      );
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (document) => {
+        // doc.data() is never undefined for query doc snapshots
+        const commentRef = doc(
+          db,
+          community,
+          router.query.id,
+          "agreeComment",
+          document.id
+        );
+        await updateDoc(commentRef, { hide: true });
+      });
+    } else if (vote === "disagreeComment") {
       const agreeCommentRef = collection(
         db,
         community,
@@ -301,6 +353,7 @@ const UserVote = ({
         await updateDoc(commentRef, { hide: true });
       });
     }
+
     setIsWroted(false);
   };
 
