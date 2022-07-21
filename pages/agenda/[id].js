@@ -46,8 +46,6 @@ const Agenda = () => {
 
   const [agenda, setAgenda] = useState(null);
 
-  console.log(agenda);
-
   useEffect(() => {
     setCommunity("agenda");
     setIsVoted(false);

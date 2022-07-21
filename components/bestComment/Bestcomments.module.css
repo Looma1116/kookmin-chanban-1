@@ -95,6 +95,11 @@
 /* .textArea::-webkit-scrollbar {
   display: none;
 } */
-.likeBtn{
-  color: green;
+.likeBtn {
+  cursor: pointer;
+}
+
+.fullBtn {
+  cursor: pointer;
+  background-color: blue;
 }

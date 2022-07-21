@@ -26,6 +26,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getAuth } from "firebase/auth";
 import styles from "../bestComment/Bestcomments.module.css";
+import LikePart from "./likePart";
 
 const CommentPart = ({ isSubmit, commentData }) => {
   const router = useRouter();
@@ -37,6 +38,8 @@ const CommentPart = ({ isSubmit, commentData }) => {
   const [likeClick, setLikeClick] = useRecoilState(likeClickState);
   let [click, setClick] = useState(false);
   const community = useRecoilValue(communityState);
+
+  const [op, setOp] = useState(0);
 
   useEffect(() => {
     console.log(isSubmit);
@@ -62,33 +65,32 @@ const CommentPart = ({ isSubmit, commentData }) => {
       console.log("좋아요 누른 댓글이 없음.");
       return false;
     } else {
-      snapShot.docs.forEach((doc)=>{
+      snapShot.docs.forEach((doc) => {
         console.log(doc.data());
-      })
+      });
       return true;
     }
   };
-  async function LikePart (data)  {
-    console.log(data);
-    if (await beforeLiked(data.data.id)) {
-      console.log(data.data);
-      console.log("좋아요 누른 댓글");
-      return (
-        <div>
-          <span className={styles.likeBtn}>{data.data.like}</span>
-        </div>
-      );
-    }
-    else{
-      console.log(data.data.article);
-      console.log("좋아요 누른 댓글이 아님");
-      return (
-        <div>
-          <span>{data.data.like}</span>
-        </div>
-      );
-    }
-  }
+  // async function LikePart(data) {
+  //   console.log(data);
+  //   if (await beforeLiked(data.data.id)) {
+  //     console.log(data.data);
+  //     console.log("좋아요 누른 댓글");
+  //     return (
+  //       <div>
+  //         <span className={styles.likeBtn}>{data.data.like}</span>
+  //       </div>
+  //     );
+  //   } else {
+  //     console.log(data.data.article);
+  //     console.log("좋아요 누른 댓글이 아님");
+  //     return (
+  //       <div>
+  //         <span>{data.data.like}</span>
+  //       </div>
+  //     );
+  //   }
+  // }
 
   return (
     <div className={styles.commentlist}>
@@ -97,11 +99,20 @@ const CommentPart = ({ isSubmit, commentData }) => {
           return (
             <div key={Math.random()} className={styles.card}>
               <div>
-                {console.log(data.id)}
+                {/* {console.log(data.id)} */}
                 <header className={styles.header}>
                   <Author level={data.authorLevel} />
                   <div className={styles.name}>&nbsp;{data.authorName}</div>
-                  {/* {logIn ? <LikePart data={data} /> : <span>{data.like}</span>} */}
+                  <LikePart
+                    data={data}
+                    op={
+                      commentS === "agreeComment"
+                        ? 1
+                        : commentS === "alternativeComment"
+                        ? 2
+                        : 3
+                    }
+                  />
                 </header>
                 <div className={styles.textArea}>{data.article}</div>
               </div>
