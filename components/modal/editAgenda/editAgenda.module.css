@@ -94,6 +94,15 @@
   outline: none;
   padding: 20px;
 }
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loader {
+  transform: translateY(-50%);
+  margin-top: 90%;
+}
 
 @media (min-width: 768px) {
   .modal {
