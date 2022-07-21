@@ -30,8 +30,10 @@ const LikePart = ({ data, op }) => {
   const [isFetched, setIsFetched] = useState(false);
 
   useEffect(() => {
-    initializeLike();
-  }, [isFetched]);
+    if (login) {
+      initializeLike();
+    }
+  }, [login, isFetched]);
 
   const initializeLike = async () => {
     const q = collection(db, "user", auth.currentUser.uid, "likeComment");
@@ -39,6 +41,8 @@ const LikePart = ({ data, op }) => {
     let emp = [];
     snapShot.docs.forEach((doc) => {
       emp.push({ ...doc.data(), id: doc.id });
+      console.log(doc.data().author);
+      console.log(data);
       if (doc.data().author === data.author) {
         setIsClicked(true);
       }
