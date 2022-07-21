@@ -91,3 +91,7 @@ export const isWrotedState = atom({
   key: "isWrotedState",
   default: false,
 });
+export const loginInterfaceState = atom({
+  key: "loginInterfaceState",
+  default: true,
+});

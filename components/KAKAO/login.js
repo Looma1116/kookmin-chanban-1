@@ -3,7 +3,12 @@ import { useEffect } from "react";
 import talk from "../../public/talk.png";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
-import { clickCountState, loadingState, loginState } from "../recoil/recoil";
+import {
+  clickCountState,
+  loadingState,
+  loginInterfaceState,
+  loginState,
+} from "../recoil/recoil";
 import { useState } from "react";
 import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
 import axios from "axios";
@@ -14,14 +19,17 @@ import {
   getDoc,
   collection,
   query,
-  FieldPath,
   documentId,
   onSnapshot,
+  where,
+  docu,
 } from "firebase/firestore";
+import "firebase/firestore";
 import styles from "./Login.module.css";
 import DetailModal from "../modal/detailModal/index";
+import DeletedLogin from "../modal/againLogin/index";
 const KakaoLogin = () => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useRecoilState(loginInterfaceState);
   const [login, setLogin] = useRecoilState(loginState);
   const [loading, setLoading] = useRecoilState(loadingState);
   const [email, setEmail] = useState("");
@@ -32,6 +40,8 @@ const KakaoLogin = () => {
   const auth = getAuth();
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const [deleted, setDeleted] = useState(false);
+  const [uid, setUid] = useState("");
+  const [user, setUser] = useState([]);
   const db = getFirestore();
   const fetchData = (c) => {
     setNick(c.data.nickname);
@@ -66,7 +76,7 @@ const KakaoLogin = () => {
         const comunication = await axios.post(apiServer, data);
         let level = 1;
         let exp = 0;
-        console.log(comunication.data.first);
+        console.log(comunication.data);
         if (comunication.data.first === false) {
           setLoading(true);
           console.log("sadasdasdsa");
@@ -82,19 +92,20 @@ const KakaoLogin = () => {
           //   exp = exp - 100;
           // }
         } else {
+          setUid(comunication.data.uid);
           await fetchData(comunication);
-          // const checkDeletedUserRef = collection(db, "user");
-          // const checkDeletedUserQuery = query(
-          //   checkDeletedUserRef,
-          //   where(uid, "==", `${documentId}`)
-          // );
-          // await onSnapshot(checkDeletedUserQuery, (snapshot) => {
-          //   const { length } = snapshot.docs;
-          //   console.log(length);
-          //   if (length > 0) {
-          //     setDeleted(true);
-          //   }
-          // });  수정중
+          const checkDeletedUserRef = collection(db, "user");
+          const checkDeletedUserQuery = query(
+            checkDeletedUserRef,
+            where(documentId(), "==", comunication.data.uid)
+          );
+          await onSnapshot(checkDeletedUserQuery, (snapshot) => {
+            const { length } = snapshot.docs;
+            if (length > 0) {
+              setUser(snapshot.docs.map((str) => str.data()));
+              setDeleted(true);
+            }
+          });
           setShow(false);
         }
       },
@@ -117,7 +128,7 @@ const KakaoLogin = () => {
           </a>
         </div>
       ) : deleted ? (
-        <h1>we</h1>
+        <DeletedLogin token={token} uid={uid} user={user[0]} />
       ) : (
         <DetailModal
           nick={nick}
