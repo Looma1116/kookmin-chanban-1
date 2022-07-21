@@ -44,24 +44,22 @@ const UserVote = ({
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const [votewhere, setVotewhere] = useState(0);
   const [ivoted, setIvoted] = useState(false);
-  const [iam, setIam] = useState("");
   const community = useRecoilValue(communityState);
   const [loading, setLoading] = useState(true);
   const [nAgree, setNAgree] = useState(numAgree);
   const [nAlter, setNAlter] = useState(numAlternative);
   const [nDisagree, setNDisagree] = useState(numDisagree);
   const [revote, setRevote] = useState(false);
-
   const [vote, setVote] = useRecoilState(voteState);
   const [isVoted, setIsVoted] = useRecoilState(isVotedState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
-
-  console.log(iam);
-  console.log(votewhere);
+  const iam = ["", "찬성을", "중립을", "반대를"];
+  console.log(iam[votewhere], votewhere);
+  console.log(agree, alternative, disagree);
 
   useEffect(() => {
     if (login) {
-      updateUser();
+      initializeVote();
       setLoading(false);
     }
   }, [agree, alternative, disagree]);
@@ -69,9 +67,9 @@ const UserVote = ({
   useEffect(() => {
     voteId();
     if (login) {
-      updateUser();
+      initializeVote();
     }
-  }, [login, ivoted]);
+  }, [login]);
 
   const voteId = async () => {
     const q = query(collection(db, community, `${router.query.id}`, "vote"));
@@ -173,23 +171,31 @@ const UserVote = ({
     }
   };
 
-  const updateUser = () => {
-    if (votewhere == 1 || agree?.indexOf(auth.currentUser.uid) >= 0) {
-      setIam("찬성을");
+  const initializeVote = () => {
+    if (agree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(1);
       setIsVoted(true);
       setVote("agreeComment");
-    } else if (
-      votewhere == 2 ||
-      alternative?.indexOf(auth.currentUser.uid) >= 0
-    ) {
-      setIam("중립을");
+    } else if (alternative?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(2);
       setIsVoted(true);
       setVote("alternativeComment");
-    } else if (votewhere == 3 || disagree?.indexOf(auth.currentUser.uid) >= 0) {
-      setIam("반대를");
+    } else if (disagree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(3);
+      setIsVoted(true);
+      setVote("disagreeComment");
+    }
+    setLoading(false);
+  };
+
+  const updateUser = () => {
+    if (votewhere == 1) {
+      setIsVoted(true);
+      setVote("agreeComment");
+    } else if (votewhere == 2) {
+      setIsVoted(true);
+      setVote("alternativeComment");
+    } else if (votewhere == 3) {
       setIsVoted(true);
       setVote("disagreeComment");
     }
@@ -200,10 +206,10 @@ const UserVote = ({
     setVote("agreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
       setLoading(true);
-      setIam("찬성을");
       setNAgree(nAgree + 1);
       setVotewhere(1);
       setIvoted(true);
+      updateUser();
       agreeCount(); // agreeUser 배열에 uid 추가
       updateVote(); // user에 joinedAgenda 추가
       updateAgenda(1); // numAgree+1
@@ -216,10 +222,10 @@ const UserVote = ({
     setVote("alternativeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
       setLoading(true);
-      setIam("중립을");
       setNAlter(nAlter + 1);
       setVotewhere(2);
       setIvoted(true);
+      updateUser();
       alterCount();
       updateVote();
       updateAgenda(2);
@@ -232,10 +238,10 @@ const UserVote = ({
     setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
       setLoading(true);
-      setIam("반대를");
       setNDisagree(nDisagree + 1);
       setVotewhere(3);
       setIvoted(true);
+      updateUser();
       disagreeCount();
       updateVote();
       updateAgenda(3);
@@ -281,7 +287,6 @@ const UserVote = ({
         router.query.id,
         "agreeComment"
       );
-      console.log(agreeCommentRef);
 
       const q = query(
         agreeCommentRef,
@@ -363,7 +368,6 @@ const UserVote = ({
         router.query.id,
         "disagreeComment"
       );
-      console.log(agreeCommentRef);
 
       const q = query(
         agreeCommentRef,
@@ -411,10 +415,10 @@ const UserVote = ({
 
   const voteChangeHandler = () => {
     setRevote(true);
+    setIsVoted(false);
     deleteVote();
     deleteComment();
     deleteUserinfo();
-    setIvoted(false);
   };
 
   return (
@@ -434,21 +438,15 @@ const UserVote = ({
         </div>
       ) : (
         <div>
-          {revote ? (
-            <div>
-              <h2 className={styles.title}>잠시만 기다려주세요...</h2>
-            </div>
-          ) : (
-            <div className={styles.statistic}>
-              <h2 className={styles.title}>{iam} 선택 하셨습니다!</h2>
-              <Statistic
-                agree={nAgree}
-                alternative={nAlter}
-                disagree={nDisagree}
-                onClick={voteChangeHandler}
-              />
-            </div>
-          )}
+          <div className={styles.statistic}>
+            <h2 className={styles.title}>{iam[votewhere]} 선택 하셨습니다!</h2>
+            <Statistic
+              agree={nAgree}
+              alternative={nAlter}
+              disagree={nDisagree}
+              onClick={voteChangeHandler}
+            />
+          </div>
         </div>
       )}
     </div>
