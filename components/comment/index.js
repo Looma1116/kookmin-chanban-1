@@ -76,9 +76,9 @@ const Comment = () => {
     let snapShot = await getDocs(q);
     a = [];
 
-    snapShot.docs.forEach(async (doc) => {
-      console.log(doc.data());
-      await a.push({ id: doc.id, ...doc.data() });
+    snapShot.docs.forEach((doc) => {
+      // console.log(doc.data());
+      a.push({ id: doc.id, ...doc.data() });
     });
 
     console.log(a);
@@ -188,11 +188,10 @@ const Comment = () => {
     );
     let CSnapShot = await getDocs(CQ);
 
-    if(CSnapShot.docs.length==0){
+    if (CSnapShot.docs.length == 0) {
       console.log("내가 작성한 댓글이 없음");
       setIsWroted(false);
-    }
-    else{
+    } else {
       CSnapShot.docs.forEach((doc) => {
         console.log(doc.data());
       });

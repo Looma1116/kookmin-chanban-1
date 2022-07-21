@@ -54,8 +54,6 @@ const UserVote = ({
   const [isVoted, setIsVoted] = useRecoilState(isVotedState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
   const iam = ["", "찬성을", "중립을", "반대를"];
-  console.log(iam[votewhere], votewhere);
-  console.log(agree, alternative, disagree);
 
   useEffect(() => {
     if (login) {
