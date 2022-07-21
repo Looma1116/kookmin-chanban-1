@@ -13,9 +13,9 @@ import {
 } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../bestComment/Bestcomments.module.css";
-import { communityState, loginState } from "../recoil/recoil";
+import { clickCountState, communityState, loginState } from "../recoil/recoil";
 
 const LikePart = ({ data, op }) => {
   const login = useRecoilValue(loginState);
@@ -28,10 +28,15 @@ const LikePart = ({ data, op }) => {
   const commentList = ["agreeComment", "alternativeComment", "disagreeComment"];
   const [likeList, setLikeList] = useState([]);
   const [isFetched, setIsFetched] = useState(false);
+  const [clickCount, setClickCount] = useRecoilState(clickCountState);
+
+  console.log(data);
 
   useEffect(() => {
-    initializeLike();
-  }, [isFetched]);
+    if (login) {
+      initializeLike();
+    }
+  }, [login, isFetched]);
 
   const initializeLike = async () => {
     const q = collection(db, "user", auth.currentUser.uid, "likeComment");
@@ -39,7 +44,7 @@ const LikePart = ({ data, op }) => {
     let emp = [];
     snapShot.docs.forEach((doc) => {
       emp.push({ ...doc.data(), id: doc.id });
-      if (doc.data().author === data.author) {
+      if (doc.id === data.id) {
         setIsClicked(true);
       }
     });
@@ -105,7 +110,7 @@ const LikePart = ({ data, op }) => {
   };
 
   const loginHandler = () => {
-    console.log("로그인 하세요!");
+    setClickCount(true);
   };
 
   function Icon({ isClicked }) {

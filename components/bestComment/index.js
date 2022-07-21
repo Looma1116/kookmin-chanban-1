@@ -11,6 +11,8 @@ import {
 import { useState, useEffect } from "react";
 import Bestcomments from "./Bestcomments";
 import styles from "./Bestcomments.module.css";
+import { useRecoilValue } from "recoil";
+import { communityState } from "../recoil/recoil";
 
 const BestComment = () => {
   const router = useRouter();
@@ -19,6 +21,7 @@ const BestComment = () => {
   const [alter, setAlter] = useState([]);
   const [disagree, setDisagree] = useState([]);
   const [isFetched, setIsFetched] = useState(false);
+  const community = useRecoilValue(communityState);
 
   useEffect(() => {
     fetchAgreeComment();
@@ -26,9 +29,14 @@ const BestComment = () => {
     fetchDisagreeComment();
   }, [isFetched]);
 
+  console.log(agree);
+  console.log(alter);
+  console.log(disagree);
+
   const fetchAgreeComment = async () => {
     const q = query(
-      collection(db, "agenda", `${router.query.id}`, "agreeComment")
+      collection(db, community, `${router.query.id}`, "agreeComment"),
+      where("hide", "==", false)
     );
     const snapshot = await getDocs(q);
     let data = [];
@@ -36,11 +44,14 @@ const BestComment = () => {
       data.push({ ...doc.data(), id: doc.id });
     });
     setAgree(data);
+    console.log(data);
+    setIsFetched(true);
   };
 
   const fetchAlternativeComment = async () => {
     const q = query(
-      collection(db, "agenda", `${router.query.id}`, "alternativeComment")
+      collection(db, community, `${router.query.id}`, "alternativeComment"),
+      where("hide", "==", false)
     );
     const snapshot = await getDocs(q);
     let data = [];
@@ -48,11 +59,14 @@ const BestComment = () => {
       data.push({ ...doc.data(), id: doc.id });
     });
     setAlter(data);
+    console.log(data);
+    setIsFetched(true);
   };
 
   const fetchDisagreeComment = async () => {
     const q = query(
-      collection(db, "agenda", `${router.query.id}`, "disagreeComment")
+      collection(db, community, `${router.query.id}`, "disagreeComment"),
+      where("hide", "==", false)
     );
     const snapshot = await getDocs(q);
     let data = [];
@@ -60,9 +74,8 @@ const BestComment = () => {
       data.push({ ...doc.data(), id: doc.id });
     });
     setDisagree(data);
-    if (!isFetched) {
-      setIsFetched(true);
-    }
+    console.log(data);
+    setIsFetched(true);
   };
 
   const sortedAgree = agree.sort((a, b) => {
