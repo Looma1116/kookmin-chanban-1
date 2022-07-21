@@ -97,7 +97,7 @@ const Agenda = () => {
             {/* <News /> */}
             <BestComment />
             <Vote agenda={agenda} />
-            {/* <Comment /> */}
+            <Comment />
             {clickCount ? <LogInModal /> : null}
           </div>
         ) : null}
