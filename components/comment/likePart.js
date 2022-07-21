@@ -1,10 +1,13 @@
+import { getAuth } from "firebase/auth";
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   getFirestore,
   increment,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -18,10 +21,31 @@ const LikePart = ({ data, op }) => {
   const login = useRecoilValue(loginState);
   const db = getFirestore();
   const router = useRouter();
+  const auth = getAuth();
   const [like, setLike] = useState(data.like);
   const [isClicked, setIsClicked] = useState(false);
   const community = useRecoilValue(communityState);
   const commentList = ["agreeComment", "alternativeComment", "disagreeComment"];
+  const [likeList, setLikeList] = useState([]);
+  const [isFetched, setIsFetched] = useState(false);
+
+  useEffect(() => {
+    initializeLike();
+  }, [isFetched]);
+
+  const initializeLike = async () => {
+    const q = collection(db, "user", auth.currentUser.uid, "likeComment");
+    const snapShot = await getDocs(q);
+    let emp = [];
+    snapShot.docs.forEach((doc) => {
+      emp.push({ ...doc.data(), id: doc.id });
+      if (doc.data().author === data.author) {
+        setIsClicked(true);
+      }
+    });
+    setLikeList(emp);
+    setIsFetched(true);
+  };
 
   const updateLike = async () => {
     const q = query(
@@ -39,6 +63,10 @@ const LikePart = ({ data, op }) => {
         item.id
       );
       await updateDoc(newLike, { like: increment(1) });
+      await setDoc(
+        doc(db, "user", auth.currentUser.uid, "likeComment", item.id),
+        data
+      );
     });
   };
 
@@ -58,6 +86,9 @@ const LikePart = ({ data, op }) => {
         item.id
       );
       await updateDoc(newLike, { like: increment(-1) });
+      await deleteDoc(
+        doc(db, "user", auth.currentUser.uid, "likeComment", item.id)
+      );
     });
   };
 
