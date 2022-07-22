@@ -95,3 +95,11 @@
 /* .textArea::-webkit-scrollbar {
   display: none;
 } */
+.likeBtn {
+  cursor: pointer;
+}
+
+.fullBtn {
+  cursor: pointer;
+  background-color: blue;
+}

@@ -1,92 +1,189 @@
-import { likeClickState, communityState, commentState } from "../recoil/recoil";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { getAuth } from "firebase/auth";
 import {
-  getFirestore,
-  query,
   collection,
+  deleteDoc,
   doc,
   getDocs,
-  getDoc,
+  getFirestore,
+  increment,
+  query,
   setDoc,
-  addDoc,
-  where,
   updateDoc,
-  arrayUnion,
+  where,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-const LikePart = ({ commentData }) => {
-  const auth = getAuth();
-  const router = useRouter();
-  const db = getFirestore();
-  const community = useRecoilValue(communityState);
-  const commentS = useRecoilValue(commentState);
-  const [likeClick, setLikeClick] = useRecoilState(likeClickState);
+import { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import styles from "../bestComment/Bestcomments.module.css";
+import { clickCountState, communityState, loginState } from "../recoil/recoil";
 
-  useEffect(()=>{
-    console.log(commentData);
-    console.log("라이크파트");
-    setLikeClick(false);
-    likeCommentFetch();
-  }, [])
-  const clickHandler = async() => {
-    console.log("클릭!");
-    let q = await addDoc(collection(db, "user", `${auth.currentUser.uid}`, "likeComment"), {
-      commentAuthorId: commentData.author,
-      article: commentData.article,
-      agendaId : commentData.id,
-    });
-    if (likeClick) {
-        console.log("좋아요 취소!");
-      let likeQuery = await updateDoc(
-        doc(
-          db,
-          `${community}`,
-          `${router.query.id}`,
-          `${commentS}`,
-          `${commentData.id}`
-        ),
-        {
-          like: commentData.like - 1,
-        }
-      );
-    } else {
-        console.log("좋아요!");
-      let likeQuery = await updateDoc(
-        doc(
-          db,
-          `${community}`,
-          `${router.query.id}`,
-          `${commentS}`,
-          `${commentData.id}`
-        ),
-        {
-          like: commentData.like + 1,
-        }
-      );
+const LikePart = ({ data, op }) => {
+  const login = useRecoilValue(loginState);
+  const db = getFirestore();
+  const router = useRouter();
+  const auth = getAuth();
+  const [like, setLike] = useState(data.like);
+  const [isClicked, setIsClicked] = useState(false);
+  const community = useRecoilValue(communityState);
+  const commentList = ["agreeComment", "alternativeComment", "disagreeComment"];
+  const [likeList, setLikeList] = useState([]);
+  const [isFetched, setIsFetched] = useState(false);
+  const [clickCount, setClickCount] = useRecoilState(clickCountState);
+
+  console.log(data);
+
+  useEffect(() => {
+    if (login) {
+      initializeLike();
     }
+  }, [login, isFetched]);
+
+  const initializeLike = async () => {
+    const q = collection(db, "user", auth.currentUser.uid, "likeComment");
+    const snapShot = await getDocs(q);
+    let emp = [];
+    snapShot.docs.forEach((doc) => {
+      emp.push({ ...doc.data(), id: doc.id });
+      if (doc.id === data.id) {
+        setIsClicked(true);
+      }
+    });
+    setLikeList(emp);
+    setIsFetched(true);
   };
 
-  const likeCommentFetch = async()=>{ // 다큐먼트가 안만들어져 있을 때 fetch를 어떻게 하는지 관건
-    let q = query(collection(db, "user", `${auth.currentUser.uid}`, "likeComment"), where("commentAuthorId", "==", `${commentData.id}`))
-    // 
-    let snapShot = await getDocs(q);
+  const updateLike = async () => {
+    const q = query(
+      collection(db, community, router.query.id, commentList[op - 1]),
+      where("hide", "==", false),
+      where("author", "==", `${data.author}`)
+    );
+    const snapShot = await getDocs(q);
+    snapShot.forEach(async (item) => {
+      const newLike = doc(
+        db,
+        community,
+        router.query.id,
+        commentList[op - 1],
+        item.id
+      );
+      await updateDoc(newLike, { like: increment(1) });
+      await setDoc(
+        doc(db, "user", auth.currentUser.uid, "likeComment", item.id),
+        data
+      );
+    });
+  };
 
-    if(snapShot.docs.length == 0){
-        console.log("좋아요한 댓글이 없음");
-    }
-    else{ //좋아요한 댓글이 있고
-        snapShot.docs.forEach((doc)=>{
-            if(doc.data().commentAuthorId==`${commentData.id}`){ // 현재 출력하려는 댓글의 저자와 동일한지 확인
-                console.log("좋아요한 댓글이 있음");
-                // setLikeClick(true); //동일하면 좋아요 눌렀다고 업데이트
-            }
-        })
-    }
+  const cancelLike = async () => {
+    const q = query(
+      collection(db, community, router.query.id, commentList[op - 1]),
+      where("hide", "==", false),
+      where("author", "==", `${data.author}`)
+    );
+    const snapShot = await getDocs(q);
+    snapShot.forEach(async (item) => {
+      const newLike = doc(
+        db,
+        community,
+        router.query.id,
+        commentList[op - 1],
+        item.id
+      );
+      await updateDoc(newLike, { like: increment(-1) });
+      await deleteDoc(
+        doc(db, "user", auth.currentUser.uid, "likeComment", item.id)
+      );
+    });
+  };
 
+  const likeHandler = () => {
+    setLike(like + 1);
+    setIsClicked(true);
+    updateLike();
+  };
+
+  const cancelHandler = () => {
+    setLike(like - 1);
+    setIsClicked(false);
+    cancelLike();
+  };
+
+  const loginHandler = () => {
+    setClickCount(true);
+  };
+
+  function Icon({ isClicked }) {
+    if (op === 1) {
+      return (
+        <svg
+          width="16"
+          height="12"
+          viewBox="0 0 16 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          onClick={
+            login ? (!isClicked ? likeHandler : cancelHandler) : loginHandler
+          }
+          className={isClicked ? styles.fullBtn : styles.likeBtn}
+        >
+          <path
+            d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
+            stroke="#2373EB"
+            strokeWidth="3"
+          />
+        </svg>
+      );
+    } else if (op === 2) {
+      return (
+        <svg
+          width="16"
+          height="12"
+          viewBox="0 0 16 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          onClick={
+            login ? (!isClicked ? likeHandler : cancelHandler) : loginHandler
+          }
+          className={isClicked ? styles.fullBtn : styles.likeBtn}
+        >
+          <path
+            d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
+            stroke="#FFC700"
+            strokeWidth="3"
+          />
+        </svg>
+      );
+    } else if (op === 3) {
+      return (
+        <svg
+          width="16"
+          height="12"
+          viewBox="0 0 16 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          onClick={
+            login ? (!isClicked ? likeHandler : cancelHandler) : loginHandler
+          }
+          className={isClicked ? styles.fullBtn : styles.likeBtn}
+        >
+          <path
+            d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
+            stroke="#FF0000"
+            strokeWidth="3"
+          />
+        </svg>
+      );
+    }
   }
-  return <div onClick={clickHandler}>{likeClick ? commentData.like + 1 : commentData.like}</div>;
+
+  return (
+    <div className={styles.like}>
+      <Icon isClicked={isClicked} />
+      &nbsp;
+      {like}
+    </div>
+  );
 };
 
 export default LikePart;

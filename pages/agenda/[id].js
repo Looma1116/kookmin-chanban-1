@@ -64,7 +64,6 @@ const Agenda = () => {
       fetchData();
     } else {
       setAgenda(JSON.parse(router.query.agenda));
-      console.log(agenda);
     }
   };
 
@@ -78,7 +77,6 @@ const Agenda = () => {
     snapshot.docs.forEach((doc) => {
       data.push({ ...doc.data(), id: doc.id });
     });
-    console.log(data);
     setAgenda(data[0]);
     setIsFetched(true);
   };
@@ -96,12 +94,8 @@ const Agenda = () => {
             <Article article={agenda.article} />
             {/* <News /> */}
             <BestComment />
-            <Vote
-              id={agenda.id}
-              title={agenda.title}
-              category={agenda.category}
-            />
-            {/*<Comment />*/}
+            <Vote agenda={agenda} />
+            <Comment />
             {clickCount ? <LogInModal /> : null}
           </div>
         ) : null}

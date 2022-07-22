@@ -23,10 +23,6 @@ const Statistic = (props) => {
     offset.push((acc[i] / total) * diameter);
   });
 
-  const mouseOverHandler = () => {
-    console.log(dataset);
-  };
-
   return (
     <div className={styles.statistic}>
       <svg viewBox="0 0 100 100" width="150" height="150">
@@ -39,7 +35,6 @@ const Statistic = (props) => {
           strokeWidth="10"
           strokeDasharray={`${fillSpace[0]} ${emptySpace[0]}`}
           strokeDashoffset={String(-offset[0])}
-          onMouseOver={mouseOverHandler}
         />
         <circle
           cx="50"
@@ -50,7 +45,6 @@ const Statistic = (props) => {
           strokeWidth="10"
           strokeDasharray={`${fillSpace[1]} ${emptySpace[1]}`}
           strokeDashoffset={String(-offset[1])}
-          onMouseOver={mouseOverHandler}
         />
         <circle
           cx="50"
@@ -61,7 +55,6 @@ const Statistic = (props) => {
           strokeWidth="10"
           strokeDasharray={`${fillSpace[2]} ${emptySpace[2]}`}
           strokeDashoffset={String(-offset[2])}
-          onMouseOver={mouseOverHandler}
         />
       </svg>
       <div className={styles.detail}>

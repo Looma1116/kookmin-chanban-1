@@ -11,6 +11,7 @@ import {
   doc,
   getDocs,
   getFirestore,
+  increment,
   query,
   setDoc,
   updateDoc,
@@ -22,43 +23,41 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   voteState,
   loginState,
-  agendaState,
   clickCountState,
   communityState,
   isVotedState,
   isWrotedState,
-  loadingState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
 
-const UserVote = ({ category, id, title }) => {
+const UserVote = ({
+  agenda: { category, id, title, numAgree, numAlternative, numDisagree },
+}) => {
   const auth = getAuth();
-  const [vote, setVote] = useRecoilState(voteState);
   const login = useRecoilValue(loginState);
   const db = getFirestore();
   const router = useRouter();
   const [docId, setDocId] = useState("");
-  const agenda = useRecoilValue(agendaState);
   const [agree, setAgree] = useState([]);
   const [alternative, setAlternative] = useState([]);
   const [disagree, setDisagree] = useState([]);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const [votewhere, setVotewhere] = useState(0);
   const [ivoted, setIvoted] = useState(false);
-  const [iam, setIam] = useState("");
   const community = useRecoilValue(communityState);
   const [loading, setLoading] = useState(true);
+  const [nAgree, setNAgree] = useState(numAgree);
+  const [nAlter, setNAlter] = useState(numAlternative);
+  const [nDisagree, setNDisagree] = useState(numDisagree);
+  const [revote, setRevote] = useState(false);
+  const [vote, setVote] = useRecoilState(voteState);
   const [isVoted, setIsVoted] = useRecoilState(isVotedState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
+  const iam = ["", "찬성을", "중립을", "반대를"];
 
   useEffect(() => {
     if (login) {
-      updateUser();
-      updateAgenda({
-        numAgree: agree ? agree.length : 0,
-        numAlternative: alternative ? alternative.length : 0,
-        numDisagree: disagree ? disagree.length : 0,
-      });
+      initializeVote();
       setLoading(false);
     }
   }, [agree, alternative, disagree]);
@@ -66,19 +65,17 @@ const UserVote = ({ category, id, title }) => {
   useEffect(() => {
     voteId();
     if (login) {
-      updateUser();
+      initializeVote();
     }
-  }, [login, ivoted]);
+  }, [login]);
 
   const voteId = async () => {
     const q = query(collection(db, community, `${router.query.id}`, "vote"));
-    console.log("1");
     const snapshot = await getDocs(q);
     let data = [];
     snapshot.docs.forEach((doc) => {
       data.push({ ...doc.data(), id: doc.id });
     });
-    console.log(data[0]);
     setDocId(data[0]?.id);
     setAgree(data[0]?.agreeUser);
     setAlternative(data[0]?.alternative);
@@ -134,52 +131,86 @@ const UserVote = ({ category, id, title }) => {
     setIsVoted(true);
   };
 
-  const updateAgenda = async ({ numAgree, numAlternative, numDisagree }) => {
-    console.log(numAgree, numAlternative, numDisagree);
-    await updateDoc(doc(db, community, router.query.id), {
-      numAgree: numAgree,
-      numAlternative: numAlternative,
-      numDisagree: numDisagree,
-      numVote: numAgree + numAlternative + numDisagree,
-    });
+  const updateAgenda = async (number) => {
+    const d = doc(db, community, router.query.id);
+    if (number === 1) {
+      await updateDoc(d, {
+        numAgree: increment(1),
+        numVote: increment(1),
+      });
+    } else if (number === -1) {
+      await updateDoc(d, {
+        numAgree: increment(-1),
+        numVote: increment(-1),
+      });
+      setRevote(false);
+    } else if (number === 2) {
+      await updateDoc(d, {
+        numAlternative: increment(1),
+        numVote: increment(1),
+      });
+    } else if (number === -2) {
+      await updateDoc(d, {
+        numAlternative: increment(-1),
+        numVote: increment(-1),
+      });
+      setRevote(false);
+    } else if (number === 3) {
+      await updateDoc(d, {
+        numDisagree: increment(1),
+        numVote: increment(1),
+      });
+    } else if (number === -3) {
+      await updateDoc(d, {
+        numDisagree: increment(-1),
+        numVote: increment(-1),
+      });
+      setRevote(false);
+    }
   };
 
-  const updateUser = async () => {
-    if (votewhere == 1 || agree?.indexOf(auth.currentUser.uid) >= 0) {
-      setIam("찬성을");
+  const initializeVote = () => {
+    if (agree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(1);
       setIsVoted(true);
       setVote("agreeComment");
-    } else if (
-      votewhere == 2 ||
-      alternative?.indexOf(auth.currentUser.uid) >= 0
-    ) {
-      setIam("중립을");
+    } else if (alternative?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(2);
       setIsVoted(true);
       setVote("alternativeComment");
-    } else if (votewhere == 3 || disagree?.indexOf(auth.currentUser.uid) >= 0) {
-      setIam("반대를");
+    } else if (disagree?.indexOf(auth.currentUser.uid) >= 0) {
       setVotewhere(3);
       setIsVoted(true);
       setVote("disagreeComment");
-    } else {
-      console.log("투표 해주세요.");
     }
+    setLoading(false);
+  };
+
+  const updateUser = () => {
+    if (votewhere == 1) {
+      setIsVoted(true);
+      setVote("agreeComment");
+    } else if (votewhere == 2) {
+      setIsVoted(true);
+      setVote("alternativeComment");
+    } else if (votewhere == 3) {
+      setIsVoted(true);
+      setVote("disagreeComment");
+    }
+    setLoading(false);
   };
 
   const agreeHandler = () => {
     setVote("agreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
       setLoading(true);
+      setNAgree(nAgree + 1);
+      setVotewhere(1);
       setIvoted(true);
-      agreeCount();
-      updateVote();
-      updateAgenda({
-        numAgree: agree ? agree.length : 0,
-        numAlternative: alternative ? alternative.length : 0,
-        numDisagree: disagree ? disagree.length : 0,
-      });
+      updateUser();
+      agreeCount(); // agreeUser 배열에 uid 추가
+      updateVote(); // user에 joinedAgenda 추가
+      updateAgenda(1); // numAgree+1
     } else {
       setClickCount(true);
     }
@@ -189,14 +220,13 @@ const UserVote = ({ category, id, title }) => {
     setVote("alternativeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
       setLoading(true);
+      setNAlter(nAlter + 1);
+      setVotewhere(2);
       setIvoted(true);
+      updateUser();
       alterCount();
       updateVote();
-      updateAgenda({
-        numAgree: agree ? agree.length : 0,
-        numAlternative: alternative ? alternative.length : 0,
-        numDisagree: disagree ? disagree.length : 0,
-      });
+      updateAgenda(2);
     } else {
       setClickCount(true);
     }
@@ -206,14 +236,13 @@ const UserVote = ({ category, id, title }) => {
     setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
       setLoading(true);
+      setNDisagree(nDisagree + 1);
+      setVotewhere(3);
       setIvoted(true);
+      updateUser();
       disagreeCount();
       updateVote();
-      updateAgenda({
-        numAgree: agree ? agree.length : 0,
-        numAlternative: alternative ? alternative.length : 0,
-        numDisagree: disagree ? disagree.length : 0,
-      });
+      updateAgenda(3);
     } else {
       setClickCount(true);
     }
@@ -225,16 +254,22 @@ const UserVote = ({ category, id, title }) => {
       await updateDoc(q, {
         agreeUser: arrayRemove(auth.currentUser.uid),
       });
+      updateAgenda(-1);
+      setNAgree(nAgree - 1);
     } else if (votewhere === 2) {
       const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
       await updateDoc(q, {
         alternative: arrayRemove(`${auth.currentUser.uid}`),
       });
+      updateAgenda(-2);
+      setNAlter(nAlter - 1);
     } else if (votewhere === 3) {
       const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
       await updateDoc(q, {
         disagreeUser: arrayRemove(`${auth.currentUser.uid}`),
       });
+      updateAgenda(-3);
+      setNDisagree(nDisagree - 1);
     }
     setVotewhere(0);
   };
@@ -243,14 +278,13 @@ const UserVote = ({ category, id, title }) => {
     await deleteDoc(
       doc(db, "user", auth.currentUser.uid, "wroteComment", router.query.id)
     );
-    if (iam === "찬성") {
+    if (vote === "agreeComment") {
       const agreeCommentRef = collection(
         db,
         community,
         router.query.id,
         "agreeComment"
       );
-      console.log(agreeCommentRef);
 
       const q = query(
         agreeCommentRef,
@@ -260,7 +294,6 @@ const UserVote = ({ category, id, title }) => {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (document) => {
         // doc.data() is never undefined for query doc snapshots
-
         const commentRef = doc(
           db,
           community,
@@ -270,8 +303,106 @@ const UserVote = ({ category, id, title }) => {
         );
         await updateDoc(commentRef, { hide: true });
       });
+      const userRef = query(
+        collection(db, "user", auth.currentUser.uid, "wroteComment"),
+        where("story", "==", router.query.id)
+      );
+      const userSnapshot = await getDocs(userRef);
+      userSnapshot.forEach(async (item) => {
+        const userTime = doc(
+          db,
+          "user",
+          auth.currentUser.uid,
+          "wroteComment",
+          item.id
+        );
+        await updateDoc(userTime, { hide: true });
+      });
+    } else if (vote === "alternativeComment") {
+      const agreeCommentRef = collection(
+        db,
+        community,
+        router.query.id,
+        "alternativeComment"
+      );
+
+      const q = query(
+        agreeCommentRef,
+        where("author", "==", `${auth.currentUser.uid}`)
+      );
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (document) => {
+        // doc.data() is never undefined for query doc snapshots
+        const commentRef = doc(
+          db,
+          community,
+          router.query.id,
+          "alternativeComment",
+          document.id
+        );
+        await updateDoc(commentRef, { hide: true });
+      });
+
+      const userRef = query(
+        collection(db, "user", auth.currentUser.uid, "wroteComment"),
+        where("story", "==", router.query.id)
+      );
+      const userSnapshot = await getDocs(userRef);
+      userSnapshot.forEach(async (item) => {
+        const userTime = doc(
+          db,
+          "user",
+          auth.currentUser.uid,
+          "wroteComment",
+          item.id
+        );
+        await updateDoc(userTime, { hide: true });
+      });
+    } else if (vote === "disagreeComment") {
+      const agreeCommentRef = collection(
+        db,
+        community,
+        router.query.id,
+        "disagreeComment"
+      );
+
+      const q = query(
+        agreeCommentRef,
+        where("author", "==", `${auth.currentUser.uid}`)
+      );
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (document) => {
+        // doc.data() is never undefined for query doc snapshots
+        const commentRef = doc(
+          db,
+          community,
+          router.query.id,
+          "disagreeComment",
+          document.id
+        );
+        await updateDoc(commentRef, { hide: true });
+      });
+      const userRef = query(
+        collection(db, "user", auth.currentUser.uid, "wroteComment"),
+        where("story", "==", router.query.id)
+      );
+      const userSnapshot = await getDocs(userRef);
+      userSnapshot.forEach(async (item) => {
+        const userTime = doc(
+          db,
+          "user",
+          auth.currentUser.uid,
+          "wroteComment",
+          item.id
+        );
+        await updateDoc(userTime, { hide: true });
+      });
     }
+
     setIsWroted(false);
+    setIsVoted(false);
   };
 
   const deleteUserinfo = async () => {
@@ -281,11 +412,11 @@ const UserVote = ({ category, id, title }) => {
   };
 
   const voteChangeHandler = () => {
+    setRevote(true);
+    setIsVoted(false);
     deleteVote();
     deleteComment();
     deleteUserinfo();
-    setIvoted(false);
-    setIsVoted(false);
   };
 
   return (
@@ -304,14 +435,16 @@ const UserVote = ({ category, id, title }) => {
           <h2 className={styles.title}>투표 결과를 불러오는 중입니다...</h2>
         </div>
       ) : (
-        <div className={styles.statistic}>
-          <h2 className={styles.title}>{iam} 선택 하셨습니다!</h2>
-          <Statistic
-            agree={agree ? agree.length : 0}
-            alternative={alternative ? alternative.length : 0}
-            disagree={disagree ? disagree.length : 0}
-            onClick={voteChangeHandler}
-          />
+        <div>
+          <div className={styles.statistic}>
+            <h2 className={styles.title}>{iam[votewhere]} 선택 하셨습니다!</h2>
+            <Statistic
+              agree={nAgree}
+              alternative={nAlter}
+              disagree={nDisagree}
+              onClick={voteChangeHandler}
+            />
+          </div>
         </div>
       )}
     </div>

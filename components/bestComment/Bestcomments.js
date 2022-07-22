@@ -1,6 +1,9 @@
+import { useRecoilValue } from "recoil";
+import { loginState } from "../recoil/recoil";
 import styles from "./Bestcomments.module.css";
 
 const Bestcomments = (props) => {
+  const login = useRecoilValue(loginState);
   const likeHandler = () => {
     console.log("댓글 좋아요!");
   };
@@ -27,6 +30,10 @@ const Bestcomments = (props) => {
     }
   }
 
+  const loginHandler = () => {
+    console.log("로그인 하세요!");
+  };
+
   function Icon() {
     if (props.op === 1) {
       return (
@@ -36,7 +43,8 @@ const Bestcomments = (props) => {
           viewBox="0 0 16 12"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          onClick={likeHandler}
+          onClick={login ? likeHandler : loginHandler}
+          className={styles.likeBtn}
         >
           <path
             d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
@@ -53,7 +61,8 @@ const Bestcomments = (props) => {
           viewBox="0 0 16 12"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          onClick={likeHandler}
+          onClick={login ? likeHandler : loginHandler}
+          className={styles.likeBtn}
         >
           <path
             d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
@@ -70,7 +79,8 @@ const Bestcomments = (props) => {
           viewBox="0 0 16 12"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          onClick={likeHandler}
+          onClick={login ? likeHandler : loginHandler}
+          className={styles.likeBtn}
         >
           <path
             d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"

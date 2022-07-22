@@ -6,6 +6,7 @@ import {
   where,
   getDocs,
   getDoc,
+  updateDoc,
 } from "firebase/firestore";
 import {
   categoryState,
@@ -45,23 +46,44 @@ const FetchData = ({ fetchedData }) => {
 
     const testSnapshot = await getDocs(wroteAgendaRef);
 
-    testSnapshot.forEach((doc) => {
+    testSnapshot.forEach(async(document) => {
+      if(document.data().imageUrl==""){
+        if (document.data().category == "정치") {
+          await updateDoc(doc(db, "userAgenda", `${document.id}`), {
+            imageUrl:
+              "https://firebasestorage.googleapis.com/v0/b/peoplevoice-fcea9.appspot.com/o/94043_307275_2538.jpg?alt=media&token=c4f4dd7f-53d0-44b0-a5b1-09f456198867",
+          });
+          console.log("배경화면 업데이트");
+        } else if (document.data().category == "연애") {
+          await updateDoc(doc(db, "userAgenda", `${document.id}`), {
+            imageUrl:
+              "https://firebasestorage.googleapis.com/v0/b/peoplevoice-fcea9.appspot.com/o/pngtree-love-letter-icon-design-template-vector-isolated-png-image_856595.jpg?alt=media&token=12de30e6-3790-47df-a7c4-3a15213b50ff",
+          });
+          console.log("배경화면 업데이트");
+        } else if (document.data().category == "진로") {
+          await updateDoc(doc(db, "userAgenda", `${document.id}`), {
+            imageUrl:
+              "https://firebasestorage.googleapis.com/v0/b/peoplevoice-fcea9.appspot.com/o/%EC%A7%84%EB%A1%9C%EC%B2%B4%ED%97%98%EC%BD%94%EB%94%94%EB%84%A4%EC%9D%B4%ED%84%B01-768x438.png?alt=media&token=25c3f6f2-97e0-4233-af3d-fd96b70df6a9",
+          });
+          console.log("배경화면 업데이트");
+        }
+      }
       const timeStamp = new Date();
       //console.log(timeStamp.getTime()); //현재 시간을 초단위로 출력 => 나노초 단위로 출력된다.
-      //console.log(doc.data().created.seconds); //게시물이 만들어진 시간을 초단위로 출력
-      const diffDate = timeStamp.getTime() - doc.data().created.seconds * 1000;
+      //console.log(document.data().created.seconds); //게시물이 만들어진 시간을 초단위로 출력
+      const diffDate = timeStamp.getTime() - document.data().created.seconds * 1000;
       const dateDays = parseInt(Math.abs(diffDate / (1000 * 3600 * 24))); // 차이 일수 계산
       if (dateDays <= sort) {
         if (search === null || search === "") {
-          data.push({ ...doc.data(), id: doc.id });
+          data.push({ ...document.data(), id: document.id });
         } else {
           if (
-            doc
+            document
               .data()
               .title.replace(/ /gi, "")
               .includes(search.replace(/ /gi, ""))
           ) {
-            data.push({ ...doc.data(), id: doc.id });
+            data.push({ ...document.data(), id: doc.id });
           }
         }
       }
@@ -81,6 +103,7 @@ const FetchData = ({ fetchedData }) => {
                     pathname: `/userAgenda/${data.id}`,
                     query: { agenda: JSON.stringify(data) },
                   }}
+                  as={`/userAgenda/${data.id}`}
                 >
                   <a>
                     <AgendaCard props={data} />
