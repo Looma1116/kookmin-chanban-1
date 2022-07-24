@@ -94,6 +94,7 @@ const KakaoLogin = () => {
         } else {
           setUid(comunication.data.uid);
           await fetchData(comunication);
+          console.log(comunication.data.uid);
           const checkDeletedUserRef = collection(db, "user");
           const checkDeletedUserQuery = query(
             checkDeletedUserRef,
@@ -101,6 +102,7 @@ const KakaoLogin = () => {
           );
           await onSnapshot(checkDeletedUserQuery, (snapshot) => {
             const { length } = snapshot.docs;
+            console.log(length);
             if (length > 0) {
               setUser(snapshot.docs.map((str) => str.data()));
               setDeleted(true);
