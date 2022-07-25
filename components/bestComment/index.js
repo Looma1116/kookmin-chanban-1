@@ -29,9 +29,9 @@ const BestComment = () => {
     fetchDisagreeComment();
   }, [isFetched]);
 
-  console.log(agree);
-  console.log(alter);
-  console.log(disagree);
+  // console.log(agree);
+  // console.log(alter);
+  // console.log(disagree);
 
   const fetchAgreeComment = async () => {
     const q = query(
