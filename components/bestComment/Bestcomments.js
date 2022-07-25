@@ -1,111 +1,42 @@
-import { useRecoilValue } from "recoil";
-import { loginState } from "../recoil/recoil";
+import Like from "./like.js";
 import styles from "./Bestcomments.module.css";
 
-const Bestcomments = (props) => {
-  const login = useRecoilValue(loginState);
-  const likeHandler = () => {
-    console.log("댓글 좋아요!");
-  };
-
+const Bestcomments = ({ com, op }) => {
   function Author() {
-    if (props.op === 1) {
+    if (op === 1) {
       return (
         <span className={styles.agreeauthor}>
-          &nbsp;{props.com[0]?.authorLevel}&nbsp;
+          &nbsp;{com[0]?.authorLevel}&nbsp;
         </span>
       );
-    } else if (props.op === 2) {
+    } else if (op === 2) {
       return (
         <span className={styles.alterauthor}>
-          &nbsp;{props.com[0]?.authorLevel}&nbsp;
+          &nbsp;{com[0]?.authorLevel}&nbsp;
         </span>
       );
-    } else if (props.op === 3) {
+    } else if (op === 3) {
       return (
         <span className={styles.disagreeauthor}>
-          &nbsp;{props.com[0]?.authorLevel}&nbsp;
+          &nbsp;{com[0]?.authorLevel}&nbsp;
         </span>
       );
     }
   }
 
-  const loginHandler = () => {
-    console.log("로그인 하세요!");
-  };
+  console.log(com[0]);
 
-  function Icon() {
-    if (props.op === 1) {
-      return (
-        <svg
-          width="16"
-          height="12"
-          viewBox="0 0 16 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          onClick={login ? likeHandler : loginHandler}
-          className={styles.likeBtn}
-        >
-          <path
-            d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
-            stroke="#2373EB"
-            strokeWidth="3"
-          />
-        </svg>
-      );
-    } else if (props.op === 2) {
-      return (
-        <svg
-          width="16"
-          height="12"
-          viewBox="0 0 16 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          onClick={login ? likeHandler : loginHandler}
-          className={styles.likeBtn}
-        >
-          <path
-            d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
-            stroke="#FFC700"
-            strokeWidth="3"
-          />
-        </svg>
-      );
-    } else if (props.op === 3) {
-      return (
-        <svg
-          width="16"
-          height="12"
-          viewBox="0 0 16 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          onClick={login ? likeHandler : loginHandler}
-          className={styles.likeBtn}
-        >
-          <path
-            d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
-            stroke="#FF0000"
-            strokeWidth="3"
-          />
-        </svg>
-      );
-    }
-  }
   return (
     <div className={styles.card}>
       <header className={styles.header}>
         <Author />
-        <div className={styles.name}>&nbsp;{props.com[0]?.authorName}</div>
-        <div className={styles.like}>
-          <Icon />
-          &nbsp;
-          {props.com[0]?.like}
-        </div>
+        <div className={styles.name}>&nbsp;{com[0]?.authorName}</div>
+        <Like data={com[0]} op={op} />
       </header>
       <p>
-        {props.com[0]?.article.length > 55
-          ? `${props.com[0]?.article.slice(0, 55)}...`
-          : props.com[0]?.article}
+        {com[0]?.article.length > 55
+          ? `${com[0]?.article.slice(0, 55)}...`
+          : com[0]?.article}
       </p>
     </div>
   );

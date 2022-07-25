@@ -17,7 +17,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../bestComment/Bestcomments.module.css";
 import { clickCountState, communityState, loginState } from "../recoil/recoil";
 
-const LikePart = ({ data, op }) => {
+const Like = ({ data, op }) => {
   const login = useRecoilValue(loginState);
   const db = getFirestore();
   const router = useRouter();
@@ -32,6 +32,7 @@ const LikePart = ({ data, op }) => {
   useEffect(() => {
     if (login) {
       initializeLike();
+      console.log(isClicked);
     }
   }, [login, isFetched]);
 
@@ -39,11 +40,17 @@ const LikePart = ({ data, op }) => {
     const q = collection(db, "user", auth.currentUser.uid, "likeComment");
     const snapShot = await getDocs(q);
     snapShot.docs.forEach((doc) => {
+      console.log(doc);
+      console.log(data);
+      console.log(doc.id, data.id);
       if (doc.id === data.id) {
         setIsClicked(true);
+        console.log(isClicked);
       }
     });
-    setIsFetched(true);
+    if (!isFetched) {
+      setIsFetched(true);
+    }
   };
 
   const updateLike = async () => {
@@ -95,12 +102,14 @@ const LikePart = ({ data, op }) => {
     setLike(like + 1);
     setIsClicked(true);
     updateLike();
+    console.log(isClicked);
   };
 
   const cancelHandler = () => {
     setLike(like - 1);
     setIsClicked(false);
     cancelLike();
+    console.log(isClicked);
   };
 
   const loginHandler = () => {
@@ -180,4 +189,4 @@ const LikePart = ({ data, op }) => {
   );
 };
 
-export default LikePart;
+export default Like;
