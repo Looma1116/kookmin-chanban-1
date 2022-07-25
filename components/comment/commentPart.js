@@ -55,42 +55,6 @@ const CommentPart = ({ isSubmit, commentData }) => {
       return <span className={styles.disagreeauthor}>&nbsp;{level}&nbsp;</span>;
     }
   }
-  const beforeLiked = async (Id) => {
-    let q = query(
-      collection(db, "user", `${auth.currentUser.uid}`, "likeComment"),
-      where("commentId", "==", `${Id}`)
-    );
-    let snapShot = await getDocs(q);
-    if (snapShot.docs.length == 0) {
-      console.log("좋아요 누른 댓글이 없음.");
-      return false;
-    } else {
-      snapShot.docs.forEach((doc) => {
-        console.log(doc.data());
-      });
-      return true;
-    }
-  };
-  // async function LikePart(data) {
-  //   console.log(data);
-  //   if (await beforeLiked(data.data.id)) {
-  //     console.log(data.data);
-  //     console.log("좋아요 누른 댓글");
-  //     return (
-  //       <div>
-  //         <span className={styles.likeBtn}>{data.data.like}</span>
-  //       </div>
-  //     );
-  //   } else {
-  //     console.log(data.data.article);
-  //     console.log("좋아요 누른 댓글이 아님");
-  //     return (
-  //       <div>
-  //         <span>{data.data.like}</span>
-  //       </div>
-  //     );
-  //   }
-  // }
 
   return (
     <div className={styles.commentlist}>
