@@ -32,7 +32,6 @@ const Like = ({ data, op }) => {
   useEffect(() => {
     if (login) {
       initializeLike();
-      console.log(isClicked);
     }
   }, [login, isFetched]);
 
@@ -40,12 +39,8 @@ const Like = ({ data, op }) => {
     const q = collection(db, "user", auth.currentUser.uid, "likeComment");
     const snapShot = await getDocs(q);
     snapShot.docs.forEach((doc) => {
-      console.log(doc);
-      console.log(data);
-      console.log(doc.id, data.id);
       if (doc.id === data.id) {
         setIsClicked(true);
-        console.log(isClicked);
       }
     });
     if (!isFetched) {
@@ -120,60 +115,60 @@ const Like = ({ data, op }) => {
     if (op === 1) {
       return (
         <svg
-          width="16"
+          width="13"
           height="12"
-          viewBox="0 0 16 12"
-          fill="none"
+          viewBox="0 0 13 12"
+          fill={isClicked ? "#2373EB" : "none"}
           xmlns="http://www.w3.org/2000/svg"
           onClick={
             login ? (!isClicked ? likeHandler : cancelHandler) : loginHandler
           }
-          className={isClicked ? styles.fullBtn : styles.likeBtn}
+          className={styles.likeBtn}
         >
           <path
-            d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
+            d="M1.73198 10.25L6.49512 2L11.2583 10.25H1.73198Z"
             stroke="#2373EB"
-            strokeWidth="3"
+            strokeWidth="2"
           />
         </svg>
       );
     } else if (op === 2) {
       return (
         <svg
-          width="16"
+          width="13"
           height="12"
-          viewBox="0 0 16 12"
-          fill="none"
+          viewBox="0 0 13 12"
+          fill={isClicked ? "#FFC700" : "none"}
           xmlns="http://www.w3.org/2000/svg"
           onClick={
             login ? (!isClicked ? likeHandler : cancelHandler) : loginHandler
           }
-          className={isClicked ? styles.fullBtn : styles.likeBtn}
+          className={styles.likeBtn}
         >
           <path
-            d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
+            d="M1.73198 10.25L6.49512 2L11.2583 10.25H1.73198Z"
             stroke="#FFC700"
-            strokeWidth="3"
+            strokeWidth="2"
           />
         </svg>
       );
     } else if (op === 3) {
       return (
         <svg
-          width="16"
+          width="13"
           height="12"
-          viewBox="0 0 16 12"
-          fill="none"
+          viewBox="0 0 13 12"
+          fill={isClicked ? "#FF0000" : "none"}
           xmlns="http://www.w3.org/2000/svg"
           onClick={
             login ? (!isClicked ? likeHandler : cancelHandler) : loginHandler
           }
-          className={isClicked ? styles.fullBtn : styles.likeBtn}
+          className={styles.likeBtn}
         >
           <path
-            d="M3.06983 9.75L8 2.63391L12.9302 9.75H3.06983Z"
+            d="M1.73198 10.25L6.49512 2L11.2583 10.25H1.73198Z"
             stroke="#FF0000"
-            strokeWidth="3"
+            strokeWidth="2"
           />
         </svg>
       );
@@ -184,7 +179,7 @@ const Like = ({ data, op }) => {
     <div className={styles.like}>
       <Icon isClicked={isClicked} />
       &nbsp;
-      {like}
+      <span className={styles.span}>{like}</span>
     </div>
   );
 };

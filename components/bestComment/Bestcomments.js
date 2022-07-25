@@ -24,8 +24,6 @@ const Bestcomments = ({ com, op }) => {
     }
   }
 
-  console.log(com[0]);
-
   return (
     <div className={styles.card}>
       <header className={styles.header}>
