@@ -28,7 +28,7 @@ const CommentSec = () => {
       setAlterSelected(true);
       setDisagreeSelected(false);
     }
-  }, [vote]);
+  }, []);
 
   const agreeClickHandler = (e) => {
     e.preventDefault();

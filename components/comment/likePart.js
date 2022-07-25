@@ -30,8 +30,6 @@ const LikePart = ({ data, op }) => {
   const [isFetched, setIsFetched] = useState(false);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
 
-  console.log(data);
-
   useEffect(() => {
     if (login) {
       initializeLike();

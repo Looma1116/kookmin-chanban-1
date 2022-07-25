@@ -51,7 +51,6 @@ const Comment = () => {
     if (logIn) {
       userFetch();
       console.log("유저정보 패치");
-      console.log(user);
       document.activeElement.blur();
     }
   }, [logIn]);
@@ -61,7 +60,7 @@ const Comment = () => {
     }
     console.log("댓글 패치");
     commentFetch();
-  }, [commentSort, isVoted, isWroted]);
+  }, [commentSort, isVoted, submit]);
 
   const clickHandler = () => {
     if (!logIn) {
@@ -83,10 +82,8 @@ const Comment = () => {
       a.push({ id: doc.id, ...doc.data() });
     });
 
-    console.log(a);
     setCommentData(a);
     setLoading(false);
-    console.log(commentData);
   };
 
   const commentSend = async () => {
@@ -151,7 +148,6 @@ const Comment = () => {
     //
     let q = query(doc(db, "user", `${auth.currentUser.uid}`));
     let snapShot = await getDoc(q);
-    console.log(snapShot.data());
     const a = {
       name: snapShot.data().nickname,
       age: snapShot.data().age,
@@ -159,7 +155,6 @@ const Comment = () => {
       level: snapShot.data().level,
       ...snapShot.data(),
     };
-    console.log(a);
 
     setUser(a);
 
