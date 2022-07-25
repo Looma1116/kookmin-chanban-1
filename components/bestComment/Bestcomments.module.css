@@ -42,25 +42,8 @@
   align-items: center;
 }
 
-.agreeauthor {
+.author {
   font-weight: 500;
-  background: rgba(35, 115, 235, 0.32);
-  border-radius: 10px;
-  text-align: center;
-  padding-bottom: 2.7px;
-}
-
-.alterauthor {
-  font-weight: 500;
-  background: rgba(255, 199, 0, 0.32);
-  border-radius: 10px;
-  text-align: center;
-  padding-bottom: 2.7px;
-}
-
-.disagreeauthor {
-  font-weight: 500;
-  background: rgba(255, 0, 0, 0.32);
   border-radius: 10px;
   text-align: center;
   padding-bottom: 2.7px;
@@ -105,9 +88,4 @@
 
 .likeBtn {
   cursor: pointer;
-}
-
-.fullBtn {
-  cursor: pointer;
-  background-color: blue;
 }
