@@ -43,24 +43,27 @@
 }
 
 .agreeauthor {
-  font-weight: bold;
+  font-weight: 500;
   background: rgba(35, 115, 235, 0.32);
   border-radius: 10px;
   text-align: center;
+  padding-bottom: 2.7px;
 }
 
 .alterauthor {
-  font-weight: bold;
+  font-weight: 500;
   background: rgba(255, 199, 0, 0.32);
   border-radius: 10px;
   text-align: center;
+  padding-bottom: 2.7px;
 }
 
 .disagreeauthor {
-  font-weight: bold;
+  font-weight: 500;
   background: rgba(255, 0, 0, 0.32);
   border-radius: 10px;
   text-align: center;
+  padding-bottom: 2.7px;
 }
 
 .name {
@@ -68,10 +71,16 @@
 }
 
 .like {
+  font-weight: 500;
   display: flex;
   flex-direction: row;
   margin-left: auto;
   align-items: center;
+  justify-items: center;
+}
+
+.span {
+  padding-bottom: 2.7px;
 }
 
 .comment {
@@ -82,6 +91,7 @@
   max-height: 70px;
   overflow: hidden;
 }
+
 .textArea {
   overflow-x: hidden;
   overflow-y: auto;
@@ -92,9 +102,7 @@
   border: none;
   width: 100%;
 }
-/* .textArea::-webkit-scrollbar {
-  display: none;
-} */
+
 .likeBtn {
   cursor: pointer;
 }
