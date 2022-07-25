@@ -44,6 +44,7 @@ const Comment = () => {
   const isVoted = useRecoilValue(isVotedState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
   let [commentData, setCommentData] = useRecoilState(commentDataState);
+  const [loading, setLoading] = useState(true);
   let a = [];
 
   useEffect(() => {
@@ -68,6 +69,7 @@ const Comment = () => {
     }
   };
   const commentFetch = async () => {
+    setLoading(true);
     console.log(commentSort);
     let q = query(
       collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
@@ -83,6 +85,7 @@ const Comment = () => {
 
     console.log(a);
     setCommentData(a);
+    setLoading(false);
     console.log(commentData);
   };
 
@@ -202,7 +205,13 @@ const Comment = () => {
   return (
     <div>
       <CommentSec />
-      <CommentPart isSubmit={submit} commentData={commentData} />
+      {loading ? (
+        <div className={styles.loadingCard}>
+          <div>로딩 중.....</div>
+        </div>
+      ) : (
+        <CommentPart isSubmit={submit} commentData={commentData} />
+      )}
       {/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
       <div>
         <form onSubmit={submitHandler} className={styles.submit}>
