@@ -21,6 +21,10 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
+import styles from "./AgainLogin.module.css";
+import Image from "next/image";
+import icon from "../../../public/ICON.ico";
+import Card from "../../../ui/Card/Card";
 const againLogin = ({ uid, user, token }) => {
   const [show, setShow] = useRecoilState(loginInterfaceState);
   const [login, setLogin] = useRecoilState(loginState);
@@ -56,14 +60,34 @@ const againLogin = ({ uid, user, token }) => {
   return (
     <div>
       <Modal show={showModal}>
-        <div>
-          탈퇴날짜 : {user.deletedTime?.toDate().toLocaleDateString()}
-          귀하는 현재 회원탈퇴로 인한 7일간의 유예기간을 가지고 있습니다. 이
-          기간동안 복원을 할 시 기존에 사용했던 레벨과 경험치만 복구되고,
-          쓴글들은 돌아오지않습니다. 원치않을시에는 나가기를 선택해주세요.
-        </div>
-        <button onClick={handleRecovery}>복원</button> {/*hide 키기 */}
-        <button onClick={handleDelete}>나가기</button> {/*auth 지우기*/}
+        <span className={styles.total}>
+          <h1>잠깐! 스탑</h1>
+          <div className={styles.story}>
+            귀하는 현재 회원탈퇴로 인한 7일간의 유예기간을 가지고 있습니다. 이
+            기간동안 복원을 할 시 기존에 사용했던 레벨과 경험치만 복구되고,
+            쓴글들은 돌아오지않습니다. 원치않을시에는 나가기를 선택해주세요.
+          </div>
+          <div className={styles.recoverTitle}>복원할 계정</div>
+          <Card>
+            <Image src={icon} width="30%" height="30%" />
+            <div>
+              <div>
+                탈퇴날짜 : {user.deletedTime?.toDate().toLocaleDateString()}
+              </div>
+              <div>
+                탈퇴계정 : 닉네임-{user.nickname} level-{user.level}
+              </div>
+            </div>
+          </Card>
+          <div className={styles.btn}>
+            <button className={styles.submitbtn} onClick={handleRecovery}>
+              복원
+            </button>
+            <button className={styles.cancelbtn} onClick={handleDelete}>
+              나가기
+            </button>
+          </div>
+        </span>
       </Modal>
     </div>
   );
