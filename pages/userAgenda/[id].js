@@ -28,9 +28,75 @@ import Comment from "../../components/comment";
 import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
 
+export async function getServerSideProps(context) {
+  const db = getFirestore();
+
+  let agreeComment = [];
+  let alternativeComment = [];
+  let disagreeComment = [];
+  const Id = await context.query;
+
+  const agreeRef = query(
+    // 찬성 댓글
+    collection(db, "userAgenda", `${Id.id}`, "agreeComment"),
+    where("hide", "==", false)
+  );
+  const agreeSnapShot = await getDocs(agreeRef);
+
+  if (agreeSnapShot.docs.length == 0) {
+    console.log("찬성댓글 없음..");
+  } else {
+    agreeSnapShot.docs.forEach((doc) => {
+      agreeComment.push({ ...doc.data(), id: doc.id });
+    });
+  }
+
+  const alternativeRef = query(
+    // 중립 댓글
+    collection(db, "userAgenda", `${Id.id}`, "alternativeComment"),
+    where("hide", "==", false)
+  );
+  const alternativeSnapShot = await getDocs(alternativeRef);
+
+  if (alternativeSnapShot.docs.length == 0) {
+    console.log("중립댓글 없음");
+  } else {
+    alternativeSnapShot.docs.forEach((doc) => {
+      alternativeComment.push({ ...doc.data(), id: doc.id });
+    });
+  }
+
+  const disagreeRef = query(
+    // 반대 댓글
+    collection(db, "userAgenda", `${Id.id}`, "disagreeComment"),
+    where("hide", "==", false)
+  );
+  const disagreeSnapShot = await getDocs(disagreeRef);
+
+  if (disagreeSnapShot.docs.length == 0) {
+    console.log("반대댓글 없음");
+  } else {
+    disagreeSnapShot.docs.forEach((doc) => {
+      disagreeComment.push({ ...doc.data(), id: doc.id });
+    });
+  }
+
+  const agreeData = JSON.stringify(agreeComment);
+  const alternativeData = JSON.stringify(alternativeComment);
+  const disagreeData = JSON.stringify(disagreeComment);
+
+  return {
+    props: {
+      agreeData,
+      disagreeData,
+      alternativeData,
+    },
+  };
+}
+
 // HpwvymAsOmqwAPEuTrIs
 
-const Agenda = () => {
+const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
   const router = useRouter();
   const db = getFirestore();
   const [agenda, setAgenda] = useState(null);
@@ -42,6 +108,13 @@ const Agenda = () => {
   const [vote, setVote] = useRecoilState(voteState);
   const [comment, setComment] = useRecoilState(commentState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
+  const [agreeFetchData, setAgreeFetchData] = useState(JSON.parse(agreeData));
+  const [disagreeFetchData, setDisagreeFetchData] = useState(
+    JSON.parse(disagreeData)
+  );
+  const [alternativeFetchData, setAlternativeFetchData] = useState(
+    JSON.parse(alternativeData)
+  );
 
   console.log(agenda);
 
@@ -51,12 +124,12 @@ const Agenda = () => {
     setComment("alternativeComment");
     setVote("alternativeComment");
     setIsWroted(false);
-    checkIn();
   }, []);
 
   useEffect(() => {
     fetchData();
   }, [isFetched, clickCount]);
+
 
   const checkIn = () => {
     if (router.query.agenda === undefined) {
@@ -92,7 +165,11 @@ const Agenda = () => {
           {/* <News /> */}
           <BestComment />
           <Vote agenda={agenda} />
-          <Comment />
+          <Comment
+            agreeData={agreeFetchData}
+            alternativeData={alternativeFetchData}
+            disagreeData={disagreeFetchData}
+          />
           {clickCount ? <LogInModal /> : null}
         </div>
       ) : null}
