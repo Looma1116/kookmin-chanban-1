@@ -1,50 +1,18 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import {
-  commentState,
-  commentDataState,
-  loginState,
-  clickCountState,
-  likeClickState,
-  communityState,
-} from "../recoil/recoil";
-import {
-  collection,
-  documentId,
-  getDocs,
-  getFirestore,
-  query,
-  where,
-  doc,
-  updateDoc,
-  getDoc,
-  setDoc,
-  arrayUnion,
-  addDoc,
-  deleteDoc,
-} from "firebase/firestore";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { getAuth } from "firebase/auth";
+import { useEffect } from "react";
+import { commentState } from "../recoil/recoil";
+import { useRecoilValue } from "recoil";
 import styles from "../bestComment/Bestcomments.module.css";
 import LikePart from "./likePart";
 
-const CommentPart = ({ isSubmit, commentData }) => {
-  const router = useRouter();
-  const auth = getAuth();
-  const db = getFirestore();
-  const [clickCount, setClickCount] = useRecoilState(clickCountState);
+const CommentPart = ({
+  isSubmit,
+  agreeComment,
+  alternativeComment,
+  disagreeComment,
+}) => {
   const commentS = useRecoilValue(commentState);
-  const logIn = useRecoilValue(loginState);
-  const [likeClick, setLikeClick] = useRecoilState(likeClickState);
-  let [click, setClick] = useState(false);
-  const community = useRecoilValue(communityState);
 
-  const [op, setOp] = useState(0);
-
-  useEffect(() => {
-    console.log(isSubmit);
-    console.log(commentS);
-  }, [commentS, isSubmit]);
+  useEffect(() => {}, [commentS, isSubmit]);
 
   function Author({ level }) {
     if (commentS === "agreeComment") {
@@ -55,15 +23,24 @@ const CommentPart = ({ isSubmit, commentData }) => {
       return <span className={styles.disagreeauthor}>&nbsp;{level}&nbsp;</span>;
     }
   }
+  const commentSort = () => {
+    if (commentS == "agreeComment") {
+      return agreeComment;
+    } else if (commentS == "alternativeComment") {
+      return alternativeComment;
+    } else {
+      return disagreeComment;
+    }
+  };
 
   return (
     <div className={styles.commentlist}>
-      {commentData != "" ? (
-        commentData.map((data) => {
+      {commentSort() != "" ? (
+        commentSort().map((data) => {
           return (
             <div key={Math.random()} className={styles.card}>
               <div>
-                {/* {console.log(data.id)} */}
+                {console.log(data)}
                 <header className={styles.header}>
                   <Author level={data.authorLevel} />
                   <div className={styles.name}>&nbsp;{data.authorName}</div>

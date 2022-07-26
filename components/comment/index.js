@@ -29,7 +29,7 @@ import CommentPart from "./commentPart";
 import { useRouter } from "next/router";
 import styles from "./comment.module.css";
 
-const Comment = () => {
+const Comment = ({agreeData, alternativeData, disagreeData}) => {
   const auth = getAuth();
   const router = useRouter();
   const db = getFirestore();
@@ -44,8 +44,12 @@ const Comment = () => {
   const isVoted = useRecoilValue(isVotedState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
   let [commentData, setCommentData] = useRecoilState(commentDataState);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   let a = [];
+
+  console.log(agreeData);
+  console.log(alternativeData);
+  console.log(disagreeData);
 
   useEffect(() => {
     if (logIn) {
@@ -58,8 +62,6 @@ const Comment = () => {
     if (logIn) {
       userFetch();
     }
-    console.log("댓글 패치");
-    commentFetch();
   }, [commentSort, isVoted, submit]);
 
   const clickHandler = () => {
@@ -67,24 +69,7 @@ const Comment = () => {
       setClickCount(true);
     }
   };
-  const commentFetch = async () => {
-    setLoading(true);
-    console.log(commentSort);
-    let q = query(
-      collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
-      where("hide", "==", false)
-    );
-    let snapShot = await getDocs(q);
-    a = [];
 
-    snapShot.docs.forEach((doc) => {
-      // console.log(doc.data());
-      a.push({ id: doc.id, ...doc.data() });
-    });
-
-    setCommentData(a);
-    setLoading(false);
-  };
 
   const commentSend = async () => {
     if (logIn) {
@@ -158,27 +143,6 @@ const Comment = () => {
 
     setUser(a);
 
-    // let commentQ = query(
-    //   // 댓글을 작성했는지 확인 하는 부분
-    //   collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
-    //   where("story", "==", `${router.query.id}`),
-    //   where("hide", "==", false)
-    // );
-    // let commentSnapShot = await getDocs(commentQ);
-    // console.log(commentQ);
-    // console.log(commentSnapShot.docs.length);
-    // commentSnapShot.docs.forEach((doc) => {
-    //   console.log(doc.data());
-    // });
-    // if (commentSnapShot.docs.length == 0) {
-    //   console.log("내가 작성한 댓글이 없음");
-    //   setIsWroted(false);
-    // } else {
-    //   commentSnapShot.docs.forEach((doc) => {
-    //     console.log(doc.data());
-    //   });
-    //   setIsWroted(true);
-    // }
     let CQ = query(
       collection(db, community, router.query.id, commentSort),
       where("author", "==", `${auth.currentUser.uid}`),
@@ -205,7 +169,7 @@ const Comment = () => {
           <div>로딩 중.....</div>
         </div>
       ) : (
-        <CommentPart isSubmit={submit} commentData={commentData} />
+        <CommentPart isSubmit={submit} agreeComment={agreeData} alternativeComment={alternativeData} disagreeComment = {disagreeData} />
       )}
       {/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
       <div>
