@@ -164,7 +164,11 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
             />
             <Article article={agenda.article} />
             {/* <News /> */}
-            <BestComment />
+            <BestComment
+              agree={agreeFetchData}
+              alter={alternativeFetchData}
+              disagree={disagreeFetchData}
+            />
             <Vote agenda={agenda} />
             <Comment
               agreeData={agreeFetchData}
