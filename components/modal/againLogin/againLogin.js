@@ -8,7 +8,7 @@ const Modal = ({ show, onClose, children }) => {
   }, []);
   const modalContent = show ? (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal}>
+      <div className={styles.modalAgainLogin}>
         <div className={styles.body}>{children}</div>
       </div>
     </div>
@@ -16,7 +16,7 @@ const Modal = ({ show, onClose, children }) => {
   if (isBrowser) {
     return ReactDOM.createPortal(
       modalContent,
-      document.getElementById("modal-deleteUser")
+      document.getElementById("modal-againLogin")
     );
   } else return null;
 };

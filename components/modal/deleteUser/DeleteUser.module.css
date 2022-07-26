@@ -4,10 +4,10 @@
   align-items: center;
   background-color: white;
   width: 40%;
-  height: 25%;
+  height: 35%;
   border-radius: 15px;
   padding: 1.4rem;
-  overflow: hidden;
+  overflow-y: scroll;
 }
 .body {
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
@@ -24,15 +24,16 @@
   background: center;
   background-color: rgb(0, 0, 0, 0.4);
 }
+
 .modal::-webkit-scrollbar {
-  width: 0.3rem; /* 스크롤바의 너비 */
+  width: 0.7rem; /* 스크롤바의 너비 */
 }
 
 .modal::-webkit-scrollbar-thumb {
   height: 30%; /* 스크롤바의 길이 */
   background: #61676e; /* 스크롤바의 색상 */
 
-  border-radius: 15px;
+  border-radius: 10px;
 }
 
 .modal::-webkit-scrollbar-track {
@@ -40,6 +41,7 @@
 }
 @media (max-width: 767px) and (max-height: 920px) {
   .modal {
+    height: 50%;
     width: 80%;
   }
 }
