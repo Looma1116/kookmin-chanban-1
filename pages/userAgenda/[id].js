@@ -130,7 +130,6 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
     fetchData();
   }, [isFetched, clickCount]);
 
-
   const checkIn = () => {
     if (router.query.agenda === undefined) {
       fetchData();
@@ -163,7 +162,11 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
           />
           <Article article={agenda.article} />
           {/* <News /> */}
-          <BestComment />
+          <BestComment
+            agree={agreeFetchData}
+            alter={alternativeFetchData}
+            disagree={disagreeFetchData}
+          />
           <Vote agenda={agenda} />
           <Comment
             agreeData={agreeFetchData}
