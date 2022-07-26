@@ -20,6 +20,7 @@ import {
   userState,
   commentDataState,
   voteState,
+  voteChangeSubmitState,
 } from "../recoil/recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
 import LogInModal from "../modal/login";
@@ -29,7 +30,7 @@ import CommentPart from "./commentPart";
 import { useRouter } from "next/router";
 import styles from "./comment.module.css";
 
-const Comment = ({agreeData, alternativeData, disagreeData}) => {
+const Comment = ({ agreeData, alternativeData, disagreeData }) => {
   const auth = getAuth();
   const router = useRouter();
   const db = getFirestore();
@@ -45,6 +46,7 @@ const Comment = ({agreeData, alternativeData, disagreeData}) => {
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
   let [commentData, setCommentData] = useRecoilState(commentDataState);
   const [loading, setLoading] = useState(false);
+  const [addComment, setAddComment] = useState([]);
   let a = [];
 
   console.log(agreeData);
@@ -69,7 +71,6 @@ const Comment = ({agreeData, alternativeData, disagreeData}) => {
       setClickCount(true);
     }
   };
-
 
   const commentSend = async () => {
     if (logIn) {
@@ -116,6 +117,15 @@ const Comment = ({agreeData, alternativeData, disagreeData}) => {
     setSubmit((prev) => !prev);
     commentSend();
     setIsWroted(true);
+
+    setAddComment({
+      article: `${comment}`,
+      author: auth.currentUser.uid,
+      authorLevel: user.level,
+      authorName: user.name,
+      hide: false,
+      like: 0,
+    });
 
     // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
   };
@@ -169,7 +179,13 @@ const Comment = ({agreeData, alternativeData, disagreeData}) => {
           <div>로딩 중.....</div>
         </div>
       ) : (
-        <CommentPart isSubmit={submit} agreeComment={agreeData} alternativeComment={alternativeData} disagreeComment = {disagreeData} />
+        <CommentPart
+          isSubmit={submit}
+          addComment={addComment}
+          agreeComment={agreeData}
+          alternativeComment={alternativeData}
+          disagreeComment={disagreeData}
+        />
       )}
       {/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
       <div>
