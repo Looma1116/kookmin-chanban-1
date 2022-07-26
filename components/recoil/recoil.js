@@ -95,3 +95,7 @@ export const loginInterfaceState = atom({
   key: "loginInterfaceState",
   default: true,
 });
+export const onceState = atom({
+  key: "onceState",
+  default: false,
+});

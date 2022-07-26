@@ -92,6 +92,7 @@ const KakaoLogin = () => {
           //   exp = exp - 100;
           // }
         } else {
+          console.log("hi2");
           setUid(comunication.data.uid);
           await fetchData(comunication);
           console.log(comunication.data.uid);
@@ -107,8 +108,8 @@ const KakaoLogin = () => {
               setUser(snapshot.docs.map((str) => str.data()));
               setDeleted(true);
             }
+            setShow(false);
           });
-          setShow(false);
         }
       },
       fail: function (err) {
@@ -116,6 +117,7 @@ const KakaoLogin = () => {
       },
     });
   };
+  console.log("hi");
   return (
     <>
       {show ? (
