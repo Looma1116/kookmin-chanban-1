@@ -6,13 +6,21 @@ import LikePart from "./likePart";
 
 const CommentPart = ({
   isSubmit,
+  addComment,
   agreeComment,
   alternativeComment,
   disagreeComment,
 }) => {
   const commentS = useRecoilValue(commentState);
 
-  useEffect(() => {}, [commentS, isSubmit]);
+  useEffect(() => {
+    console.log(addComment);
+    if (addComment != "") {
+      console.log("추가 댓글!");
+      commentSort().push({id:Math.random(), ...addComment});
+    }
+  }, [isSubmit]);
+
 
   function Author({ level }) {
     if (commentS === "agreeComment") {
@@ -40,7 +48,6 @@ const CommentPart = ({
           return (
             <div key={Math.random()} className={styles.card}>
               <div>
-                {console.log(data)}
                 <header className={styles.header}>
                   <Author level={data.authorLevel} />
                   <div className={styles.name}>&nbsp;{data.authorName}</div>
