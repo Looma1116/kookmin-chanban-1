@@ -16,7 +16,7 @@ const Modal = ({ show, onClose, children }) => {
   if (isBrowser) {
     return ReactDOM.createPortal(
       modalContent,
-      document.getElementById("modal-againLogin");
+      document.getElementById("modal-againLogin")
     );
   } else return null;
 };
