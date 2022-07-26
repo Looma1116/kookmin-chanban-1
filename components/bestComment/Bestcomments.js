@@ -5,19 +5,38 @@ const Bestcomments = ({ com, op }) => {
   function Author() {
     if (op === 1) {
       return (
-        <span className={styles.agreeauthor}>
+        <span
+          style={{
+            background: `rgba(35, 115, 235, ${
+              0.1 + com[0]?.authorLevel * 0.006
+            })`,
+          }}
+          className={styles.author}
+        >
           &nbsp;{com[0]?.authorLevel}&nbsp;
         </span>
       );
     } else if (op === 2) {
       return (
-        <span className={styles.alterauthor}>
+        <span
+          style={{
+            background: `rgba(255, 199, 0, ${
+              0.1 + com[0]?.authorLevel * 0.006
+            })`,
+          }}
+          className={styles.author}
+        >
           &nbsp;{com[0]?.authorLevel}&nbsp;
         </span>
       );
     } else if (op === 3) {
       return (
-        <span className={styles.disagreeauthor}>
+        <span
+          style={{
+            background: `rgba(255, 0, 0, ${0.1 + com[0]?.authorLevel * 0.006})`,
+          }}
+          className={styles.author}
+        >
           &nbsp;{com[0]?.authorLevel}&nbsp;
         </span>
       );

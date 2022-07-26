@@ -15,12 +15,40 @@ const CommentPart = ({
   useEffect(() => {}, [commentS, isSubmit]);
 
   function Author({ level }) {
+    console.log(level);
     if (commentS === "agreeComment") {
-      return <span className={styles.agreeauthor}>&nbsp;{level}&nbsp;</span>;
+      return (
+        <span
+          style={{
+            background: `rgba(35, 115, 235, ${0.1 + level * 0.006})`,
+          }}
+          className={styles.author}
+        >
+          &nbsp;{level}&nbsp;
+        </span>
+      );
     } else if (commentS === "alternativeComment") {
-      return <span className={styles.alterauthor}>&nbsp;{level}&nbsp;</span>;
+      return (
+        <span
+          style={{
+            background: `rgba(255, 199, 0, ${0.1 + level * 0.006})`,
+          }}
+          className={styles.author}
+        >
+          &nbsp;{level}&nbsp;
+        </span>
+      );
     } else if (commentS === "disagreeComment") {
-      return <span className={styles.disagreeauthor}>&nbsp;{level}&nbsp;</span>;
+      return (
+        <span
+          style={{
+            background: `rgba(255, 0, 0, ${0.1 + level * 0.006})`,
+          }}
+          className={styles.author}
+        >
+          &nbsp;{level}&nbsp;
+        </span>
+      );
     }
   }
   const commentSort = () => {
