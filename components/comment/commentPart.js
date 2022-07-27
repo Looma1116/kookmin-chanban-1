@@ -17,10 +17,9 @@ const CommentPart = ({
     console.log(addComment);
     if (addComment != "") {
       console.log("추가 댓글!");
-      commentSort().push({id:Math.random(), ...addComment});
+      commentSort().push({ id: Math.random(), ...addComment });
     }
   }, [isSubmit]);
-
 
   function Author({ level }) {
     console.log(level);
@@ -74,7 +73,7 @@ const CommentPart = ({
       {commentSort() != "" ? (
         commentSort().map((data) => {
           return (
-            <div key={Math.random()} className={styles.card}>
+            <div key={Math.random()} className={styles.commentcard}>
               <div>
                 <header className={styles.header}>
                   <Author level={data.authorLevel} />
