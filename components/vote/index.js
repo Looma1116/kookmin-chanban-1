@@ -27,6 +27,7 @@ import {
   communityState,
   isVotedState,
   isWrotedState,
+  voteChangeClickState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
 
@@ -53,6 +54,7 @@ const UserVote = ({
   const [vote, setVote] = useRecoilState(voteState);
   const [isVoted, setIsVoted] = useRecoilState(isVotedState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
+  const [voteChangeClick, setVoteChangeClick] = useRecoilState(voteChangeClickState); //투표 바꾸기를 누르면 댓글 삭제를 위해 상태를 comment/index로 보냄
   const iam = ["", "찬성을", "중립을", "반대를"];
 
   useEffect(() => {
@@ -415,6 +417,7 @@ const UserVote = ({
     deleteVote();
     deleteComment();
     deleteUserinfo();
+    setVoteChangeClick(true);
     setIsVoted(false);
   };
 

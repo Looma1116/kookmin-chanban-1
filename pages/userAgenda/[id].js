@@ -17,6 +17,7 @@ import {
   communityState,
   isVotedState,
   isWrotedState,
+  voteChangeClickState,
   voteState,
 } from "../../components/recoil/recoil";
 import Title from "../../components/title";
@@ -115,6 +116,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
   const [alternativeFetchData, setAlternativeFetchData] = useState(
     JSON.parse(alternativeData)
   );
+  const [voteChangeClick, setVoteChangeClick] = useRecoilState(voteChangeClickState);
 
   console.log(agenda);
 
@@ -124,6 +126,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
     setComment("alternativeComment");
     setVote("alternativeComment");
     setIsWroted(false);
+    setVoteChangeClick(false);
   }, []);
 
   useEffect(() => {
