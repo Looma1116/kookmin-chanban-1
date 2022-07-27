@@ -128,6 +128,7 @@ const UserVote = ({
         story: id,
         title: title,
         vote: `${voteWhere}`,
+        hide : false,
       }
     );
     setIsVoted(true);
