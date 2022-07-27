@@ -7,6 +7,7 @@ import {
   arrayRemove,
   arrayUnion,
   collection,
+  connectFirestoreEmulator,
   deleteDoc,
   doc,
   getDocs,
@@ -54,7 +55,8 @@ const UserVote = ({
   const [vote, setVote] = useRecoilState(voteState);
   const [isVoted, setIsVoted] = useRecoilState(isVotedState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
-  const [voteChangeClick, setVoteChangeClick] = useRecoilState(voteChangeClickState); //투표 바꾸기를 누르면 댓글 삭제를 위해 상태를 comment/index로 보냄
+  const [voteChangeClick, setVoteChangeClick] =
+    useRecoilState(voteChangeClickState); //투표 바꾸기를 누르면 댓글 삭제를 위해 상태를 comment/index로 보냄
   const iam = ["", "찬성을", "중립을", "반대를"];
 
   useEffect(() => {
@@ -128,7 +130,7 @@ const UserVote = ({
         story: id,
         title: title,
         vote: `${voteWhere}`,
-        hide : false,
+        hide: false,
       }
     );
     setIsVoted(true);
@@ -414,12 +416,18 @@ const UserVote = ({
   };
 
   const voteChangeHandler = () => {
-    setRevote(true);
-    deleteVote();
-    deleteComment();
-    deleteUserinfo();
-    setVoteChangeClick(true);
-    setIsVoted(false);
+    if (
+      confirm(
+        "의견을 바꾸시면 작성한 댓글이 사라집니다. 그래도 바꾸시겠습니까?"
+      )
+    ) {
+      setRevote(true);
+      deleteVote();
+      deleteComment();
+      deleteUserinfo();
+      setVoteChangeClick(true);
+      setIsVoted(false);
+    }
   };
 
   return (
