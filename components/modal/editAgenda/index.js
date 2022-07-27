@@ -109,6 +109,7 @@ const EditAgenda = () => {
       title: event.target.title.value,
       wrote: createdAt,
       story: id,
+      hide: false,
     };
     await addDoc(wroteAgendaCollection, agendaInfo);
     setEditModalIsOpen(false);

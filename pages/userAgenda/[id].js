@@ -4,6 +4,7 @@ import {
   documentId,
   getDocs,
   getFirestore,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -40,7 +41,7 @@ export async function getServerSideProps(context) {
   const agreeRef = query(
     // 찬성 댓글
     collection(db, "userAgenda", `${Id.id}`, "agreeComment"),
-    where("hide", "==", false)
+    where("hide", "==", false),orderBy("wrote")
   );
   const agreeSnapShot = await getDocs(agreeRef);
 
@@ -55,7 +56,7 @@ export async function getServerSideProps(context) {
   const alternativeRef = query(
     // 중립 댓글
     collection(db, "userAgenda", `${Id.id}`, "alternativeComment"),
-    where("hide", "==", false)
+    where("hide", "==", false),orderBy("wrote")
   );
   const alternativeSnapShot = await getDocs(alternativeRef);
 
@@ -70,7 +71,7 @@ export async function getServerSideProps(context) {
   const disagreeRef = query(
     // 반대 댓글
     collection(db, "userAgenda", `${Id.id}`, "disagreeComment"),
-    where("hide", "==", false)
+    where("hide", "==", false),orderBy("wrote")
   );
   const disagreeSnapShot = await getDocs(disagreeRef);
 

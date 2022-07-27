@@ -217,6 +217,8 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
   return (
     <div>
       <CommentSec />
+      <button>추천순</button>
+      <button>최신순</button>
       {loading ? (
         <div className={styles.loadingCard}>
           <div>로딩 중.....</div>
