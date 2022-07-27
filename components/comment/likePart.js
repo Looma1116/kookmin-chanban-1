@@ -39,8 +39,6 @@ const Like = ({ data, op }) => {
     const q = collection(db, "user", auth.currentUser.uid, "likeComment");
     const snapShot = await getDocs(q);
     snapShot.docs.forEach((doc) => {
-      console.log(data);
-      console.log(doc.id, data.id);
       if (doc.id === data.id) {
         setIsClicked(true);
       }
