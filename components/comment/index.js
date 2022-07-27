@@ -21,6 +21,7 @@ import {
   commentDataState,
   voteState,
   voteChangeSubmitState,
+  voteChangeClickState,
 } from "../recoil/recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
 import LogInModal from "../modal/login";
@@ -49,6 +50,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
   let [agreeComment, setAgreeComment] = useState(agreeData);
   let [alternativeComment, setAlternativeComment] = useState(alternativeData);
   let [disagreeComment, setDisagreeComment] = useState(disagreeData);
+  const [voteChangeClick, setVoteChangeClick] = useRecoilState(voteChangeClickState);
   let a = [];
 
   useEffect(() => {
@@ -68,9 +70,9 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
     deleteComment();
   }, [isVoted]);
 
-  const deleteComment = async () => {
+  const deleteComment = async () => { // 투표 바꾸기 버튼 클릭 시 내가 작성한 댓글 삭제(프론트 단)
     if (logIn) {
-      if (isVoted == false) {
+      if (isVoted == false && voteChangeClick == true) {
         if (vote == "agreeComment") {
           a = await agreeData.filter((element) => {
             if (element.author == `${auth.currentUser.uid}`) {
@@ -81,6 +83,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
             }
           });
           setAgreeComment(a);
+          setVoteChangeClick(false);
           console.log(agreeComment);
         } else if (vote == "alternativeComment") {
           a = await alternativeData.filter((element) => {
@@ -92,6 +95,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
             }
           });
           setAlternativeComment(a);
+          setVoteChangeClick(false);
           console.log(alternativeComment);
         } else {
           a = await disagreeData.filter((element) => {
@@ -103,6 +107,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
             }
           });
           setDisagreeComment(a);
+          setVoteChangeClick(false);
           console.log(disagreeComment);
         }
       }

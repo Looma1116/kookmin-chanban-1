@@ -99,3 +99,8 @@ export const onceState = atom({
   key: "onceState",
   default: false,
 });
+
+export const voteChangeClickState = atom({
+  key: "voteChangeClickState",
+  default : false,
+})
