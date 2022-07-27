@@ -44,14 +44,12 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
   const [submit, setSubmit] = useState(false);
   const isVoted = useRecoilValue(isVotedState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
-  let [commentData, setCommentData] = useRecoilState(commentDataState);
   const [loading, setLoading] = useState(false);
   const [addComment, setAddComment] = useState([]);
+  let [agreeComment, setAgreeComment] = useState(agreeData);
+  let [alternativeComment, setAlternativeComment] = useState(alternativeData);
+  let [disagreeComment, setDisagreeComment] = useState(disagreeData);
   let a = [];
-
-  console.log(agreeData);
-  console.log(alternativeData);
-  console.log(disagreeData);
 
   useEffect(() => {
     if (logIn) {
@@ -65,6 +63,51 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
       userFetch();
     }
   }, [commentSort, isVoted, submit]);
+
+  useEffect(() => {
+    deleteComment();
+  }, [isVoted]);
+
+  const deleteComment = async () => {
+    if (logIn) {
+      if (isVoted == false) {
+        if (vote == "agreeComment") {
+          a = await agreeData.filter((element) => {
+            if (element.author == `${auth.currentUser.uid}`) {
+              console.log("내가 작성한 찬성 댓글 삭제");
+              return false;
+            } else {
+              return true;
+            }
+          });
+          setAgreeComment(a);
+          console.log(agreeComment);
+        } else if (vote == "alternativeComment") {
+          a = await alternativeData.filter((element) => {
+            if (element.author == `${auth.currentUser.uid}`) {
+              console.log("내가 작성한 중립 댓글 삭제");
+              return false;
+            } else {
+              return true;
+            }
+          });
+          setAlternativeComment(a);
+          console.log(alternativeComment);
+        } else {
+          a = await disagreeData.filter((element) => {
+            if (element.author == `${auth.currentUser.uid}`) {
+              console.log("내가 작성한 반대 댓글 삭제");
+              return false;
+            } else {
+              return true;
+            }
+          });
+          setDisagreeComment(a);
+          console.log(disagreeComment);
+        }
+      }
+    }
+  };
 
   const clickHandler = () => {
     if (!logIn) {
@@ -85,11 +128,6 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
           hide: false,
         }
       );
-      console.log(q);
-      console.log("쿼리 출력!");
-      console.log(comment);
-      console.log(community);
-      console.log(user);
       await addDoc(
         // 파이어베이스 아젠다부분에 댓글 추가
         collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
@@ -103,8 +141,6 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
           wrote: new Date(),
         }
       );
-      console.log(comment);
-      console.log(community);
       console.log("답변완료!");
       setComment("");
     }
@@ -140,6 +176,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
     }
   };
   const userFetch = async () => {
+    //유저 정보를 패치하고 내가 작성한 댓글이 있는 지 확인
     //
     let q = query(doc(db, "user", `${auth.currentUser.uid}`));
     let snapShot = await getDoc(q);
@@ -164,6 +201,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
       console.log("내가 작성한 댓글이 없음");
       setIsWroted(false);
     } else {
+      console.log("내가 작성한 댓글이 있음");
       CSnapShot.docs.forEach((doc) => {
         console.log(doc.data());
       });
@@ -182,9 +220,9 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
         <CommentPart
           isSubmit={submit}
           addComment={addComment}
-          agreeComment={agreeData}
-          alternativeComment={alternativeData}
-          disagreeComment={disagreeData}
+          agreeComment={agreeComment}
+          alternativeComment={alternativeComment}
+          disagreeComment={disagreeComment}
         />
       )}
       {/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
