@@ -402,7 +402,6 @@ const UserVote = ({
     }
 
     setIsWroted(false);
-    setIsVoted(false);
   };
 
   const deleteUserinfo = async () => {
@@ -413,10 +412,10 @@ const UserVote = ({
 
   const voteChangeHandler = () => {
     setRevote(true);
-    setIsVoted(false);
     deleteVote();
     deleteComment();
     deleteUserinfo();
+    setIsVoted(false);
   };
 
   return (
