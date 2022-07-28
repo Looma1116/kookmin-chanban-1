@@ -15,18 +15,22 @@ import {
   query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { BiCommentDetail } from "react-icons/bi";
 const WroteComment = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
   const [wroteComment, setWroteComment] = useState([]);
   const wroteCommentUnsubsribe = useRef([]);
-  const fetchData = async () => {
+  const fetchData = async (time) => {
+    if (time == null) time = new Date();
     const db = getFirestore();
     const wroteCommentRef = collection(db, "user", user.uid, "wroteComment");
     const wroteCommentQuery = query(
       wroteCommentRef,
-      orderBy("wrote"),
+      orderBy("wrote", "desc"),
+      where("wrote", "<=", time),
+      where("hide", "==", false),
       limit(20)
     );
     wroteCommentUnsubsribe.current = await onSnapshot(

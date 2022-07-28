@@ -74,9 +74,9 @@ export default function User() {
   // if (deleted) return </>
   return (
     <div>
-      {!login ? (
+      {!auth.currentUser === null ? (
         <KakaoLogin />
-      ) : (
+      ) : login ? (
         <div className={styles.main}>
           <h1 className={styles.title}>{`${nickname}님`}</h1>
           <h3 className={styles.level}>{`레벨 ${level}`}</h3>
@@ -97,7 +97,7 @@ export default function User() {
             exp={exp}
           />
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
