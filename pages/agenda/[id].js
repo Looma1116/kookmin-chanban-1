@@ -13,6 +13,7 @@ import Article from "../../components/article";
 import {
   agendaState,
   clickCountState,
+  commentSortClickState,
   commentState,
   communityState,
   isVotedState,
@@ -116,12 +117,14 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
   const [alternativeFetchData, setAlternativeFetchData] = useState(
     JSON.parse(alternativeData)
   );
+  const [commentSortClick, setCommentSortClick] = useRecoilState(commentSortClickState);
 
   useEffect(() => {
     setCommunity("agenda");
     setIsVoted(false);
     setComment("alternativeComment");
     setVote("alternativeComment");
+    setCommentSortClick("latest");
     setIsWroted(false);
     checkIn();
   }, []);

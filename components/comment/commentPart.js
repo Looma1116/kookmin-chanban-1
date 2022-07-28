@@ -17,7 +17,7 @@ const CommentPart = ({
     console.log(addComment);
     if (addComment != "") {
       console.log("추가 댓글!");
-      commentSort().push({id:Math.random(), ...addComment});
+      commentSort().push({ id: Math.random(), ...addComment });
     }
   }, [isSubmit]);
 

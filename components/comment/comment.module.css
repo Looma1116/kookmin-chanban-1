@@ -152,3 +152,24 @@
   box-shadow: 0px 2px 6px 0px rgb(194, 194, 194);
   margin-bottom: 5%;
 }
+.recommendBtn{
+  outline: 0;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+.notFocusBtn{
+  outline: 0;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  color :rgb(194, 194, 194);
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+.btnBox{
+  display: flex;
+  justify-content: flex-end;
+}
