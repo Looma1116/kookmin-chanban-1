@@ -123,6 +123,9 @@ const DeleteUser = ({ onClick }) => {
       }
     });
     await DeleteUserAgenda();
+    await DeleteJoinedAgenda();
+    await DeleteWroteAgenda();
+    await DeleteWroteComment();
   };
 
   const DeleteUserAgenda = async () => {
@@ -226,7 +229,81 @@ const DeleteUser = ({ onClick }) => {
       }
     });
   };
-
+  const DeleteWroteComment = async () => {
+    const deleteWroteCommentRef = collection(
+      db,
+      "user",
+      auth.currentUser.uid,
+      "wroteComment"
+    );
+    const deleteWroteCommentQuery = query(
+      deleteWroteCommentRef,
+      where("hide", "==", false)
+    );
+    await onSnapshot(deleteWroteCommentQuery, (snapshot) => {
+      snapshot.docs.forEach(async (note) => {
+        const { length } = snapshot.docs;
+        if (length > 0) {
+          await updateDoc(
+            doc(db, "user", auth.currentUser.uid, "wroteComment", note.id),
+            {
+              hide: true,
+            }
+          );
+        }
+      });
+    });
+  };
+  const DeleteWroteAgenda = async () => {
+    const deleteWroteAgendaRef = collection(
+      db,
+      "user",
+      auth.currentUser.uid,
+      "wroteAgenda"
+    );
+    const deleteWroteAgendaQuery = query(
+      deleteWroteAgendaRef,
+      where("hide", "==", false)
+    );
+    await onSnapshot(deleteWroteAgendaQuery, (snapshot) => {
+      snapshot.docs.forEach(async (note) => {
+        const { length } = snapshot.docs;
+        if (length > 0) {
+          await updateDoc(
+            doc(db, "user", auth.currentUser.uid, "wroteAgenda", note.id),
+            {
+              hide: true,
+            }
+          );
+        }
+      });
+    });
+  };
+  const DeleteJoinedAgenda = async () => {
+    const deleteJoinedAgendaRef = collection(
+      db,
+      "user",
+      auth.currentUser.uid,
+      "joinedAgenda"
+    );
+    const deleteJoinedAgendaQuery = query(
+      deleteJoinedAgendaRef,
+      where("hide", "==", false)
+    );
+    await onSnapshot(deleteJoinedAgendaQuery, (snapshot) => {
+      snapshot.docs.forEach(async (note) => {
+        const { length } = snapshot.docs;
+        if (length > 0) {
+          await updateDoc(
+            doc(db, "user", auth.currentUser.uid, "joinedAgenda", note.id),
+            {
+              hide: true,
+            }
+          );
+        }
+      });
+    });
+  };
   const handleDelete = async () => {
     await updateDoc(doc(db, "user", auth.currentUser.uid), {
       deleted: true,
