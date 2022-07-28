@@ -54,6 +54,10 @@ export async function getServerSideProps(context) {
     });
   }
 
+  agreeComment.sort((x, y) => {
+    return y.wrote.seconds - x.wrote.seconds;
+  });
+
   const alternativeRef = query(
     // 중립 댓글
     collection(db, "agenda", `${Id}`, "alternativeComment"),
@@ -69,6 +73,10 @@ export async function getServerSideProps(context) {
     });
   }
 
+  alternativeComment.sort((x, y) => {
+    return y.wrote.seconds - x.wrote.seconds;
+  });
+
   const disagreeRef = query(
     // 반대 댓글
     collection(db, "agenda", `${Id}`, "disagreeComment"),
@@ -83,6 +91,10 @@ export async function getServerSideProps(context) {
       disagreeComment.push({ ...doc.data(), id: doc.id });
     });
   }
+
+  disagreeComment.sort((x, y) => {
+    return y.wrote.seconds - x.wrote.seconds;
+  });
 
   const agreeData = JSON.stringify(agreeComment);
   const alternativeData = JSON.stringify(alternativeComment);
@@ -117,7 +129,9 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
   const [alternativeFetchData, setAlternativeFetchData] = useState(
     JSON.parse(alternativeData)
   );
-  const [commentSortClick, setCommentSortClick] = useRecoilState(commentSortClickState);
+  const [commentSortClick, setCommentSortClick] = useRecoilState(
+    commentSortClickState
+  );
 
   useEffect(() => {
     setCommunity("agenda");
@@ -174,9 +188,9 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
             />
             <Vote agenda={agenda} />
             <Comment
-              agreeData={agreeFetchData}
-              alternativeData={alternativeFetchData}
-              disagreeData={disagreeFetchData}
+              agreeData={JSON.parse(agreeData)}
+              alternativeData={JSON.parse(alternativeData)}
+              disagreeData={JSON.parse(disagreeData)}
             />
             {clickCount ? <LogInModal /> : null}
           </div>
