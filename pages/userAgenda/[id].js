@@ -38,6 +38,8 @@ export async function getServerSideProps(context) {
   let alternativeComment = [];
   let disagreeComment = [];
   const Id = await context.query;
+  let agenda = JSON.parse(Id.agenda);
+  let writerUid = JSON.stringify(agenda.uid);
 
   const agreeRef = query(
     // 찬성 댓글
@@ -95,25 +97,23 @@ export async function getServerSideProps(context) {
     return y.wrote.seconds - x.wrote.seconds;
   });
 
-
   const agreeData = JSON.stringify(agreeComment);
   const alternativeData = JSON.stringify(alternativeComment);
   const disagreeData = JSON.stringify(disagreeComment);
-
-  console.log(JSON.parse(agreeData));
 
   return {
     props: {
       agreeData,
       disagreeData,
       alternativeData,
+      writerUid,
     },
   };
 }
 
 // HpwvymAsOmqwAPEuTrIs
 
-const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
+const Agenda = ({ agreeData, disagreeData, alternativeData ,writerUid }) => {
   const router = useRouter();
   const db = getFirestore();
   const [agenda, setAgenda] = useState(null);
@@ -180,6 +180,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
             title={agenda.title}
             subTitle={agenda.subTitle}
             imageUrl={agenda.imageUrl}
+            writerUid = {JSON.parse(writerUid)}
           />
           <Article article={agenda.article} />
           {/* <News /> */}
