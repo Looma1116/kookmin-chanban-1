@@ -20,6 +20,7 @@ import {
   isWrotedState,
   voteChangeClickState,
   voteState,
+  commentSortClickState,
 } from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
@@ -52,6 +53,9 @@ export async function getServerSideProps(context) {
       agreeComment.push({ ...doc.data(), id: doc.id });
     });
   }
+  agreeComment.sort((x,y)=>{
+    return y.wrote.seconds - x.wrote.seconds;
+  })
 
   const alternativeRef = query(
     // 중립 댓글
@@ -68,6 +72,10 @@ export async function getServerSideProps(context) {
     });
   }
 
+  alternativeComment.sort((x, y) => {
+    return y.wrote.seconds - x.wrote.seconds;
+  });
+
   const disagreeRef = query(
     // 반대 댓글
     collection(db, "userAgenda", `${Id.id}`, "disagreeComment"),
@@ -83,9 +91,16 @@ export async function getServerSideProps(context) {
     });
   }
 
+  disagreeComment.sort((x, y) => {
+    return y.wrote.seconds - x.wrote.seconds;
+  });
+
+
   const agreeData = JSON.stringify(agreeComment);
   const alternativeData = JSON.stringify(alternativeComment);
   const disagreeData = JSON.stringify(disagreeComment);
+
+  console.log(JSON.parse(agreeData));
 
   return {
     props: {
@@ -118,14 +133,16 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
     JSON.parse(alternativeData)
   );
   const [voteChangeClick, setVoteChangeClick] = useRecoilState(voteChangeClickState);
-
-  console.log(agenda);
+    const [commentSortClick, setCommentSortClick] = useRecoilState(
+      commentSortClickState
+    );
 
   useEffect(() => {
     setCommunity("userAgenda");
     setIsVoted(false);
     setComment("alternativeComment");
     setVote("alternativeComment");
+    setCommentSortClick("latest");
     setIsWroted(false);
     setVoteChangeClick(false);
   }, []);
@@ -167,15 +184,15 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
           <Article article={agenda.article} />
           {/* <News /> */}
           <BestComment
-            agree={agreeFetchData}
-            alter={alternativeFetchData}
-            disagree={disagreeFetchData}
+            agree={JSON.parse(agreeData)}
+            alter={JSON.parse(alternativeData)}
+            disagree={JSON.parse(disagreeData)}
           />
           <Vote agenda={agenda} />
           <Comment
-            agreeData={agreeFetchData}
-            alternativeData={alternativeFetchData}
-            disagreeData={disagreeFetchData}
+            agreeData={JSON.parse(agreeData)}
+            alternativeData={JSON.parse(alternativeData)}
+            disagreeData={JSON.parse(disagreeData)}
           />
           {clickCount ? <LogInModal /> : null}
         </div>

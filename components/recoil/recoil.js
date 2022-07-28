@@ -104,3 +104,7 @@ export const voteChangeClickState = atom({
   key: "voteChangeClickState",
   default : false,
 })
+export const commentSortClickState = atom({
+  key: "commentSortClickState",
+  default : "latest",
+})

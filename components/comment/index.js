@@ -22,10 +22,11 @@ import {
   voteState,
   voteChangeSubmitState,
   voteChangeClickState,
+  commentSortClickState,
 } from "../recoil/recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
 import LogInModal from "../modal/login";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import CommentSec from "./commentSec";
 import CommentPart from "./commentPart";
 import { useRouter } from "next/router";
@@ -47,13 +48,24 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
   const [loading, setLoading] = useState(false);
   const [addComment, setAddComment] = useState([]);
-  let [agreeComment, setAgreeComment] = useState(agreeData);
-  let [alternativeComment, setAlternativeComment] = useState(alternativeData);
-  let [disagreeComment, setDisagreeComment] = useState(disagreeData);
+  let [agreeComment, setAgreeComment] = useState([]);
+  let [alternativeComment, setAlternativeComment] = useState([]);
+  let [disagreeComment, setDisagreeComment] = useState([]);
   const [voteChangeClick, setVoteChangeClick] = useRecoilState(voteChangeClickState);
+  const [commentSortClick, setCommentSortClick] = useRecoilState(commentSortClickState);
   let a = [];
+  let sortEmpty = [];
+  let agreeEmpty = [...agreeData];
+  let alternativeEmpty = [...alternativeData];
+  let disagreeEmpty = [...disagreeData];
+
+  console.log(agreeEmpty);
+  console.log(agreeData);
+  console.log(alternativeEmpty);
+  console.log(disagreeEmpty);
 
   useEffect(() => {
+    console.log(agreeData);
     if (logIn) {
       userFetch();
       console.log("유저정보 패치");
@@ -69,6 +81,15 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
   useEffect(() => {
     deleteComment();
   }, [isVoted]);
+
+  useLayoutEffect(() => {
+    console.log("버튼 클릭");
+    if (commentSortClick == "latest") {
+      latestBtnClickHandler();
+    } else {
+      recommendBtnClickHandler();
+    }
+  }, [commentSortClick]);
 
   const deleteComment = async () => { // 투표 바꾸기 버튼 클릭 시 내가 작성한 댓글 삭제(프론트 단)
     if (logIn) {
@@ -214,9 +235,65 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
     }
   };
 
+   const recommendBtnClickHandler = async () => {
+     sortEmpty = await agreeEmpty.sort((x, y) => {
+       return y.like - x.like;
+     });
+     setAgreeComment(sortEmpty);
+
+     sortEmpty = [];
+
+     sortEmpty = await alternativeEmpty.sort((x, y) => {
+       return y.like - x.like;
+     });
+     setAlternativeComment(sortEmpty);
+
+     sortEmpty = [];
+
+     sortEmpty = await disagreeEmpty.sort((x, y) => {
+       return y.like - x.like;
+     });
+     setDisagreeComment(sortEmpty);
+
+     sortEmpty = [];
+   };
+   const latestBtnClickHandler = () => {
+     setAgreeComment(agreeData);
+     setAlternativeComment(alternativeData);
+     setDisagreeComment(disagreeData);
+
+     console.log(agreeData);
+   };
+
   return (
     <div>
       <CommentSec />
+      <div className={styles.btnBox}>
+        <button
+          onClick={() => {
+            setCommentSortClick("recommend");
+          }}
+          className={
+            commentSortClick == "recommend"
+              ? styles.recommendBtn
+              : styles.notFocusBtn
+          }
+        >
+          추천순
+        </button>
+        <button
+          onClick={() => {
+            setCommentSortClick("latest");
+          }}
+          className={
+            commentSortClick == "latest"
+              ? styles.recommendBtn
+              : styles.notFocusBtn
+          }
+        >
+          최신순
+        </button>
+      </div>
       {loading ? (
         <div className={styles.loadingCard}>
           <div>로딩 중.....</div>
