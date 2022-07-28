@@ -69,6 +69,7 @@ const JoinedAgenda = ({ user }) => {
       joinedAgendaRef,
       orderBy("joined", "desc"),
       where("joined", "<=", time),
+      where("hide", "==", false),
       limit(20)
     );
     joinedAgendaUnsubsribe.current = await onSnapshot(
@@ -111,7 +112,7 @@ const JoinedAgenda = ({ user }) => {
         </div>
         <div className={styles.card}>
           {joinedAgenda?.map((agenda, index) => (
-            <Card key={index} story={agenda.story}>
+            <Card key={index} story={agenda.story} sort={agenda.agenda}>
               <h3 key={index}>{agenda?.title}</h3>
               <p key={index}>{agenda?.category}</p>
               <div key={index}>
