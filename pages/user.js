@@ -33,13 +33,15 @@ export default function User() {
   const text = useRecoilValue(loginState);
   const auth = getAuth();
   const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
-
+  const [firstface, setFirstface] = useState(true);
   useEffect(() => {
     setIsClicked(false);
     const authUnsubscribe = onAuthStateChanged(auth, (user) => {
       if (user === null) {
+        setFirstface(false);
       } else {
         console.log(user);
+        setFirstface(false);
         if (once === false) {
           setLoading(true);
           setOnce(true);
@@ -67,14 +69,16 @@ export default function User() {
       }
     });
   }, [change]);
+  console.log(auth.currentUser);
   console.log(login);
   console.log(change);
   console.log(nickname);
+  if (firstface) return null;
   if (loading) return <Loading />;
   // if (deleted) return </>
   return (
     <div>
-      {!auth.currentUser === null ? (
+      {auth.currentUser === null ? (
         <KakaoLogin />
       ) : login ? (
         <div className={styles.main}>
