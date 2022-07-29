@@ -25,7 +25,7 @@ import styles from "./AgainLogin.module.css";
 import Image from "next/image";
 import icon from "../../../public/ICON.ico";
 import Card from "../../../ui/Card/Card";
-const againLogin = ({ uid, user, token }) => {
+const AgainLogin = ({ uid, user, token }) => {
   const [show, setShow] = useRecoilState(loginInterfaceState);
   const [login, setLogin] = useRecoilState(loginState);
   const [showModal, setShowModal] = useState(true);
@@ -92,4 +92,4 @@ const againLogin = ({ uid, user, token }) => {
     </div>
   );
 };
-export default againLogin;
+export default AgainLogin;
