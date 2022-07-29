@@ -13,6 +13,7 @@ import {
   query,
   where,
   onSnapshot,
+  getDocs,
 } from "firebase/firestore";
 import AgreeBtn from "../../../ui/button/agreeBtn";
 import DisagreeBtn from "../../../ui/button/disagreeBtn";
@@ -321,6 +322,10 @@ const DeleteUser = ({ onClick }) => {
     await auth.signOut();
     setLogin(false);
     setShow(true);
+    await setTimeout(function () {
+      //복원중이나 수정중 로딩만들기
+      window.location.reload();
+    }, 4000);
   };
   return (
     <div>
