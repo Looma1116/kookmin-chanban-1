@@ -25,6 +25,7 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore";
+import { RingLoader } from "react-spinners";
 
 export async function getStaticProps() {
   let agenda = [];

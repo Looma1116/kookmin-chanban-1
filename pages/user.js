@@ -9,6 +9,7 @@ import {
   loadingState,
   loginState,
   nickState,
+  onceState,
   searchIsClicked,
 } from "../components/recoil/recoil";
 import KakaoLogin from "../components/KAKAO/login";
@@ -28,17 +29,23 @@ export default function User() {
   const [gender, setGender] = useState("");
   const [deleted, setDeleted] = useState(false);
   const [exp, setExp] = useState(0);
+  const [once, setOnce] = useRecoilState(onceState);
   const text = useRecoilValue(loginState);
   const auth = getAuth();
   const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
-
+  const [firstface, setFirstface] = useState(true);
   useEffect(() => {
     setIsClicked(false);
     const authUnsubscribe = onAuthStateChanged(auth, (user) => {
       if (user === null) {
+        setFirstface(false);
       } else {
         console.log(user);
-
+        setFirstface(false);
+        if (once === false) {
+          setLoading(true);
+          setOnce(true);
+        }
         setTimeout(async () => {
           const db = getFirestore();
           const d = await getDoc(doc(db, "user", user.uid));
@@ -58,32 +65,43 @@ export default function User() {
           }
           setLoading(false);
           setLogin(true);
-        }, 2000);
+        }, 1000);
       }
     });
   }, [change]);
+  console.log(auth.currentUser);
   console.log(login);
   console.log(change);
   console.log(nickname);
+  if (firstface) return null;
   if (loading) return <Loading />;
-  if (!login) return <KakaoLogin />;
   // if (deleted) return </>
   return (
-    <div className={styles.main}>
-      <h1 className={styles.title}>{`${nickname}님`}</h1>
-      <h3 className={styles.level}>{`레벨 ${level}`}</h3>
-      {console.log(exp)}
-      <progress className={styles.progress} value={exp} max="100"></progress>
-      <JoinedAgenda user={auth.currentUser} />
-      <WroteAgenda user={auth.currentUser} />
-      <WroteComment user={auth.currentUser} />
-      <UserInfo
-        nickname={nickname}
-        gender={gender}
-        age={age}
-        level={level}
-        exp={exp}
-      />
+    <div>
+      {auth.currentUser === null ? (
+        <KakaoLogin />
+      ) : login ? (
+        <div className={styles.main}>
+          <h1 className={styles.title}>{`${nickname}님`}</h1>
+          <h3 className={styles.level}>{`레벨 ${level}`}</h3>
+          {console.log(exp)}
+          <progress
+            className={styles.progress}
+            value={exp}
+            max="100"
+          ></progress>
+          <JoinedAgenda user={auth.currentUser} />
+          <WroteAgenda user={auth.currentUser} />
+          <WroteComment user={auth.currentUser} />
+          <UserInfo
+            nickname={nickname}
+            gender={gender}
+            age={age}
+            level={level}
+            exp={exp}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

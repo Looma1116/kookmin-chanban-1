@@ -97,12 +97,14 @@ const Like = ({ data, op }) => {
     setLike(like + 1);
     setIsClicked(true);
     updateLike();
+    console.log(isClicked);
   };
 
   const cancelHandler = () => {
     setLike(like - 1);
     setIsClicked(false);
     cancelLike();
+    console.log(isClicked);
   };
 
   const loginHandler = () => {

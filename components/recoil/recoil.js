@@ -91,3 +91,20 @@ export const isWrotedState = atom({
   key: "isWrotedState",
   default: false,
 });
+export const loginInterfaceState = atom({
+  key: "loginInterfaceState",
+  default: true,
+});
+export const onceState = atom({
+  key: "onceState",
+  default: false,
+});
+
+export const voteChangeClickState = atom({
+  key: "voteChangeClickState",
+  default: false,
+});
+export const commentSortClickState = atom({
+  key: "commentSortClickState",
+  default: "latest",
+});

@@ -1,94 +1,93 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import {
-  commentState,
-  commentDataState,
-  loginState,
-  clickCountState,
-  likeClickState,
-  communityState,
-} from "../recoil/recoil";
-import {
-  collection,
-  documentId,
-  getDocs,
-  getFirestore,
-  query,
-  where,
-  doc,
-  updateDoc,
-  getDoc,
-  setDoc,
-  arrayUnion,
-} from "firebase/firestore";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { getAuth } from "firebase/auth";
+import { useEffect } from "react";
+import { commentState } from "../recoil/recoil";
+import { useRecoilValue } from "recoil";
 import styles from "../bestComment/Bestcomments.module.css";
 import LikePart from "./likePart";
 
-const CommentPart = ({ isSubmit }) => {
-  const router = useRouter();
-  const auth = getAuth();
-  const db = getFirestore();
-  const [clickCount, setClickCount] = useRecoilState(clickCountState);
+const CommentPart = ({
+  isSubmit,
+  addComment,
+  agreeComment,
+  alternativeComment,
+  disagreeComment,
+}) => {
   const commentS = useRecoilValue(commentState);
-  const logIn = useRecoilValue(loginState);
-  let likeClickCommentId = [];
-  const [likeClick, setLikeClick] = useRecoilState(likeClickState);
-  let [click, setClick] = useState(false);
-  const community = useRecoilValue(communityState);
-  let [commentData, setCommentData] = useRecoilState(commentDataState);
-  let a = [];
 
   useEffect(() => {
-    console.log(isSubmit);
-    setCommentData([]);
-    commentFetch();
-    console.log(commentS);
-    console.log(commentData);
-  }, [commentS, isSubmit]);
-
-  const commentFetch = async () => {
-    console.log(commentS);
-    let snapShot = await getDocs(
-      collection(db, `${community}`, `${router.query.id}`, `${commentS}`)
-    );
-    a = [];
-
-    snapShot.docs.forEach((doc) => {
-      console.log(doc.id);
-      a.push({ id: doc.id, ...doc.data() });
-    });
-
-    console.log(a);
-    setCommentData(a);
-    console.log(commentData);
-  };
+    console.log(addComment);
+    if (addComment != "") {
+      console.log("추가 댓글!");
+      commentSort().push({ id: Math.random(), ...addComment });
+    }
+  }, [isSubmit]);
 
   function Author({ level }) {
+    console.log(level);
     if (commentS === "agreeComment") {
-      return <span className={styles.agreeauthor}>&nbsp;{level}&nbsp;</span>;
+      return (
+        <span
+          style={{
+            background: `rgba(35, 115, 235, ${0.1 + level * 0.006})`,
+          }}
+          className={styles.author}
+        >
+          &nbsp;{level}&nbsp;
+        </span>
+      );
     } else if (commentS === "alternativeComment") {
-      return <span className={styles.alterauthor}>&nbsp;{level}&nbsp;</span>;
+      return (
+        <span
+          style={{
+            background: `rgba(255, 199, 0, ${0.1 + level * 0.006})`,
+          }}
+          className={styles.author}
+        >
+          &nbsp;{level}&nbsp;
+        </span>
+      );
     } else if (commentS === "disagreeComment") {
-      return <span className={styles.disagreeauthor}>&nbsp;{level}&nbsp;</span>;
+      return (
+        <span
+          style={{
+            background: `rgba(255, 0, 0, ${0.1 + level * 0.006})`,
+          }}
+          className={styles.author}
+        >
+          &nbsp;{level}&nbsp;
+        </span>
+      );
     }
   }
+  const commentSort = () => {
+    if (commentS == "agreeComment") {
+      return agreeComment;
+    } else if (commentS == "alternativeComment") {
+      return alternativeComment;
+    } else {
+      return disagreeComment;
+    }
+  };
 
   return (
     <div className={styles.commentlist}>
-      {commentData != "" ? (
-        commentData.map((data) => {
+      {commentSort() != "" ? (
+        commentSort().map((data) => {
           return (
-            <div key={Math.random()} className={styles.card}>
+            <div key={Math.random()} className={styles.commentcard}>
               <div>
-                {async () => {
-                  click = false;
-                }}
                 <header className={styles.header}>
                   <Author level={data.authorLevel} />
                   <div className={styles.name}>&nbsp;{data.authorName}</div>
-                  <LikePart commentData={data}/>
+                  <LikePart
+                    data={data}
+                    op={
+                      commentS === "agreeComment"
+                        ? 1
+                        : commentS === "alternativeComment"
+                        ? 2
+                        : 3
+                    }
+                  />
                 </header>
                 <div className={styles.textArea}>{data.article}</div>
               </div>

@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
 import styles from "./Card.module.css";
-export default function Card({ key, children, story, cla }) {
+export default function Card({ key, children, story, cla, sort }) {
   const router = useRouter();
   const handleClick = () => {
-    router.push(`/agenda/${story}`);
+    if (!sort) router.push(`/userAgenda/${story}`);
+    else router.push(`/agenda/${story}`);
   };
   console.log(story);
   return (

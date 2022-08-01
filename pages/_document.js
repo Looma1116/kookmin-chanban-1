@@ -19,6 +19,7 @@ export default function Document() {
         <div id="modal-userInfo"></div>
         <div id="modal-detailUser"></div>
         <div id="modal-deleteUser"></div>
+        <div id="modal-againLogin"></div>
         <div id="modal-Loading"></div>
         <div id="root"></div>
       </body>

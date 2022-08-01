@@ -12,15 +12,23 @@ import {
   onSnapshot,
   orderBy,
   query,
+  where,
 } from "firebase/firestore";
 const WroteAgenda = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
   const [wroteAgenda, setWroteAgenda] = useState([]);
   const wroteAgendaUnsubscribe = useRef([]);
-  const fetchData = async () => {
+  const fetchData = async (time) => {
+    if (time == null) time = new Date();
     const db = getFirestore();
     const wroteAgendaRef = collection(db, "user", user.uid, "wroteAgenda");
-    const wroteAgendaQuery = query(wroteAgendaRef, orderBy("wrote"), limit(20));
+    const wroteAgendaQuery = query(
+      wroteAgendaRef,
+      orderBy("wrote", "desc"),
+      where("wrote", "<=", time),
+      where("hide", "==", false),
+      limit(20)
+    );
     wroteAgendaUnsubscribe.current = await onSnapshot(
       wroteAgendaQuery,
       (snapshot) => {

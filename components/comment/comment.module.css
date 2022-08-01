@@ -90,3 +90,86 @@
   background: gray;
   cursor: not-allowed;
 }
+
+@-webkit-keyframes AnimationName {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-moz-keyframes AnimationName {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-o-keyframes AnimationName {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes AnimationName {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.loadingCard {
+  color: rgb(245, 240, 240);
+  background: linear-gradient(-45deg,#c4c5c7, #7ea2c4, #ebebeb);
+  background-size: 300% 300%;
+  animation: AnimationName 5s ease infinite;
+  display: flex;
+  height: 6rem;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 2px 6px 0px rgb(194, 194, 194);
+  margin-bottom: 5%;
+}
+.recommendBtn{
+  outline: 0;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+.notFocusBtn{
+  outline: 0;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  color :rgb(194, 194, 194);
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+.btnBox{
+  display: flex;
+  justify-content: flex-end;
+}

@@ -20,6 +20,8 @@ import {
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import styles from "./editAgenda.module.css";
+import Loading from "../loading";
+import { RingLoader } from "react-spinners";
 
 const EditAgenda = () => {
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
@@ -30,7 +32,7 @@ const EditAgenda = () => {
   const [hide, setHide] = useRecoilState(hideState);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const login = useRecoilValue(loginState);
-
+  const [loading, setLoading] = useState(false);
   const auth = getAuth();
   const router = useRouter();
 
@@ -56,6 +58,8 @@ const EditAgenda = () => {
     event.preventDefault();
     const db = getFirestore();
     const storage = getStorage();
+
+    setLoading(true);
 
     //storage에 이미지 추가
     let imageURL = "";
@@ -105,9 +109,12 @@ const EditAgenda = () => {
       title: event.target.title.value,
       wrote: createdAt,
       story: id,
+      hide: false,
+      agenda: false,
     };
     await addDoc(wroteAgendaCollection, agendaInfo);
     setEditModalIsOpen(false);
+    setLoading(false);
     router.push(`/userAgenda/${id}`);
     await addDoc(
       // 파이어베이스 아젠다부분에 댓글 추가
@@ -154,66 +161,72 @@ const EditAgenda = () => {
         >
           닫기
         </button>
-        <form onSubmit={onSubmitHandler}>
-          <select
-            value={category}
-            onChange={categoryHandler}
-            className={styles.category}
-          >
-            <option value="정치">정치</option>
-            <option value="연애">연애</option>
-            <option value="진로">진로</option>
-          </select>
-          <div className={styles.label}>제목</div>
-          <input type="text" name="title" className={styles.input}></input>
-          <br />
-          <br />
-          <div className={styles.label}>부제목</div>
-          <input type="text" name="subTitle" className={styles.input}></input>
-          <br />
-          <br />
-          <div className={styles.label}>본문</div>
-          <textarea
-            name="article"
-            rows="10"
-            className={styles.textinput}
-          ></textarea>
-          <br />
-          <br />
+        {loading ? (
+          <div className={styles.loading}>
+            <RingLoader className={styles.loader} size={150} color="#03b3ff" />
+          </div>
+        ) : (
+          <form onSubmit={onSubmitHandler}>
+            <select
+              value={category}
+              onChange={categoryHandler}
+              className={styles.category}
+            >
+              <option value="정치">정치</option>
+              <option value="연애">연애</option>
+              <option value="진로">진로</option>
+            </select>
+            <div className={styles.label}>제목</div>
+            <input type="text" name="title" className={styles.input}></input>
+            <br />
+            <br />
+            <div className={styles.label}>부제목</div>
+            <input type="text" name="subTitle" className={styles.input}></input>
+            <br />
+            <br />
+            <div className={styles.label}>본문</div>
+            <textarea
+              name="article"
+              rows="10"
+              className={styles.textinput}
+            ></textarea>
+            <br />
+            <br />
 
-          {image === null ? (
-            <div>
-              <label htmlFor="upload" className={styles.uploadBtn}>
-                이미지 업로드
-              </label>
-              <input
-                type="file"
-                name="image"
-                onChange={imageHandler}
-                id="upload"
-                style={{ display: "none" }}
-              ></input>
-            </div>
-          ) : (
-            <div>
-              <label htmlFor="change" className={styles.uploadBtn}>
-                이미지 변경
-              </label>
-              <span> {image.name}</span>
-              <input
-                type="file"
-                name="image"
-                onChange={imageHandler}
-                id="change"
-                style={{ display: "none" }}
-              ></input>
-            </div>
-          )}
-          <br />
-          <button type="submit" className={styles.btn_upload}>
-            등록
-          </button>
-        </form>
+            {image === null ? (
+              <div>
+                <label htmlFor="upload" className={styles.uploadBtn}>
+                  이미지 업로드
+                </label>
+                <input
+                  type="file"
+                  name="image"
+                  onChange={imageHandler}
+                  id="upload"
+                  style={{ display: "none" }}
+                ></input>
+              </div>
+            ) : (
+              <div>
+                <label htmlFor="change" className={styles.uploadBtn}>
+                  이미지 변경
+                </label>
+                <span> {image.name}</span>
+                <input
+                  type="file"
+                  name="image"
+                  onChange={imageHandler}
+                  id="change"
+                  style={{ display: "none" }}
+                ></input>
+              </div>
+            )}
+            <br />
+            <button type="submit" className={styles.btn_upload}>
+              등록
+            </button>
+          </form>
+        )}
       </Modal>
       <Modal
         isOpen={warningModalIsOpen}
