@@ -30,7 +30,7 @@ import { RingLoader } from "react-spinners";
 export async function getStaticProps() {
   let agenda = [];
   const db = getFirestore();
-  const wroteAgendaRef = query(collection(db, "userAgenda"));
+  const wroteAgendaRef = query(collection(db, "userAgenda"),where("hide", "==", false));
 
   const testSnapshot = await getDocs(wroteAgendaRef);
 
