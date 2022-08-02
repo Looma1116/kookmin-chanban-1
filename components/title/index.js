@@ -59,6 +59,7 @@ const Title = ({ title, subTitle, imageUrl, agendaId, writerUid }) => {
         }
       );
     });
+    
 
     console.log("게시글 삭제 완료");
     router.back();

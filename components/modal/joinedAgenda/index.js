@@ -111,8 +111,9 @@ const JoinedAgenda = ({ user }) => {
           <div className={styles.title}>참여한 찬반</div>
         </div>
         <div className={styles.card}>
+          {console.log(joinedAgenda)}
           {joinedAgenda?.map((agenda, index) => (
-            <Card key={index} story={agenda.story} sort={agenda.agenda}>
+            <Card key={index} story={agenda.story} sort={agenda.agenda} data={agenda}>
               <h3 key={index}>{agenda?.title}</h3>
               <p key={index}>{agenda?.category}</p>
               <div key={index}>
