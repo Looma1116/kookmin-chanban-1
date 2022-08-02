@@ -180,6 +180,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData ,writerUid }) => {
             title={agenda.title}
             subTitle={agenda.subTitle}
             imageUrl={agenda.imageUrl}
+            agendaId = {`${router.query.id}`}
             writerUid = {JSON.parse(writerUid)}
           />
           <Article article={agenda.article} />
