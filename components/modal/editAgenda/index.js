@@ -73,6 +73,20 @@ const EditAgenda = () => {
       });
       imageURL = await getDownloadURL(storageRef);
     }
+    if(imageURL==""){
+      if(category=="정치"){
+        imageURL =
+          "https://firebasestorage.googleapis.com/v0/b/peoplevoice-fcea9.appspot.com/o/94043_307275_2538.jpg?alt=media&token=c4f4dd7f-53d0-44b0-a5b1-09f456198867";
+      }
+      else if(category=="연애"){
+        imageURL =
+          "https://firebasestorage.googleapis.com/v0/b/peoplevoice-fcea9.appspot.com/o/pngtree-love-letter-icon-design-template-vector-isolated-png-image_856595.jpg?alt=media&token=12de30e6-3790-47df-a7c4-3a15213b50ff";
+      }
+      else{
+        imageURL =
+          "https://firebasestorage.googleapis.com/v0/b/peoplevoice-fcea9.appspot.com/o/%EC%A7%84%EB%A1%9C%EC%B2%B4%ED%97%98%EC%BD%94%EB%94%94%EB%84%A4%EC%9D%B4%ED%84%B01-768x438.png?alt=media&token=25c3f6f2-97e0-4233-af3d-fd96b70df6a9";
+      }
+    }
 
     // userAgenda에 추가
     const createdAt = new Date();
@@ -115,7 +129,13 @@ const EditAgenda = () => {
     await addDoc(wroteAgendaCollection, agendaInfo);
     setEditModalIsOpen(false);
     setLoading(false);
-    router.push(`/userAgenda/${id}`);
+
+
+
+    router.push({
+      pathname: `/userAgenda/${id}`,
+      query: { agenda: JSON.stringify(agenda) },
+    });
     await addDoc(
       // 파이어베이스 아젠다부분에 댓글 추가
       collection(db, "userAgenda", `${id}`, "vote"),

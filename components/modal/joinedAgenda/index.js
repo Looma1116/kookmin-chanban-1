@@ -118,6 +118,7 @@ const JoinedAgenda = ({ user }) => {
           <MdOutlineHowToVote size="2.5rem" color="#2373EB" />
           <div className={styles.title}>참여한 찬반</div>
         </div>
+
         <AutoSizer AutoSizer>
           {({ width, height }) => (
             <List
@@ -133,7 +134,7 @@ const JoinedAgenda = ({ user }) => {
         </AutoSizer>
         {/* <div className={styles.card}>
           {joinedAgenda?.map((agenda, index) => (
-            <Card key={index} story={agenda.story} sort={agenda.agenda}>
+            <Card key={index} story={agenda.story} sort={agenda.agenda} data={agenda}>
               <h3 key={index}>{agenda?.title}</h3>
               <p key={index}>{agenda?.category}</p>
               <div key={index}>

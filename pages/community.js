@@ -30,18 +30,12 @@ import { RingLoader } from "react-spinners";
 export async function getStaticProps() {
   let agenda = [];
   const db = getFirestore();
-  const wroteAgendaRef = query(collection(db, "userAgenda"));
+  const wroteAgendaRef = query(collection(db, "userAgenda"),where("hide", "==", false));
 
   const testSnapshot = await getDocs(wroteAgendaRef);
 
   testSnapshot.forEach((doc) => {
-    const timeStamp = new Date();
-    const diffDate = timeStamp.getTime() - doc.data().created.seconds * 1000;
-    const dateDays = parseInt(Math.abs(diffDate / (1000 * 3600 * 24))); // 차이 일수 계산
-
-    if (dateDays <= 7) {
-      agenda.push({ ...doc.data(), id: doc.id });
-    }
+    agenda.push({ ...doc.data(), id: doc.id });
   });
 
   const agendasData = JSON.stringify(agenda);
