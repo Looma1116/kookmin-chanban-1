@@ -1,9 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import Modal from "./agendaCard";
 import Card from "../../../ui/Card/Card";
 import Image from "next/image";
 import Images from "../../../public/joined.png";
 import styles from "./JoinedAgenda.module.css";
+import Carousel from "react-material-ui-carousel";
+import { v4 as uuidv4 } from "uuid";
 import { MdOutlineHowToVote } from "react-icons/md";
 import {
   collection,
@@ -14,79 +16,85 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import {
+  CellMeasurerCache,
+  CellMeasurer,
+  InfiniteLoader,
+  List,
+  AutoSizer,
+} from "react-virtualized";
+
 const JoinedAgenda = ({ user }) => {
   const [joinedAgenda, setJoinedAgenda] = useState([]);
   const joinedAgendaUnsubsribe = useRef([]);
   const [showModal, setShowModal] = useState(false);
-
-  // const [scrollTop, setScrollTop] = useState(0);
-  // const [hide, setHide] = useState(true);
-  // const scrolltoTop = () => {
-  //   window.scrollTo({
-  //     top: 0,
-  //     behavior: "smooth",
-  //   });
-  // };
-  // const handleScroll = async () => {
-  //   setScrollTop(document.documentElement.scrollTop);
-  //   const scrollHeight = document.documentElement.scrollHeight - 10;
-  //   const clientHeight = document.documentElement.clientHeight;
-  //   if (scrollTop > 200) {
-  //     setHide(false);
-  //   } else {
-  //     setHide(true);
-  //   }
-  //   if (scrollTop + clientHeight >= scrollHeight) {
-  //     await fetchData(joinedAgenda[cnt].joined);
-  //   }
-  // };
-  // const handleScroll = async () => {
-  //   console.log(document.documentElement.scrollHeight);
-  //   const scrollHeight = document.documentElement.scrollHeight;
-  //   const scrollTop = document.documentElement.scrollTop;
-  //   const clientHeight = document.documentElement.clientHeight;
-  //   if (scrollTop + clientHeight >= scrollHeight) {
-  //     // 페이지 끝에 도달하면 추가 데이터를 받아온다
-  //     await fetchData(joinedAgenda);
-  //     console.log("hi");
-  //   }
-  // };
-  // useEffect(() => {
-  //   // scroll event listener 등록
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     // scroll event listener 해제
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // });
-
-  let cnt = 0;
+  const [cnt, setCnt] = useState(0);
+  const [more, setMore] = useState(true);
   const fetchData = async (time) => {
     if (time == null) time = new Date();
+    console.log(time);
     const db = getFirestore();
     const joinedAgendaRef = collection(db, "user", user.uid, "joinedAgenda");
     const joinedAgendaQuery = query(
       joinedAgendaRef,
       orderBy("joined", "desc"),
-      where("joined", "<=", time),
+      where("joined", "<", time),
       where("hide", "==", false),
-      limit(20)
+      limit(5)
     );
     joinedAgendaUnsubsribe.current = await onSnapshot(
       joinedAgendaQuery,
       (snapshot) => {
         const { length } = snapshot.docs;
         console.log(length);
-        cnt = length - 1;
+        setCnt(length - 1);
         if (length > 0) {
-          setJoinedAgenda(snapshot.docs.map((str) => str.data()));
+          setJoinedAgenda([
+            ...joinedAgenda,
+            snapshot.docs.map((str) => str.data()),
+          ]);
+        } else {
+          setMore(false);
         }
       }
     );
   };
+  console.log(joinedAgenda);
   useEffect(() => {
     fetchData();
   }, []);
+  const scrollListener = async (params) => {
+    if (params.scrollTop + params.clientHeight >= params.scrollHeight - 100) {
+      const time = joinedAgenda[joinedAgenda.length - 1][cnt]?.joined.toDate();
+      console.log(time);
+      if (more === true) {
+        await fetchData(time);
+      }
+    }
+  };
+  const rowRenderer = ({ index, style }) => {
+    const post = joinedAgenda[index];
+    return (
+      <div style={style}>
+        {post?.map((agenda, index) => (
+          <div key={uuidv4()}>
+            <Card
+              key={index}
+              story={agenda.story}
+              sort={agenda.agenda}
+              data={agenda}
+            >
+              <h3 key={uuidv4()}>{agenda?.title}</h3>
+              <p key={uuidv4()}>{agenda?.category}</p>
+              <div key={uuidv4()}>
+                {agenda?.joined.toDate().toLocaleDateString()}
+              </div>
+            </Card>
+          </div>
+        ))}
+      </div>
+    );
+  };
   return (
     <div>
       <div className={styles.out} onClick={() => setShowModal(true)}>
@@ -110,7 +118,20 @@ const JoinedAgenda = ({ user }) => {
           <MdOutlineHowToVote size="2.5rem" color="#2373EB" />
           <div className={styles.title}>참여한 찬반</div>
         </div>
-        <div className={styles.card}>
+        <AutoSizer AutoSizer>
+          {({ width, height }) => (
+            <List
+              width={width}
+              height={800}
+              rowCount={joinedAgenda.length}
+              rowHeight={800}
+              rowRenderer={rowRenderer}
+              onScroll={scrollListener}
+              overscanRowCount={3}
+            />
+          )}
+        </AutoSizer>
+        {/* <div className={styles.card}>
           {joinedAgenda?.map((agenda, index) => (
             <Card key={index} story={agenda.story} sort={agenda.agenda}>
               <h3 key={index}>{agenda?.title}</h3>
@@ -120,7 +141,7 @@ const JoinedAgenda = ({ user }) => {
               </div>
             </Card>
           ))}
-        </div>
+        </div> */}
       </Modal>
     </div>
   );
