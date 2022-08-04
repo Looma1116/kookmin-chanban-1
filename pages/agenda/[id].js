@@ -18,6 +18,7 @@ import {
   communityState,
   isVotedState,
   isWrotedState,
+  likePartState,
   loadingState,
   voteState,
 } from "../../components/recoil/recoil";
@@ -34,10 +35,25 @@ import Loading from "../../components/modal/loading";
 export async function getServerSideProps(context) {
   const db = getFirestore();
 
+  console.log(context.query.uid);
+
   let agreeComment = [];
   let alternativeComment = [];
   let disagreeComment = [];
+  let likeComment = [];
   const Id = await context.query.id;
+  const logged = JSON.parse(context.query.login);
+
+  if (logged) {
+    const q = query(
+      collection(db, "user", context.query.uid, "likeComment"),
+      where("hide", "==", false)
+    );
+    const snapShot = await getDocs(q);
+    snapShot.docs.forEach((doc) => {
+      likeComment.push({ ...doc.data(), id: doc.id });
+    });
+  }
 
   const agreeRef = query(
     // 찬성 댓글
@@ -99,17 +115,19 @@ export async function getServerSideProps(context) {
   const agreeData = JSON.stringify(agreeComment);
   const alternativeData = JSON.stringify(alternativeComment);
   const disagreeData = JSON.stringify(disagreeComment);
+  const commentList = JSON.stringify(likeComment);
 
   return {
     props: {
       agreeData,
       disagreeData,
       alternativeData,
+      commentList,
     },
   };
 }
 
-const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
+const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
   const router = useRouter();
   const db = getFirestore();
 
@@ -129,9 +147,11 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
   const [alternativeFetchData, setAlternativeFetchData] = useState(
     JSON.parse(alternativeData)
   );
+  const [likeComment, setLikeComment] = useState(JSON.parse(commentList));
   const [commentSortClick, setCommentSortClick] = useRecoilState(
     commentSortClickState
   );
+  const [likeState, setLikeState] = useRecoilState(likePartState);
 
   useEffect(() => {
     setCommunity("agenda");
@@ -141,11 +161,27 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
     setCommentSortClick("latest");
     setIsWroted(false);
     checkIn();
+    updateLike();
   }, []);
 
   useEffect(() => {
     fetchData();
   }, [isFetched, clickCount]);
+
+  let a = [];
+
+  const updateLike = () => {
+    likeComment.forEach((doc) => {
+      const like = {
+        id: doc.id,
+        like: doc.like,
+        isClicked: true,
+      };
+      a.push(like);
+    });
+    setLikeState(a);
+    console.log(likeState);
+  };
 
   const checkIn = () => {
     if (router.query.agenda === undefined) {
@@ -185,12 +221,14 @@ const Agenda = ({ agreeData, disagreeData, alternativeData }) => {
               agree={agreeFetchData}
               alter={alternativeFetchData}
               disagree={disagreeFetchData}
+              likeList={likeComment}
             />
             <Vote agenda={agenda} />
             <Comment
               agreeData={JSON.parse(agreeData)}
               alternativeData={JSON.parse(alternativeData)}
               disagreeData={JSON.parse(disagreeData)}
+              likeList={likeComment}
             />
             {clickCount ? <LogInModal /> : null}
           </div>

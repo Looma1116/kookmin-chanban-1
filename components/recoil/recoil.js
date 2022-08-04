@@ -108,3 +108,7 @@ export const commentSortClickState = atom({
   key: "commentSortClickState",
   default: "latest",
 });
+export const likePartState = atom({
+  key: "likePartState",
+  default: [],
+});
