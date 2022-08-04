@@ -4,7 +4,6 @@ import Card from "../../../ui/Card/Card";
 import Image from "next/image";
 import Images from "../../../public/joined.png";
 import styles from "./JoinedAgenda.module.css";
-import Carousel from "react-material-ui-carousel";
 import { v4 as uuidv4 } from "uuid";
 import { MdOutlineHowToVote } from "react-icons/md";
 import {
@@ -16,14 +15,8 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import {
-  CellMeasurerCache,
-  CellMeasurer,
-  InfiniteLoader,
-  List,
-  AutoSizer,
-} from "react-virtualized";
-
+import { List, AutoSizer } from "react-virtualized";
+import "react-virtualized/styles.css";
 const JoinedAgenda = ({ user }) => {
   const [joinedAgenda, setJoinedAgenda] = useState([]);
   const joinedAgendaUnsubsribe = useRef([]);
@@ -40,7 +33,7 @@ const JoinedAgenda = ({ user }) => {
       orderBy("joined", "desc"),
       where("joined", "<", time),
       where("hide", "==", false),
-      limit(5)
+      limit(20)
     );
     joinedAgendaUnsubsribe.current = await onSnapshot(
       joinedAgendaQuery,
@@ -64,7 +57,7 @@ const JoinedAgenda = ({ user }) => {
     fetchData();
   }, []);
   const scrollListener = async (params) => {
-    if (params.scrollTop + params.clientHeight >= params.scrollHeight - 100) {
+    if (params.scrollTop + params.clientHeight >= params.scrollHeight - 300) {
       const time = joinedAgenda[joinedAgenda.length - 1][cnt]?.joined.toDate();
       console.log(time);
       if (more === true) {
@@ -123,12 +116,13 @@ const JoinedAgenda = ({ user }) => {
           {({ width, height }) => (
             <List
               width={width}
-              height={800}
+              height={900}
               rowCount={joinedAgenda.length}
-              rowHeight={800}
+              rowHeight={900}
               rowRenderer={rowRenderer}
               onScroll={scrollListener}
-              overscanRowCount={3}
+              overscanRowCount={2}
+              className={styles.scroll}
             />
           )}
         </AutoSizer>
