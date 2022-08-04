@@ -15,9 +15,14 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../bestComment/Bestcomments.module.css";
-import { clickCountState, communityState, loginState } from "../recoil/recoil";
+import {
+  clickCountState,
+  communityState,
+  likePartState,
+  loginState,
+} from "../recoil/recoil";
 
-const Like = ({ data, op }) => {
+const Like = ({ data, op, likeList }) => {
   const login = useRecoilValue(loginState);
   const db = getFirestore();
   const router = useRouter();
@@ -26,26 +31,21 @@ const Like = ({ data, op }) => {
   const [isClicked, setIsClicked] = useState(false);
   const community = useRecoilValue(communityState);
   const commentList = ["agreeComment", "alternativeComment", "disagreeComment"];
-  const [isFetched, setIsFetched] = useState(false);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
+  const [likeState, setLikeState] = useRecoilState(likePartState);
 
   useEffect(() => {
     if (login) {
       initializeLike();
     }
-  }, [login, isFetched]);
+  }, [login]);
 
   const initializeLike = async () => {
-    const q = collection(db, "user", auth.currentUser.uid, "likeComment");
-    const snapShot = await getDocs(q);
-    snapShot.docs.forEach((doc) => {
+    likeList.forEach((doc) => {
       if (doc.id === data.id) {
         setIsClicked(true);
       }
     });
-    if (!isFetched) {
-      setIsFetched(true);
-    }
   };
 
   const updateLike = async () => {
