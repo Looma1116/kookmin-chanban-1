@@ -14,9 +14,13 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { List, AutoSizer } from "react-virtualized";
+import "react-virtualized/styles.css";
 const WroteAgenda = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
   const [wroteAgenda, setWroteAgenda] = useState([]);
+  const [more, setMore] = useState(true);
+  const [cnt, setCnt] = useState(0);
   const wroteAgendaUnsubscribe = useRef([]);
   const fetchData = async (time) => {
     if (time == null) time = new Date();
@@ -35,7 +39,12 @@ const WroteAgenda = ({ user }) => {
         const { length } = snapshot.docs;
         console.log(length);
         if (length > 0) {
-          setWroteAgenda(snapshot.docs.map((str) => str.data()));
+          setWroteAgenda([
+            ...wroteAgenda,
+            snapshot.docs.map((str) => str.data()),
+          ]);
+        } else {
+          setMore(false);
         }
       }
     );
@@ -43,6 +52,38 @@ const WroteAgenda = ({ user }) => {
   useEffect(() => {
     fetchData();
   }, []);
+  const scrollListener = async (params) => {
+    if (params.scrollTop + params.clientHeight >= params.scrollHeight - 300) {
+      const time = wroteAgenda[wroteAgenda.length - 1][cnt]?.wrote.toDate();
+      console.log(time);
+      if (more === true) {
+        await fetchData(time);
+      }
+    }
+  };
+  const rowRenderer = ({ index, style }) => {
+    const post = wroteAgenda[index];
+    return (
+      <div style={style}>
+        {post?.map((agenda, index) => (
+          <div key={uuidv4()}>
+            <Card
+              key={index}
+              story={agenda.story}
+              sort={agenda.agenda}
+              data={agenda}
+            >
+              <h3 key={uuidv4()}>{agenda?.title}</h3>
+              <p key={uuidv4()}>{agenda?.category}</p>
+              <div key={uuidv4()}>
+                {agenda?.joined.toDate().toLocaleDateString()}
+              </div>
+            </Card>
+          </div>
+        ))}
+      </div>
+    );
+  };
   return (
     <div>
       <div className={styles.out} onClick={() => setShowModal(true)}>
@@ -61,7 +102,21 @@ const WroteAgenda = ({ user }) => {
           <BiAddToQueue size="2.5rem" color="#FFC700" />
           <div className={styles.title}>제시한 찬반</div>
         </div>
-        <div className={styles.card}>
+        <AutoSizer AutoSizer>
+          {({ width, height }) => (
+            <List
+              width={width}
+              height={900}
+              rowCount={wroteAgenda.length}
+              rowHeight={900}
+              rowRenderer={rowRenderer}
+              onScroll={scrollListener}
+              overscanRowCount={2}
+              className={styles.scroll}
+            />
+          )}
+        </AutoSizer>
+        {/* <div className={styles.card}>
           {wroteAgenda?.map((agenda, index) => (
             <Card key={index} story={agenda?.story}>
               <h3 key={index}>{agenda?.title}</h3>
@@ -71,7 +126,7 @@ const WroteAgenda = ({ user }) => {
               </div>
             </Card>
           ))}
-        </div>
+        </div> */}
       </Modal>
     </div>
   );
