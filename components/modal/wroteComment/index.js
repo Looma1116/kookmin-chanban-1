@@ -4,6 +4,8 @@ import Card from "../../../ui/Card/Card";
 import Image from "next/image";
 import Images from "../../../public/comment.png";
 import styles from "./WroteComment.module.css";
+import { List, AutoSizer } from "react-virtualized";
+import { v4 as uuidv4 } from "uuid";
 import {
   collection,
   doc,
@@ -21,6 +23,7 @@ import { BiCommentDetail } from "react-icons/bi";
 const WroteComment = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
   const [wroteComment, setWroteComment] = useState([]);
+  const [more, setMore] = useState(true);
   const wroteCommentUnsubsribe = useRef([]);
   const fetchData = async (time) => {
     if (time == null) time = new Date();
@@ -38,8 +41,17 @@ const WroteComment = ({ user }) => {
       (snapshot) => {
         const { length } = snapshot.docs;
         console.log(length);
+        let agendas = [];
         if (length > 0) {
-          setWroteComment(snapshot.docs.map((str) => str.data()));
+          snapshot.docs.forEach(async (document) => {
+            agendas.push({
+              ...document.data(),
+            });
+          });
+          const newState = [...wroteComment, ...agendas];
+          setWroteComment(newState);
+        } else {
+          setMore(false);
         }
       }
     );
@@ -47,6 +59,35 @@ const WroteComment = ({ user }) => {
   useEffect(() => {
     fetchData();
   }, []);
+  const scrollListener = async (params) => {
+    if (params.scrollTop + params.clientHeight >= params.scrollHeight - 100) {
+      const time = wroteComment[wroteComment.length - 1]?.wrote.toDate();
+      console.log(time);
+      if (more === true) {
+        await fetchData(time);
+      }
+    }
+  };
+  const rowRenderer = ({ index, style }) => {
+    const post = wroteComment[index];
+    console.log(index);
+    console.log(post);
+    return (
+      <div style={style}>
+        <div key={uuidv4()}>
+          <Card cla="Comment" story={post.story}>
+            <div className={styles.line}>
+              <div className={styles.date}>
+                {post?.wrote.toDate().toLocaleDateString()}
+              </div>
+              <div>👍{post?.like}</div>
+            </div>
+            <div>{post?.article}</div>
+          </Card>
+        </div>
+      </div>
+    );
+  };
   return (
     <div>
       <div className={styles.out} onClick={() => setShowModal(true)}>
@@ -65,19 +106,20 @@ const WroteComment = ({ user }) => {
           <BiCommentDetail size="2.5rem" color="#FF0000" />
           <div className={styles.title}>남긴 목소리</div>
         </div>
-        <div className={styles.card}>
-          {wroteComment?.map((agenda, index) => (
-            <Card cla="Comment" key={index} story={agenda.story}>
-              <div className={styles.line}>
-                <div key={index} className={styles.date}>
-                  {agenda?.wrote.toDate().toLocaleDateString()}
-                </div>
-                <div key={index}>👍{agenda?.like}</div>
-              </div>
-              <div key={index}>{agenda?.article}</div>
-            </Card>
-          ))}
-        </div>
+        <AutoSizer>
+          {({ width }) => (
+            <List
+              width={width}
+              height={900}
+              rowCount={wroteComment.length}
+              rowHeight={200}
+              rowRenderer={rowRenderer}
+              onScroll={scrollListener}
+              overscanRowCount={3}
+              className={styles.scroll}
+            />
+          )}
+        </AutoSizer>
       </Modal>
     </div>
   );
