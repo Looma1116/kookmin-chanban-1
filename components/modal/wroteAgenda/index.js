@@ -38,11 +38,15 @@ const WroteAgenda = ({ user }) => {
       (snapshot) => {
         const { length } = snapshot.docs;
         console.log(length);
+        let agendas = [];
         if (length > 0) {
-          setWroteAgenda([
-            ...wroteAgenda,
-            snapshot.docs.map((str) => str.data()),
-          ]);
+          snapshot.docs.forEach(async (document) => {
+            agendas.push({
+              ...document.data(),
+            });
+          });
+          const newState = [...wroteAgenda, ...agendas];
+          setWroteAgenda(newState);
         } else {
           setMore(false);
         }
@@ -54,7 +58,7 @@ const WroteAgenda = ({ user }) => {
   }, []);
   const scrollListener = async (params) => {
     if (params.scrollTop + params.clientHeight >= params.scrollHeight - 300) {
-      const time = wroteAgenda[wroteAgenda.length - 1][cnt]?.wrote.toDate();
+      const time = wroteAgenda[wroteAgenda.length - 1]?.wrote.toDate();
       console.log(time);
       if (more === true) {
         await fetchData(time);
@@ -65,22 +69,19 @@ const WroteAgenda = ({ user }) => {
     const post = wroteAgenda[index];
     return (
       <div style={style}>
-        {post?.map((agenda, index) => (
-          <div key={uuidv4()}>
-            <Card
-              key={index}
-              story={agenda.story}
-              sort={agenda.agenda}
-              data={agenda}
-            >
-              <h3 key={uuidv4()}>{agenda?.title}</h3>
-              <p key={uuidv4()}>{agenda?.category}</p>
-              <div key={uuidv4()}>
-                {agenda?.joined.toDate().toLocaleDateString()}
-              </div>
-            </Card>
-          </div>
-        ))}
+        <div key={uuidv4()}>
+          <Card key={index} story={post.story} sort={post.agenda} data={post}>
+            <h3 key={uuidv4()}>
+              {post.title.length > 18
+                ? `${post.title.substring(0, 15)}...`
+                : post.title}
+            </h3>
+            <p key={uuidv4()}>{post?.category}</p>
+            <div key={uuidv4()}>
+              {post?.joined.toDate().toLocaleDateString()}
+            </div>
+          </Card>
+        </div>
       </div>
     );
   };
@@ -102,16 +103,16 @@ const WroteAgenda = ({ user }) => {
           <BiAddToQueue size="2.5rem" color="#FFC700" />
           <div className={styles.title}>제시한 찬반</div>
         </div>
-        <AutoSizer AutoSizer>
-          {({ width, height }) => (
+        <AutoSizer>
+          {({ width }) => (
             <List
               width={width}
               height={900}
               rowCount={wroteAgenda.length}
-              rowHeight={900}
+              rowHeight={200}
               rowRenderer={rowRenderer}
               onScroll={scrollListener}
-              overscanRowCount={2}
+              overscanRowCount={3}
               className={styles.scroll}
             />
           )}

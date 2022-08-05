@@ -18,7 +18,7 @@ import {
 import { List, AutoSizer } from "react-virtualized";
 import "react-virtualized/styles.css";
 const JoinedAgenda = ({ user }) => {
-  const [joinedAgenda, setJoinedAgenda] = useState([]);
+  let [joinedAgenda, setJoinedAgenda] = useState([]);
   const joinedAgendaUnsubsribe = useRef([]);
   const [showModal, setShowModal] = useState(false);
   const [cnt, setCnt] = useState(0);
@@ -41,14 +41,19 @@ const JoinedAgenda = ({ user }) => {
         const { length } = snapshot.docs;
         console.log(length);
         setCnt(length - 1);
+        let agendas = [];
         if (length > 0) {
-          setJoinedAgenda([
-            ...joinedAgenda,
-            snapshot.docs.map((str) => str.data()),
-          ]);
+          snapshot.docs.forEach(async (document) => {
+            agendas.push({
+              ...document.data(),
+            });
+          });
+          const newState = [...joinedAgenda, ...agendas];
+          setJoinedAgenda(newState);
         } else {
           setMore(false);
         }
+        console.log(agendas);
       }
     );
   };
@@ -57,8 +62,8 @@ const JoinedAgenda = ({ user }) => {
     fetchData();
   }, []);
   const scrollListener = async (params) => {
-    if (params.scrollTop + params.clientHeight >= params.scrollHeight - 300) {
-      const time = joinedAgenda[joinedAgenda.length - 1][cnt]?.joined.toDate();
+    if (params.scrollTop + params.clientHeight >= params.scrollHeight - 100) {
+      const time = joinedAgenda[joinedAgenda.length - 1]?.joined.toDate();
       console.log(time);
       if (more === true) {
         await fetchData(time);
@@ -67,24 +72,23 @@ const JoinedAgenda = ({ user }) => {
   };
   const rowRenderer = ({ index, style }) => {
     const post = joinedAgenda[index];
+    console.log(index);
+    console.log(post);
     return (
       <div style={style}>
-        {post?.map((agenda, index) => (
-          <div key={uuidv4()}>
-            <Card
-              key={index}
-              story={agenda.story}
-              sort={agenda.agenda}
-              data={agenda}
-            >
-              <h3 key={uuidv4()}>{agenda?.title}</h3>
-              <p key={uuidv4()}>{agenda?.category}</p>
-              <div key={uuidv4()}>
-                {agenda?.joined.toDate().toLocaleDateString()}
-              </div>
-            </Card>
-          </div>
-        ))}
+        <div key={uuidv4()}>
+          <Card key={index} story={post.story} sort={post.agenda} data={post}>
+            <h3 key={uuidv4()}>
+              {post.title.length > 18
+                ? `${post.title.substring(0, 15)}...`
+                : post.title}
+            </h3>
+            <p key={uuidv4()}>{post?.category}</p>
+            <div key={uuidv4()}>
+              {post?.joined.toDate().toLocaleDateString()}
+            </div>
+          </Card>
+        </div>
       </div>
     );
   };
@@ -112,16 +116,16 @@ const JoinedAgenda = ({ user }) => {
           <div className={styles.title}>참여한 찬반</div>
         </div>
 
-        <AutoSizer AutoSizer>
-          {({ width, height }) => (
+        <AutoSizer>
+          {({ width }) => (
             <List
               width={width}
               height={900}
               rowCount={joinedAgenda.length}
-              rowHeight={900}
+              rowHeight={200}
               rowRenderer={rowRenderer}
               onScroll={scrollListener}
-              overscanRowCount={2}
+              overscanRowCount={3}
               className={styles.scroll}
             />
           )}
