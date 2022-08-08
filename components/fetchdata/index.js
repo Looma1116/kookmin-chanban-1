@@ -31,10 +31,13 @@ const FetchData = ({ fetchedData }) => {
 
   useEffect(() => {
     console.log(fetchedData);
+    data = [];
+    console.log(category);
     dataFetch();
   }, [category, sort, submit]);
 
   const dataFetch = async () => {
+    console.log(category);
     const timeStamp = new Date();
     //console.log(timeStamp.getTime()); //현재 시간을 초단위로 출력 => 나노초 단위로 출력된다.
     //console.log(document.data().created.seconds); //게시물이 만들어진 시간을 초단위로 출력
@@ -42,10 +45,10 @@ const FetchData = ({ fetchedData }) => {
       const diffDate =
         timeStamp.getTime() - fetchedData[i].created.seconds * 1000;
       const dateDays = parseInt(Math.abs(diffDate / (1000 * 3600 * 24))); // 차이 일수 계산
-      if ((category = "전체")) {
+      if ((category == "전체")) {
         if (dateDays <= sort) {
-          console.log(dateDays);
-          console.log(sort);
+          // console.log(dateDays);
+          // console.log(sort);
           if (search === null || search === "") {
             data.push({ ...fetchedData[i], id: fetchedData[i].id });
           } else {
@@ -54,27 +57,28 @@ const FetchData = ({ fetchedData }) => {
                 .title.replace(/ /gi, "")
                 .includes(search.replace(/ /gi, ""))
             ) {
-              data.push({ ...document.data(), id: doc.id });
+              data.push({ ...fetchedData[i], id: fetchedData[i].id });
             }
           }
         }
-      } else if (fetchedData[i].category == category) {
-        if (dateDays <= sort) {
-          if (search === null || search === "") {
-            data.push({ ...fetchedData[i], id: fetchedData[i].id });
-          } else {
-            if (
-              fetchedData[i].title
-                .replace(/ /gi, "")
-                .includes(search.replace(/ /gi, ""))
-            ) {
-              data.push({ ...document.data(), id: doc.id });
+      } else {
+        if (fetchedData[i].category == category) {
+          if (dateDays <= sort) {
+            if (search === null || search === "") {
+              data.push({ ...fetchedData[i], id: fetchedData[i].id });
+            } else {
+              if (
+                fetchedData[i].title
+                  .replace(/ /gi, "")
+                  .includes(search.replace(/ /gi, ""))
+              ) {
+                data.push({ ...fetchedData[i], id: fetchedData[i].id });
+              }
             }
           }
         }
       }
     }
-    console.log(data);
 
     setAgenda(data);
   };
