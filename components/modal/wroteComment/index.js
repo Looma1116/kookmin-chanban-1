@@ -32,7 +32,7 @@ const WroteComment = ({ user }) => {
     const wroteCommentQuery = query(
       wroteCommentRef,
       orderBy("wrote", "desc"),
-      where("wrote", "<=", time),
+      where("wrote", "<", time),
       where("hide", "==", false),
       limit(20)
     );
@@ -112,7 +112,7 @@ const WroteComment = ({ user }) => {
               width={width}
               height={900}
               rowCount={wroteComment.length}
-              rowHeight={200}
+              rowHeight={100}
               rowRenderer={rowRenderer}
               onScroll={scrollListener}
               overscanRowCount={3}
