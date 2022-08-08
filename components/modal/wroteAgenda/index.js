@@ -29,7 +29,7 @@ const WroteAgenda = ({ user }) => {
     const wroteAgendaQuery = query(
       wroteAgendaRef,
       orderBy("wrote", "desc"),
-      where("wrote", "<=", time),
+      where("wrote", "<", time),
       where("hide", "==", false),
       limit(20)
     );
@@ -69,17 +69,15 @@ const WroteAgenda = ({ user }) => {
     const post = wroteAgenda[index];
     return (
       <div style={style}>
-        <div key={uuidv4()}>
+        <div>
           <Card key={index} story={post.story} sort={post.agenda} data={post}>
-            <h3 key={uuidv4()}>
+            <h3>
               {post.title.length > 18
                 ? `${post.title.substring(0, 15)}...`
                 : post.title}
             </h3>
-            <p key={uuidv4()}>{post?.category}</p>
-            <div key={uuidv4()}>
-              {post?.joined.toDate().toLocaleDateString()}
-            </div>
+            <p>{post?.category}</p>
+            <div>{post?.wrote.toDate().toLocaleDateString()}</div>
           </Card>
         </div>
       </div>
