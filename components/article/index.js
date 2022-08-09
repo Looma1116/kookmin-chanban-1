@@ -1,11 +1,11 @@
 import { useRecoilValue } from "recoil";
 import { agendaState } from "../recoil/recoil";
 
-const Article = () => {
+const Article = ({ article }) => {
   const agenda = useRecoilValue(agendaState);
   return (
     <div>
-      <p>{agenda[0]?.article}</p>
+      <p>{article}</p>
     </div>
   );
 };

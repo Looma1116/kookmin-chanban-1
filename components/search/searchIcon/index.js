@@ -5,7 +5,7 @@ import { BsSearch } from "react-icons/bs";
 import styles from "./SearchIcon.module.css";
 
 
-const searchIcon = () => {
+const SearchIcon = () => {
   const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
   const clickHandler = () => {
     setIsClicked(prev=>!prev);
@@ -17,4 +17,4 @@ const searchIcon = () => {
   );
 };
 
-export default searchIcon;
+export default SearchIcon;

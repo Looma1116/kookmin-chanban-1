@@ -9,53 +9,72 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore";
-import { getApps, initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import AgendaCard from "../components/agendaCard";
 import styles from "../styles/Home.module.css";
-import { useRecoilState } from "recoil";
-import { searchIsClicked } from "../components/recoil/recoil";
-import logo from "../public/logo@4x.png";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  communityState,
+  loginState,
+  searchIsClicked,
+} from "../components/recoil/recoil";
+import logo from "../public/국민찬반.svg";
+import { getAuth } from "firebase/auth";
 
-export default function Home() {
+export async function getStaticProps() {
+  initializeApp({
+    apiKey: process.env.apiKey,
+    authDomain: process.env.authDomain,
+    projectId: process.env.projectId,
+    storageBucket: process.env.storageBucket,
+    messagingSenderId: process.env.messagingSenderId,
+    appId: process.env.appId,
+    measurementId: process.env.measurementId,
+  });
   const db = getFirestore();
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [agendas, setAgendas] = useState([]);
-  const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
-
   // 투표수 상위 10개 내림차순
   const agendaRef = query(collection(db, "agenda"));
   const q = query(agendaRef, orderBy("numVote", "desc"), limit(10));
+  const agendaSnapshot = await getDocs(q);
+
+  let agendas = [];
+
+  agendaSnapshot.forEach(async (document) => {
+    console.log(document.id);
+    agendas.push({
+      id: document.id,
+      ...document.data(),
+    });
+  });
+
+  const agendasData = JSON.stringify(agendas);
+
+  return {
+    props: {
+      agendasData,
+    },
+    revalidate: 15,
+  };
+}
+
+export default function Home({ agendasData }) {
+  // const db = getFirestore();
+  const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
+  const [community, setCommunity] = useRecoilState(communityState);
+  const auth = getAuth();
+  const login = useRecoilValue(loginState);
 
   useEffect(() => {
     setIsClicked(false);
-    fetchData();
+    // fetchData();
+    setCommunity("agenda");
   }, []);
 
-  const fetchData = async () => {
-    const agendaSnapshot = await getDocs(q);
-    console.log("agendaSnapshot done!");
-    const voteData = {};
-    agendaSnapshot.forEach(async (document) => {
-      //const voteRef = collection(db, "agenda", document.id, "vote");
-      console.log("voteRef done!");
-
-      setAgendas(
-        agendas.concat({
-          id: document.id,
-          ...document.data(),
-        })
-      );
-    });
-    if (!isLoaded) {
-      setIsLoaded(true);
-      console.log("datas are loaded!");
-    }
-  };
-  console.log(agendas);
+  let agendas = JSON.parse(agendasData);
 
   return (
     <div className={styles.container}>
@@ -70,10 +89,20 @@ export default function Home() {
           <Image src={logo} alt="국민찬반" height={75} width={270} />
         </span>
         <div className={styles.cardSection}>
-          {agendas.map((data) => {
+          {agendas?.map((data) => {
             return (
               <div key={data.id}>
-                <Link href={`/agenda/${data.id}`}>
+                <Link
+                  href={{
+                    pathname: `/agenda/${data.id}`,
+                    query: {
+                      agenda: JSON.stringify(data),
+                      uid: login ? auth.currentUser.uid : null,
+                      login: login,
+                    },
+                  }}
+                  as={`/agenda/${data.id}`}
+                >
                   <a>
                     <AgendaCard props={data} />
                   </a>
@@ -86,40 +115,3 @@ export default function Home() {
     </div>
   );
 }
-
-/*
-export async function getStaticProps() {
-  // 투표수 상위 10개 내림차순
-  const agendaRef = query(collection(db, "agenda"));
-  const q = query(agendaRef, orderBy("numVote", "desc"), limit(10));
-  const agendaSnapshot = await getDocs(q);
-  console.log("agendaSnapshot done!");
-
-  let voteData = {};
-  let agendas = [];
-
-  agendaSnapshot.forEach(async (document) => {
-    const voteRef = collection(db, "agenda", document.id, "vote");
-    console.log("voteRef done!");
-
-    const voteSnapshot = await getDocs(voteRef);
-    voteSnapshot.forEach((voteDoc) => {
-      voteData = voteDoc.data();
-    });
-    agendas.concat({
-      id: document.id,
-      ...document.data(),
-      numAgree: voteData.numAgree,
-      numAlternative: voteData.numAlternative,
-      numDisagree: voteData.numDisagree,
-    });
-    console.log(agendas);
-  });
-
-  return {
-    props: {
-      agendas,
-    },
-  };
-}
-*/

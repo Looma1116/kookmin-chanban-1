@@ -2,9 +2,28 @@
   border-radius: 8px;
   box-shadow: 0px 2px 6px 0px rgb(194, 194, 194);
   margin-bottom: 0.5rem;
-  padding: 0.5rem;
+  padding: 1rem;
   max-height: 100px;
   overflow: hidden;
+}
+
+.commentcard {
+  border-radius: 8px;
+  box-shadow: 0px 0px 3px 0px rgb(194, 194, 194);
+  margin: 0.5rem auto 0;
+  padding: 1rem;
+  width: 99.4%;
+  max-height: 100px;
+  overflow: hidden;
+}
+
+.empty {
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px 0px rgb(194, 194, 194);
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .title {
@@ -33,25 +52,10 @@
   align-items: center;
 }
 
-.agreeauthor {
-  font-weight: bold;
-  background: rgba(35, 115, 235, 0.32);
+.author {
+  font-weight: 500;
   border-radius: 10px;
-  text-align: center;
-}
-
-.alterauthor {
-  font-weight: bold;
-  background: rgba(255, 199, 0, 0.32);
-  border-radius: 10px;
-  text-align: center;
-}
-
-.disagreeauthor {
-  font-weight: bold;
-  background: rgba(255, 0, 0, 0.32);
-  border-radius: 10px;
-  text-align: center;
+  padding-bottom: 2.7px;
 }
 
 .name {
@@ -59,10 +63,16 @@
 }
 
 .like {
+  font-weight: 500;
   display: flex;
   flex-direction: row;
   margin-left: auto;
   align-items: center;
+  justify-items: center;
+}
+
+.span {
+  padding-bottom: 2.7px;
 }
 
 .comment {
@@ -73,7 +83,8 @@
   max-height: 70px;
   overflow: hidden;
 }
-.textArea{
+
+.textArea {
   overflow-x: hidden;
   overflow-y: auto;
   border-radius: 8px;
@@ -83,6 +94,7 @@
   border: none;
   width: 100%;
 }
-/* .textArea::-webkit-scrollbar {
-  display: none;
-} */
+
+.likeBtn {
+  cursor: pointer;
+}

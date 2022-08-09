@@ -9,6 +9,7 @@ const nextConfig = {
     messagingSenderId: "1081065997313",
     appId: "1:1081065997313:web:e542c43f8f09f1c4166c00",
     measurementId: "G-PXYT3B4M4Z",
+    Kakao: "18647889c10275cb15e3718a64e04b7f",
   },
 };
 

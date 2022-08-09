@@ -6,7 +6,6 @@ import {
   getDocs,
   getDoc,
   setDoc,
-  set,
   addDoc,
   where,
 } from "firebase/firestore";
@@ -14,19 +13,26 @@ import { getAuth } from "firebase/auth";
 import {
   clickCountState,
   commentState,
+  communityState,
+  isVotedState,
+  isWrotedState,
   loginState,
   userState,
+  commentDataState,
   voteState,
+  voteChangeSubmitState,
+  voteChangeClickState,
+  commentSortClickState,
 } from "../recoil/recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
 import LogInModal from "../modal/login";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import CommentSec from "./commentSec";
 import CommentPart from "./commentPart";
 import { useRouter } from "next/router";
 import styles from "./comment.module.css";
 
-const Comment = () => {
+const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   const auth = getAuth();
   const router = useRouter();
   const db = getFirestore();
@@ -36,31 +42,114 @@ const Comment = () => {
   const [user, setUser] = useRecoilState(userState);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const vote = useRecoilValue(voteState);
+  const community = useRecoilValue(communityState);
+  const [submit, setSubmit] = useState(false);
+  const isVoted = useRecoilValue(isVotedState);
+  const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
+  const [loading, setLoading] = useState(false);
+  const [addComment, setAddComment] = useState([]);
+  let [agreeComment, setAgreeComment] = useState([]);
+  let [alternativeComment, setAlternativeComment] = useState([]);
+  let [disagreeComment, setDisagreeComment] = useState([]);
+  const [voteChangeClick, setVoteChangeClick] =
+    useRecoilState(voteChangeClickState);
+  const [commentSortClick, setCommentSortClick] = useRecoilState(
+    commentSortClickState
+  );
+  let a = [];
+  let sortEmpty = [];
+  let agreeEmpty = [...agreeData];
+  let alternativeEmpty = [...alternativeData];
+  let disagreeEmpty = [...disagreeData];
 
+  console.log(agreeEmpty);
+  console.log(agreeData);
+  console.log(alternativeEmpty);
+  console.log(disagreeEmpty);
+
+  useEffect(() => {
+    console.log(agreeData);
+    if (logIn) {
+      userFetch();
+      console.log("유저정보 패치");
+      document.activeElement.blur();
+    }
+  }, [logIn]);
   useEffect(() => {
     if (logIn) {
       userFetch();
-      console.log("유저정보임");
-      console.log(user);
     }
-    document.activeElement.blur();
-  }, [logIn]);
+  }, [commentSort, isVoted, submit]);
+
+  useEffect(() => {
+    deleteComment();
+  }, [isVoted]);
+
+  useLayoutEffect(() => {
+    console.log("버튼 클릭");
+    if (commentSortClick == "latest") {
+      latestBtnClickHandler();
+    } else {
+      recommendBtnClickHandler();
+    }
+  }, [commentSortClick]);
+
+  const deleteComment = async () => {
+    // 투표 바꾸기 버튼 클릭 시 내가 작성한 댓글 삭제(프론트 단)
+    if (logIn) {
+      if (isVoted == false && voteChangeClick == true) {
+        if (vote == "agreeComment") {
+          a = await agreeData.filter((element) => {
+            if (element.author == `${auth.currentUser.uid}`) {
+              console.log("내가 작성한 찬성 댓글 삭제");
+              return false;
+            } else {
+              return true;
+            }
+          });
+          setAgreeComment(a);
+          setVoteChangeClick(false);
+          console.log(agreeComment);
+        } else if (vote == "alternativeComment") {
+          a = await alternativeData.filter((element) => {
+            if (element.author == `${auth.currentUser.uid}`) {
+              console.log("내가 작성한 중립 댓글 삭제");
+              return false;
+            } else {
+              return true;
+            }
+          });
+          setAlternativeComment(a);
+          setVoteChangeClick(false);
+          console.log(alternativeComment);
+        } else {
+          a = await disagreeData.filter((element) => {
+            if (element.author == `${auth.currentUser.uid}`) {
+              console.log("내가 작성한 반대 댓글 삭제");
+              return false;
+            } else {
+              return true;
+            }
+          });
+          setDisagreeComment(a);
+          setVoteChangeClick(false);
+          console.log(disagreeComment);
+        }
+      }
+    }
+  };
+
   const clickHandler = () => {
     if (!logIn) {
       setClickCount(true);
     }
   };
-  const submitHandler = async (e) => {
-    e.preventDefault();
+
+  const commentSend = async () => {
     if (logIn) {
-      const q = query(
-        collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
-        where("story", "==", `${router.query.id}`)
-      );
-      console.log(q);
-      console.log("쿼리 출력!");
-      await addDoc(
-        collection(db, "agenda", `${router.query.id}`, `${commentSort}`),
+      const agendaQ = await addDoc(
+        // 파이어베이스 아젠다부분에 댓글 추가
+        collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
         {
           article: `${comment}`,
           author: auth.currentUser.uid,
@@ -69,26 +158,61 @@ const Comment = () => {
           hide: false,
           like: 0, // 나중에 반응형으로 교체해야함
           wrote: new Date(),
-          id: auth.currentUser.uid,
+        }
+      );
+      const q = addDoc(
+        // 파이어베이스 user/wroteComment 추가
+        collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
+        {
+          article: `${comment}`,
+          like: 0,
+          story: `${router.query.id}`,
+          wrote: new Date(),
+          hide: false,
+          document: `${community}`,
+          where: `${commentSort}`,
+          commentId : `${agendaQ.id}`,
         }
       );
       console.log("답변완료!");
-      // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
+      setComment("");
     }
   };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    alert("댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?");
+
+    setSubmit((prev) => !prev);
+    commentSend();
+    setIsWroted(true);
+
+    setAddComment({
+      article: `${comment}`,
+      author: auth.currentUser.uid,
+      authorLevel: user.level,
+      authorName: user.name,
+      hide: false,
+      like: 0,
+    });
+
+    // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
+  };
+
   const onChangeHandler = (e) => {
     setComment(e.target.value);
   };
+
   const onKeyPress = (e) => {
     if (e.key === "Enter") {
       submitHandler(e);
     }
   };
   const userFetch = async () => {
+    //유저 정보를 패치하고 내가 작성한 댓글이 있는 지 확인
     //
     let q = query(doc(db, "user", `${auth.currentUser.uid}`));
     let snapShot = await getDoc(q);
-    console.log(snapShot.data());
     const a = {
       name: snapShot.data().nickname,
       age: snapShot.data().age,
@@ -96,40 +220,165 @@ const Comment = () => {
       level: snapShot.data().level,
       ...snapShot.data(),
     };
-    console.log(a);
 
     setUser(a);
+
+    let CQ = query(
+      collection(db, community, router.query.id, commentSort),
+      where("author", "==", `${auth.currentUser.uid}`),
+      where("hide", "==", false)
+    );
+    let CSnapShot = await getDocs(CQ);
+
+    if (CSnapShot.docs.length == 0) {
+      console.log("내가 작성한 댓글이 없음");
+      setIsWroted(false);
+    } else {
+      console.log("내가 작성한 댓글이 있음");
+      CSnapShot.docs.forEach((doc) => {
+        console.log(doc.data());
+      });
+      setIsWroted(true);
+    }
+  };
+
+  const recommendBtnClickHandler = async () => {
+    sortEmpty = await agreeEmpty.sort((x, y) => {
+      return y.like - x.like;
+    });
+    setAgreeComment(sortEmpty);
+
+    sortEmpty = [];
+
+    sortEmpty = await alternativeEmpty.sort((x, y) => {
+      return y.like - x.like;
+    });
+    setAlternativeComment(sortEmpty);
+
+    sortEmpty = [];
+
+    sortEmpty = await disagreeEmpty.sort((x, y) => {
+      return y.like - x.like;
+    });
+    setDisagreeComment(sortEmpty);
+
+    sortEmpty = [];
+  };
+  const latestBtnClickHandler = () => {
+    setAgreeComment(agreeData);
+    setAlternativeComment(alternativeData);
+    setDisagreeComment(disagreeData);
+
+    console.log(agreeData);
   };
 
   return (
     <div>
       <CommentSec />
-      <CommentPart />
+      <div className={styles.btnBox}>
+        <button
+          onClick={() => {
+            setCommentSortClick("recommend");
+          }}
+          className={
+            commentSortClick == "recommend"
+              ? styles.recommendBtn
+              : styles.notFocusBtn
+          }
+        >
+          추천순
+        </button>
+        <button
+          onClick={() => {
+            setCommentSortClick("latest");
+          }}
+          className={
+            commentSortClick == "latest"
+              ? styles.recommendBtn
+              : styles.notFocusBtn
+          }
+        >
+          최신순
+        </button>
+      </div>
+      {loading ? (
+        <div className={styles.loadingCard}>
+          <div>로딩 중.....</div>
+        </div>
+      ) : (
+        <CommentPart
+          isSubmit={submit}
+          addComment={addComment}
+          agreeComment={agreeComment}
+          alternativeComment={alternativeComment}
+          disagreeComment={disagreeComment}
+          likeList={likeList}
+        />
+      )}
+      {/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}
       <div>
         <form onSubmit={submitHandler} className={styles.submit}>
-          <input
-            type="text"
-            className={styles.input}
-            placeholder={
-              logIn
-                ? `${auth.currentUser.displayName}님, 성숙한 사회를 만들어주셔서 고맙습니다!`
-                : "로그인을 해주세요."
+          <div className={styles.input}>
+            <input
+              required
+              type="text"
+              className={
+                commentSort == "agreeComment"
+                  ? styles.agreein
+                  : commentSort == "alternativeComment"
+                  ? styles.alterin
+                  : styles.disagreein
+              }
+              placeholder={
+                logIn
+                  ? isWroted
+                    ? `${auth.currentUser.displayName}님은 이미 댓글을 1회 작성하셨습니다.`
+                    : isVoted
+                    ? vote == commentSort
+                      ? `${auth.currentUser.displayName}님의 소중한 의견이 필요합니다!`
+                      : `${auth.currentUser.displayName}님은 다른 입장에 투표를 하였습니다!`
+                    : `${auth.currentUser.displayName}님, 먼저 투표를 진행해주세요!`
+                  : "로그인을 해주세요."
+              }
+              onChange={onChangeHandler}
+              value={comment}
+              onKeyUp={onKeyPress}
+              onFocus={clickHandler}
+              disabled={
+                logIn
+                  ? isWroted
+                    ? true
+                    : isVoted
+                    ? vote == commentSort
+                      ? false
+                      : true //투표상태랑 내가 작성하려는 comment부분이랑 다를 때
+                    : true // 투표를 안했을 때
+                  : false //로그인을 안했을 때
+              }
+            />
+          </div>
+          <button
+            className={
+              commentSort == "agreeComment"
+                ? styles.agree
+                : commentSort == "alternativeComment"
+                ? styles.alter
+                : styles.disagree
             }
-            onChange={onChangeHandler}
-            value={comment}
-            onKeyUp={onKeyPress}
-            onFocus={clickHandler}
             disabled={
               logIn
-                ? vote == ""
-                  ? false
-                  : vote === commentSort
-                  ? false
-                  : true
-                : false
+                ? isWroted
+                  ? true
+                  : isVoted
+                  ? vote == commentSort
+                    ? false
+                    : true //투표상태랑 내가 작성하려는 comment부분이랑 다를 때
+                  : true // 투표를 안했을 때
+                : false //로그인을 안했을 때
             }
-          />
-          <button className={styles.button}>게시</button>
+          >
+            게시
+          </button>
         </form>
       </div>
     </div>

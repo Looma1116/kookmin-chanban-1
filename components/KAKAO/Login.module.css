@@ -4,16 +4,16 @@
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   margin: 3rem;
 }
 
 .main .write {
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-style: normal;
   font-weight: 400;
   font-size: 24px;
@@ -21,4 +21,23 @@
   text-align: center;
   letter-spacing: -0.015em;
   margin-bottom: 3rem;
+}
+
+.kakao {
+  background-color: #fee500;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+  border-radius: 12px;
+  height: 3.2rem;
+  width: 14rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.kakao:hover {
+  cursor: pointer;
 }

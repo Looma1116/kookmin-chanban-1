@@ -3,6 +3,14 @@ export const loginState = atom({
   key: "loginState",
   default: false,
 });
+export const levelState = atom({
+  key: "levelState",
+  default: 1,
+});
+export const nickState = atom({
+  key: "nickState",
+  default: "",
+});
 export const categoryState = atom({
   key: "categoryState",
   default: "전체",
@@ -54,19 +62,53 @@ export const changeState = atom({
   key: "change",
   default: false,
 });
-export const nickState = atom({
-  key: "nick",
-  default: "",
-});
-export const loadingState=atom({
+export const loadingState = atom({
   key: "load",
-  default:false,
-})
+  default: false,
+});
 export const likeClickState = atom({
   key: "likeClickState",
-  default : false,
-})
-export const categoryIsClickedState = atom({
-  key : "categoryIsClickedState",
   default: false,
-})
+});
+export const categoryIsClickedState = atom({
+  key: "categoryIsClickedState",
+  default: false,
+});
+export const communityState = atom({
+  key: "communityState",
+  default: "agenda",
+});
+export const hideState = atom({
+  key: "hideState",
+  default: false,
+});
+
+export const isVotedState = atom({
+  key: "isVotedState",
+  default: false,
+});
+export const isWrotedState = atom({
+  key: "isWrotedState",
+  default: false,
+});
+export const loginInterfaceState = atom({
+  key: "loginInterfaceState",
+  default: true,
+});
+export const onceState = atom({
+  key: "onceState",
+  default: false,
+});
+
+export const voteChangeClickState = atom({
+  key: "voteChangeClickState",
+  default: false,
+});
+export const commentSortClickState = atom({
+  key: "commentSortClickState",
+  default: "latest",
+});
+export const likePartState = atom({
+  key: "likePartState",
+  default: [],
+});

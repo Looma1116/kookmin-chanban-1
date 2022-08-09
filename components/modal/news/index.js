@@ -9,8 +9,13 @@ const News = () => {
       <button className={styles.button} onClick={() => setModalIsOpen(true)}>
         관련 뉴스
       </button>
-      <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
-        <h2>관련 뉴스</h2>
+      <Modal
+        className={styles.modal}
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+      >
+        <h2>베타 테스트때 만나요 😅</h2>
+        <br />
         <button onClick={() => setModalIsOpen(false)}>닫기</button>
       </Modal>
     </div>

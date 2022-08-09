@@ -1,18 +1,37 @@
 import React from "react";
 import { useEffect } from "react";
-import Images from "../../public/1.png";
+import talk from "../../public/talk.png";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
-import { clickCountState, loginState } from "../recoil/recoil";
+import {
+  clickCountState,
+  loadingState,
+  loginInterfaceState,
+  loginState,
+} from "../recoil/recoil";
 import { useState } from "react";
 import { getAuth, signInWithCustomToken, updateProfile } from "firebase/auth";
 import axios from "axios";
-import { getFirestore, setDoc, doc, getDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  setDoc,
+  doc,
+  getDoc,
+  collection,
+  query,
+  documentId,
+  onSnapshot,
+  where,
+  docu,
+} from "firebase/firestore";
+import "firebase/firestore";
 import styles from "./Login.module.css";
 import DetailModal from "../modal/detailModal/index";
+import DeletedLogin from "../modal/againLogin/index";
 const KakaoLogin = () => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useRecoilState(loginInterfaceState);
   const [login, setLogin] = useRecoilState(loginState);
+  const [loading, setLoading] = useRecoilState(loadingState);
   const [email, setEmail] = useState("");
   const [nick, setNick] = useState("");
   const [age, setAge] = useState("");
@@ -20,6 +39,9 @@ const KakaoLogin = () => {
   const [token, setToken] = useState("");
   const auth = getAuth();
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
+  const [deleted, setDeleted] = useState(false);
+  const [uid, setUid] = useState("");
+  const [user, setUser] = useState([]);
   const db = getFirestore();
   const fetchData = (c) => {
     setNick(c.data.nickname);
@@ -33,7 +55,7 @@ const KakaoLogin = () => {
       // 중복 initialization 방지
       if (!kakao.isInitialized()) {
         // 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
-        kakao.init("18647889c10275cb15e3718a64e04b7f");
+        kakao.init(process.env.Kakao);
       }
     }
   }, []);
@@ -54,12 +76,14 @@ const KakaoLogin = () => {
         const comunication = await axios.post(apiServer, data);
         let level = 1;
         let exp = 0;
-        console.log(comunication.data.first);
+        console.log(comunication.data);
         if (comunication.data.first === false) {
+          setLoading(true);
           console.log("sadasdasdsa");
           await signInWithCustomToken(auth, comunication.data.firebase_token);
           setLogin(true);
           setClickCount(false);
+
           // const d = await getDoc(doc(db, "user", auth.currentUser.uid));
           // level = d.data().level;
           // exp = d.data().exp;
@@ -68,8 +92,24 @@ const KakaoLogin = () => {
           //   exp = exp - 100;
           // }
         } else {
+          console.log("hi2");
+          setUid(comunication.data.uid);
           await fetchData(comunication);
-          setShow(false);
+          console.log(comunication.data.uid);
+          const checkDeletedUserRef = collection(db, "user");
+          const checkDeletedUserQuery = query(
+            checkDeletedUserRef,
+            where(documentId(), "==", comunication.data.uid)
+          );
+          await onSnapshot(checkDeletedUserQuery, (snapshot) => {
+            const { length } = snapshot.docs;
+            console.log(length);
+            if (length > 0) {
+              setUser(snapshot.docs.map((str) => str.data()));
+              setDeleted(true);
+            }
+            setShow(false);
+          });
         }
       },
       fail: function (err) {
@@ -77,15 +117,22 @@ const KakaoLogin = () => {
       },
     });
   };
+  console.log("hi");
   return (
     <>
       {show ? (
         <div className={styles.main}>
           <div className={styles.write}>1초만에 카카오 로그인 하기</div>
           <a id="custom-login-btn" onClick={loginWithKakao}>
-            <Image src={Images} />
+            <div className={styles.kakao}>
+              <Image src={talk} width="24" height="22" />
+              카카오 로그인
+            </div>
+            {/* <Image src={kakao} /> */}
           </a>
         </div>
+      ) : deleted ? (
+        <DeletedLogin token={token} uid={uid} user={user[0]} />
       ) : (
         <DetailModal
           nick={nick}

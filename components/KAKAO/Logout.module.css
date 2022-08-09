@@ -1,3 +1,19 @@
-.image{
-    text-align: center;
+.image {
+  text-align: center;
+  margin-left: 50%;
+}
+.kakao {
+  background-color: #fee500;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+  border-radius: 12px;
+  height: 3rem;
+  width: 14rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding-left: 10px;
+  padding-right: 10px;
+  transform: translateX(-50%);
 }
