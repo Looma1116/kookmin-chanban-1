@@ -34,18 +34,17 @@ const Like = ({ data, op, likeList }) => {
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const [likeState, setLikeState] = useRecoilState(likePartState);
 
+  const [likedComment, setLikedComment] = useState(likeState);
+  let comment = [...likedComment];
+
   useEffect(() => {
     if (login) {
       initializeLike();
     }
   }, [login]);
 
-  const initializeLike = async () => {
-    likeList.forEach((doc) => {
-      if (doc.id === data.id) {
-        setIsClicked(true);
-      }
-    });
+  const initializeLike = () => {
+    setIsClicked(likedComment.some((doc) => doc.id === data.id));
   };
 
   const updateLike = async () => {
@@ -69,6 +68,19 @@ const Like = ({ data, op, likeList }) => {
         data
       );
     });
+  };
+
+  const pushComment = () => {
+    comment.push({
+      id: data.id,
+      like: data.like,
+      isClicked: true,
+    });
+    setLikedComment(comment);
+  };
+
+  const removeComment = () => {
+    likedComment = likedComment.filter((doc) => doc.id !== data.id);
   };
 
   const cancelLike = async () => {
@@ -96,18 +108,23 @@ const Like = ({ data, op, likeList }) => {
   const likeHandler = () => {
     setLike(like + 1);
     setIsClicked(true);
+    pushComment();
     updateLike();
   };
 
   const cancelHandler = () => {
     setLike(like - 1);
     setIsClicked(false);
+    removeComment();
     cancelLike();
   };
 
   const loginHandler = () => {
     setClickCount(true);
   };
+
+  console.log(likedComment);
+  console.log(like);
 
   function Icon({ isClicked }) {
     if (op === 1) {
