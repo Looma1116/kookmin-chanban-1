@@ -70,7 +70,7 @@ const WroteAgenda = ({ user }) => {
     return (
       <div style={style}>
         <div>
-          <Card key={index} story={post.story} sort={post.agenda} data={post}>
+          <Card key={index} story={post.story} sort={post.document}>
             <h3>
               {post.title.length > 18
                 ? `${post.title.substring(0, 15)}...`
