@@ -46,6 +46,15 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.subTitle{
+   display: block;
+  width: 98%;
+  text-align: center;
+  font-weight: bold;
+  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .graph {
   display: flex;
   flex-direction: row;
