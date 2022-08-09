@@ -131,6 +131,7 @@ const UserVote = ({
         title: title,
         vote: `${voteWhere}`,
         hide: false,
+        document : `${community}`,
       }
     );
     setIsVoted(true);
