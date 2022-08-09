@@ -75,7 +75,7 @@ const WroteComment = ({ user }) => {
     return (
       <div style={style}>
         <div key={uuidv4()}>
-          <Card cla="Comment" story={post.story}>
+          <Card cla="Comment" story={post.story} sort={post.document}>
             <div className={styles.line}>
               <div className={styles.date}>
                 {post?.wrote.toDate().toLocaleDateString()}

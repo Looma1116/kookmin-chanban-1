@@ -77,7 +77,7 @@ const JoinedAgenda = ({ user }) => {
     return (
       <div style={style}>
         <div key={uuidv4()}>
-          <Card key={index} story={post.story} sort={post.agenda} data={post}>
+          <Card key={index} story={post.story} sort={post.document}>
             <h3 key={uuidv4()}>
               {post.title.length > 18
                 ? `${post.title.substring(0, 15)}...`
