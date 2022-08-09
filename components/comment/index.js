@@ -147,18 +147,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
 
   const commentSend = async () => {
     if (logIn) {
-      const q = addDoc(
-        // 파이어베이스 user/wroteComment 추가
-        collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
-        {
-          article: `${comment}`,
-          like: 0,
-          story: `${router.query.id}`,
-          wrote: new Date(),
-          hide: false,
-        }
-      );
-      await addDoc(
+      const agendaQ = await addDoc(
         // 파이어베이스 아젠다부분에 댓글 추가
         collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
         {
@@ -169,6 +158,20 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
           hide: false,
           like: 0, // 나중에 반응형으로 교체해야함
           wrote: new Date(),
+        }
+      );
+      const q = addDoc(
+        // 파이어베이스 user/wroteComment 추가
+        collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
+        {
+          article: `${comment}`,
+          like: 0,
+          story: `${router.query.id}`,
+          wrote: new Date(),
+          hide: false,
+          document: `${community}`,
+          where: `${commentSort}`,
+          commentId : `${agendaQ.id}`,
         }
       );
       console.log("답변완료!");
