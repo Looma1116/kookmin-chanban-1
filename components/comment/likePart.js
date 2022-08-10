@@ -35,19 +35,34 @@ const Like = ({ data, op, likeList }) => {
   const [likeState, setLikeState] = useRecoilState(likePartState);
 
   const [likedComment, setLikedComment] = useState(likeState);
-  let comment = [...likedComment];
+  let comment = [...likeState];
+  console.log(likeState);
 
   useEffect(() => {
     if (login) {
-      initializeLike();
+      updateLike();
     }
   }, [login]);
 
-  const initializeLike = () => {
-    setIsClicked(likedComment.some((doc) => doc.id === data.id));
+  const updateLike = () => {
+    likeState.forEach((doc) => {
+      if ((doc.id === data.id) & !doc.dislike) {
+        setIsClicked(true);
+        if (doc.isClicked) {
+          setLike(data.like + 1);
+        } else {
+          setLike(data.like);
+        }
+      } else if ((doc.id === data.id) & doc.dislike) {
+        setIsClicked(false);
+        if (doc.isClicked) {
+          setLike(data.like);
+        }
+      }
+    });
   };
 
-  const updateLike = async () => {
+  const uploadLike = async () => {
     const q = query(
       collection(db, community, router.query.id, commentList[op - 1]),
       where("hide", "==", false),
@@ -73,14 +88,24 @@ const Like = ({ data, op, likeList }) => {
   const pushComment = () => {
     comment.push({
       id: data.id,
-      like: data.like,
+      dislike: false,
       isClicked: true,
     });
-    setLikedComment(comment);
+    setLikeState(comment);
   };
 
   const removeComment = () => {
-    likedComment = likedComment.filter((doc) => doc.id !== data.id);
+    // comment.forEach((doc) =>
+    //   doc.id === data.id ? { ...likeState, dislike: !doc.dislike } : doc
+    // );
+    // console.log(comment);
+    comment = comment.filter((doc) => doc.id !== data.id);
+    comment.push({
+      id: data.id,
+      dislike: true,
+      isClicked: true,
+    });
+    setLikeState(comment);
   };
 
   const cancelLike = async () => {
@@ -109,7 +134,7 @@ const Like = ({ data, op, likeList }) => {
     setLike(like + 1);
     setIsClicked(true);
     pushComment();
-    updateLike();
+    uploadLike();
   };
 
   const cancelHandler = () => {
@@ -122,9 +147,6 @@ const Like = ({ data, op, likeList }) => {
   const loginHandler = () => {
     setClickCount(true);
   };
-
-  console.log(likedComment);
-  console.log(like);
 
   function Icon({ isClicked }) {
     if (op === 1) {

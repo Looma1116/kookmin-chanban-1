@@ -1,5 +1,5 @@
-import { useRecoilValue } from "recoil";
-import { agendaState, loginState } from "../recoil/recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { agendaState, likePartState, loginState } from "../recoil/recoil";
 import Router, { useRouter } from "next/router";
 import styles from "./Title.module.css";
 import { useEffect, useState } from "react";
@@ -22,6 +22,7 @@ const Title = ({ title, subTitle, imageUrl, agendaId, writerUid }) => {
   const logIn = useRecoilValue(loginState);
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
+  const [likeState, setLikeState] = useRecoilState(likePartState);
 
   const openModal = () => {
     setModalOpen(true);
@@ -29,7 +30,6 @@ const Title = ({ title, subTitle, imageUrl, agendaId, writerUid }) => {
   const closeModal = () => {
     setModalOpen(false);
   };
-
 
   const match = () => {
     if (logIn) {
@@ -51,7 +51,7 @@ const Title = ({ title, subTitle, imageUrl, agendaId, writerUid }) => {
       where("story", "==", `${agendaId}`)
     );
     const snapShot = await getDocs(q);
-    snapShot.docs.forEach(async(document) => {
+    snapShot.docs.forEach(async (document) => {
       updateDoc(
         doc(db, "user", auth.currentUser.uid, "wroteAgenda", `${document.id}`),
         {
@@ -59,7 +59,6 @@ const Title = ({ title, subTitle, imageUrl, agendaId, writerUid }) => {
         }
       );
     });
-    
 
     console.log("게시글 삭제 완료");
     router.back();
@@ -75,7 +74,13 @@ const Title = ({ title, subTitle, imageUrl, agendaId, writerUid }) => {
       className={styles.title}
     >
       <div className={styles.container}>
-        <span className={styles.button} onClick={() => Router.back()}>
+        <span
+          className={styles.button}
+          onClick={() => {
+            Router.back();
+            setLikeState([]);
+          }}
+        >
           뒤로
         </span>
         {match() ? (

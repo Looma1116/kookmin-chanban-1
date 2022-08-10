@@ -174,8 +174,8 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
     likeComment.forEach((doc) => {
       const like = {
         id: doc.id,
-        like: doc.like,
-        isClicked: true,
+        dislike: false,
+        isClicked: false,
       };
       a.push(like);
     });
