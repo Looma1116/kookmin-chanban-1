@@ -19,7 +19,7 @@ const AgendaCard = ({ props }) => {
     >
       <div className={styles.info}>
         <span className={styles.title}>{props.title}</span>
-        <span>{props.subTitle}</span>
+        <span className={styles.subTitle}>{props.subTitle}</span>
         <span>{props.numVote}명 참여중</span>
       </div>
       <div className={styles.graph}>

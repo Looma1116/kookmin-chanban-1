@@ -32,7 +32,7 @@ import CommentPart from "./commentPart";
 import { useRouter } from "next/router";
 import styles from "./comment.module.css";
 
-const Comment = ({ agreeData, alternativeData, disagreeData }) => {
+const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   const auth = getAuth();
   const router = useRouter();
   const db = getFirestore();
@@ -51,8 +51,11 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
   let [agreeComment, setAgreeComment] = useState([]);
   let [alternativeComment, setAlternativeComment] = useState([]);
   let [disagreeComment, setDisagreeComment] = useState([]);
-  const [voteChangeClick, setVoteChangeClick] = useRecoilState(voteChangeClickState);
-  const [commentSortClick, setCommentSortClick] = useRecoilState(commentSortClickState);
+  const [voteChangeClick, setVoteChangeClick] =
+    useRecoilState(voteChangeClickState);
+  const [commentSortClick, setCommentSortClick] = useRecoilState(
+    commentSortClickState
+  );
   let a = [];
   let sortEmpty = [];
   let agreeEmpty = [...agreeData];
@@ -91,7 +94,8 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
     }
   }, [commentSortClick]);
 
-  const deleteComment = async () => { // 투표 바꾸기 버튼 클릭 시 내가 작성한 댓글 삭제(프론트 단)
+  const deleteComment = async () => {
+    // 투표 바꾸기 버튼 클릭 시 내가 작성한 댓글 삭제(프론트 단)
     if (logIn) {
       if (isVoted == false && voteChangeClick == true) {
         if (vote == "agreeComment") {
@@ -143,18 +147,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
 
   const commentSend = async () => {
     if (logIn) {
-      const q = addDoc(
-        // 파이어베이스 user/wroteComment 추가
-        collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
-        {
-          article: `${comment}`,
-          like: 0,
-          story: `${router.query.id}`,
-          wrote: new Date(),
-          hide: false,
-        }
-      );
-      await addDoc(
+      const agendaQ = await addDoc(
         // 파이어베이스 아젠다부분에 댓글 추가
         collection(db, `${community}`, `${router.query.id}`, `${commentSort}`),
         {
@@ -165,6 +158,20 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
           hide: false,
           like: 0, // 나중에 반응형으로 교체해야함
           wrote: new Date(),
+        }
+      );
+      const q = addDoc(
+        // 파이어베이스 user/wroteComment 추가
+        collection(db, "user", `${auth.currentUser.uid}`, "wroteComment"),
+        {
+          article: `${comment}`,
+          like: 0,
+          story: `${router.query.id}`,
+          wrote: new Date(),
+          hide: false,
+          document: `${community}`,
+          where: `${commentSort}`,
+          commentId : `${agendaQ.id}`,
         }
       );
       console.log("답변완료!");
@@ -235,35 +242,35 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
     }
   };
 
-   const recommendBtnClickHandler = async () => {
-     sortEmpty = await agreeEmpty.sort((x, y) => {
-       return y.like - x.like;
-     });
-     setAgreeComment(sortEmpty);
+  const recommendBtnClickHandler = async () => {
+    sortEmpty = await agreeEmpty.sort((x, y) => {
+      return y.like - x.like;
+    });
+    setAgreeComment(sortEmpty);
 
-     sortEmpty = [];
+    sortEmpty = [];
 
-     sortEmpty = await alternativeEmpty.sort((x, y) => {
-       return y.like - x.like;
-     });
-     setAlternativeComment(sortEmpty);
+    sortEmpty = await alternativeEmpty.sort((x, y) => {
+      return y.like - x.like;
+    });
+    setAlternativeComment(sortEmpty);
 
-     sortEmpty = [];
+    sortEmpty = [];
 
-     sortEmpty = await disagreeEmpty.sort((x, y) => {
-       return y.like - x.like;
-     });
-     setDisagreeComment(sortEmpty);
+    sortEmpty = await disagreeEmpty.sort((x, y) => {
+      return y.like - x.like;
+    });
+    setDisagreeComment(sortEmpty);
 
-     sortEmpty = [];
-   };
-   const latestBtnClickHandler = () => {
-     setAgreeComment(agreeData);
-     setAlternativeComment(alternativeData);
-     setDisagreeComment(disagreeData);
+    sortEmpty = [];
+  };
+  const latestBtnClickHandler = () => {
+    setAgreeComment(agreeData);
+    setAlternativeComment(alternativeData);
+    setDisagreeComment(disagreeData);
 
-     console.log(agreeData);
-   };
+    console.log(agreeData);
+  };
 
   return (
     <div>
@@ -305,6 +312,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData }) => {
           agreeComment={agreeComment}
           alternativeComment={alternativeComment}
           disagreeComment={disagreeComment}
+          likeList={likeList}
         />
       )}
       {/*제출 상태를 넘겨서 제출 할 때마다 commentPart를 리랜더링하게 한다. */}

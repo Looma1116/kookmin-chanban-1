@@ -20,6 +20,7 @@ import {
   query,
   where,
   onSnapshot,
+  getDocs,
 } from "firebase/firestore";
 import styles from "./AgainLogin.module.css";
 import Image from "next/image";
@@ -50,290 +51,54 @@ const AgainLogin = ({ uid, user, token }) => {
       deleted: false,
       deletedTime: null,
     });
-    console.log(token);
+    await recoverAll(uid);
     await signInWithCustomToken(auth, token);
-    setLoading(true);
+    console.log(token);
     setLogin(true);
     setShowModal(false);
-    await recoverAll();
-    await setTimeout(function () {
-      //복원중이나 수정중 로딩만들기
-      window.location.reload();
-    }, 4000);
   };
-  const recoverAll = async () => {
-    //메인 정치 찬성 반대 중립 날리기
-    const deletedWriteRef = collection(db, "agenda");
-    await onSnapshot(deletedWriteRef, (snapshot) => {
-      const { length } = snapshot.docs;
-      if (length > 0) {
-        snapshot.docs.forEach(async (list) => {
-          console.log("1");
-          const deleteAgreeRef = collection(
-            db,
-            "agenda",
-            list.id,
-            "agreeComment"
-          );
-          const deleteAgreeQuery = query(
-            deleteAgreeRef,
-            where("author", "==", auth.currentUser.uid)
-          );
-          await onSnapshot(deleteAgreeQuery, (snapshot) => {
-            console.log("2");
-            snapshot.docs.forEach(async (agree) => {
-              const { length } = snapshot.docs;
-              if (length > 0) {
-                await updateDoc(
-                  doc(db, "agenda", list.id, "agreeComment", agree.id),
-                  {
-                    hide: false,
-                  }
-                );
-              }
-            });
-          });
-          //찬성꿑
-          const deleteAlternativeRef = collection(
-            db,
-            "agenda",
-            list.id,
-            "alternativeComment"
-          );
-          const deleteAlternativeQuery = query(
-            deleteAlternativeRef,
-            where("author", "==", auth.currentUser.uid)
-          );
-          await onSnapshot(deleteAlternativeQuery, (snapshot) => {
-            console.log("3");
-            snapshot.docs.forEach(async (alternative) => {
-              const { length } = snapshot.docs;
-              if (length > 0) {
-                await updateDoc(
-                  doc(
-                    db,
-                    "agenda",
-                    list.id,
-                    "alternativeComment",
-                    alternative.id
-                  ),
-                  {
-                    hide: false,
-                  }
-                );
-              }
-            });
-          });
-          //중립끝
-          const deleteDisagreeRef = collection(
-            db,
-            "agenda",
-            list.id,
-            "disagreeComment"
-          );
-          const deleteDisagreeQuery = query(
-            deleteDisagreeRef,
-            where("author", "==", auth.currentUser.uid)
-          );
-          await onSnapshot(deleteDisagreeQuery, (snapshot) => {
-            console.log("4");
-            snapshot.docs.forEach(async (disAgree) => {
-              const { length } = snapshot.docs;
-              if (length > 0) {
-                await updateDoc(
-                  doc(db, "agenda", list.id, "disagreeComment", disAgree.id),
-                  {
-                    hide: false,
-                  }
-                );
-              }
-            });
-          });
-          //반대끝
-        });
-      }
-    });
-    await DeleteUserAgenda();
-    await DeleteJoinedAgenda();
-    await DeleteWroteAgenda();
-    await DeleteWroteComment();
-  };
-
-  const DeleteUserAgenda = async () => {
-    const deletedWriteRef = collection(db, "userAgenda");
-    await onSnapshot(deletedWriteRef, (snapshot) => {
-      console.log("5");
-      const { length } = snapshot.docs;
-      if (length > 0) {
-        snapshot.docs.forEach(async (list) => {
-          if (auth.currentUser.uid === list.data().uid) {
-            await updateDoc(doc(db, "userAgenda", list.id), {
-              hide: false,
-            });
-          }
-        });
-
-        //쓴글끝
-        snapshot.docs.forEach(async (list) => {
-          const deleteAgreeRef = collection(
-            db,
-            "userAgenda",
-            list.id,
-            "agreeComment"
-          );
-          const deleteAgreeQuery = query(
-            deleteAgreeRef,
-            where("author", "==", auth.currentUser.uid)
-          );
-          await onSnapshot(deleteAgreeQuery, (snapshot) => {
-            console.log("6");
-            snapshot.docs.forEach(async (agree) => {
-              const { length } = snapshot.docs;
-              if (length > 0) {
-                await updateDoc(
-                  doc(db, "userAgenda", list.id, "agreeComment", agree.id),
-                  {
-                    hide: false,
-                  }
-                );
-              }
-            });
-          });
-          //찬성꿑
-          const deleteAlternativeRef = collection(
-            db,
-            "userAgenda",
-            list.id,
-            "alternativeComment"
-          );
-          const deleteAlternativeQuery = query(
-            deleteAlternativeRef,
-            where("author", "==", auth.currentUser.uid)
-          );
-          await onSnapshot(deleteAlternativeQuery, (snapshot) => {
-            console.log("7");
-            snapshot.docs.forEach(async (alternative) => {
-              const { length } = snapshot.docs;
-              if (length > 0) {
-                await updateDoc(
-                  doc(
-                    db,
-                    "userAgenda",
-                    list.id,
-                    "alternativeComment",
-                    alternative.id
-                  ),
-                  {
-                    hide: false,
-                  }
-                );
-              }
-            });
-          });
-          //중립끝
-          const deleteDisagreeRef = collection(
-            db,
-            "userAgenda",
-            list.id,
-            "disagreeComment"
-          );
-          const deleteDisagreeQuery = query(
-            deleteDisagreeRef,
-            where("author", "==", auth.currentUser.uid)
-          );
-          await onSnapshot(deleteDisagreeQuery, (snapshot) => {
-            console.log("8");
-            snapshot.docs.forEach(async (agree) => {
-              const { length } = snapshot.docs;
-              if (length > 0) {
-                await updateDoc(
-                  doc(db, "userAgenda", list.id, "disagreeComment", agree.id),
-                  {
-                    hide: false,
-                  }
-                );
-              }
-            });
-          });
-          //반대끝
-        });
-      }
-    });
-  };
-  const DeleteWroteComment = async () => {
-    const deleteWroteCommentRef = collection(
-      db,
-      "user",
-      auth.currentUser.uid,
-      "wroteComment"
-    );
-    const deleteWroteCommentQuery = query(
-      deleteWroteCommentRef,
+  const recoverAll = async (uid) => {
+    const fetchRecoverData = async (document, story, where, commentId) => {
+      console.log(document);
+      console.log(story);
+      console.log(where);
+      console.log(commentId);
+      const RecoverCommentRef = doc(db, document, story, where, commentId);
+      await updateDoc(RecoverCommentRef, {
+        hide: false,
+      });
+    };
+    const userCommentDataRef = collection(db, "user", uid, "wroteComment");
+    const userCommentDataQuery = query(
+      userCommentDataRef,
       where("hide", "==", false)
     );
-    await onSnapshot(deleteWroteCommentQuery, (snapshot) => {
-      snapshot.docs.forEach(async (note) => {
-        const { length } = snapshot.docs;
-        if (length > 0) {
-          await updateDoc(
-            doc(db, "user", auth.currentUser.uid, "wroteComment", note.id),
-            {
-              hide: false,
-            }
-          );
-        }
-      });
-    });
-  };
-  const DeleteWroteAgenda = async () => {
-    const deleteWroteAgendaRef = collection(
-      db,
-      "user",
-      auth.currentUser.uid,
-      "wroteAgenda"
+    const userCommentData = await getDocs(userCommentDataQuery);
+    await Promise.all(
+      userCommentData.docs.map(async (element) => {
+        console.log(element.data());
+        await fetchRecoverData(
+          element.data().document,
+          element.data().story,
+          element.data().where,
+          element.data().commentId
+        );
+      })
     );
-    const deleteWroteAgendaQuery = query(
-      deleteWroteAgendaRef,
+    const userWroteAgendaRef = collection(db, "user", uid, "wroteAgenda");
+    const userWroteAgendaQuery = query(
+      userWroteAgendaRef,
       where("hide", "==", false)
     );
-    await onSnapshot(deleteWroteAgendaQuery, (snapshot) => {
-      snapshot.docs.forEach(async (note) => {
-        const { length } = snapshot.docs;
-        if (length > 0) {
-          await updateDoc(
-            doc(db, "user", auth.currentUser.uid, "wroteAgenda", note.id),
-            {
-              hide: false,
-            }
-          );
-        }
-      });
-    });
-  };
-  const DeleteJoinedAgenda = async () => {
-    const deleteJoinedAgendaRef = collection(
-      db,
-      "user",
-      auth.currentUser.uid,
-      "joinedAgenda"
+    const userWroteAgenda = await getDocs(userWroteAgendaQuery);
+    await Promise.all(
+      userWroteAgenda.docs.map(async (element) => {
+        console.log(element.data());
+        await updateDoc(doc(db, "userAgenda", element.data().story), {
+          hide: false,
+        });
+      })
     );
-    const deleteJoinedAgendaQuery = query(
-      deleteJoinedAgendaRef,
-      where("hide", "==", false)
-    );
-    await onSnapshot(deleteJoinedAgendaQuery, (snapshot) => {
-      snapshot.docs.forEach(async (note) => {
-        const { length } = snapshot.docs;
-        if (length > 0) {
-          await updateDoc(
-            doc(db, "user", auth.currentUser.uid, "joinedAgenda", note.id),
-            {
-              hide: false,
-            }
-          );
-        }
-      });
-    });
   };
   return (
     <div>

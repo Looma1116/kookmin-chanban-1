@@ -17,8 +17,13 @@ import { useEffect, useState } from "react";
 import AgendaCard from "../components/agendaCard";
 import styles from "../styles/Home.module.css";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { communityState, searchIsClicked } from "../components/recoil/recoil";
+import {
+  communityState,
+  loginState,
+  searchIsClicked,
+} from "../components/recoil/recoil";
 import logo from "../public/국민찬반.svg";
+import { getAuth } from "firebase/auth";
 
 export async function getStaticProps() {
   initializeApp({
@@ -60,6 +65,8 @@ export default function Home({ agendasData }) {
   // const db = getFirestore();
   const [isClicked, setIsClicked] = useRecoilState(searchIsClicked);
   const [community, setCommunity] = useRecoilState(communityState);
+  const auth = getAuth();
+  const login = useRecoilValue(loginState);
 
   useEffect(() => {
     setIsClicked(false);
@@ -88,7 +95,11 @@ export default function Home({ agendasData }) {
                 <Link
                   href={{
                     pathname: `/agenda/${data.id}`,
-                    query: { agenda: JSON.stringify(data) },
+                    query: {
+                      agenda: JSON.stringify(data),
+                      uid: login ? auth.currentUser.uid : null,
+                      login: login,
+                    },
                   }}
                   as={`/agenda/${data.id}`}
                 >

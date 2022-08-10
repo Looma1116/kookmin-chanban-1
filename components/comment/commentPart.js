@@ -10,6 +10,7 @@ const CommentPart = ({
   agreeComment,
   alternativeComment,
   disagreeComment,
+  likeList,
 }) => {
   const commentS = useRecoilValue(commentState);
 
@@ -80,6 +81,7 @@ const CommentPart = ({
                   <div className={styles.name}>&nbsp;{data.authorName}</div>
                   <LikePart
                     data={data}
+                    likeList={likeList}
                     op={
                       commentS === "agreeComment"
                         ? 1
