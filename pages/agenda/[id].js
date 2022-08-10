@@ -42,7 +42,13 @@ export async function getServerSideProps(context) {
   let disagreeComment = [];
   let likeComment = [];
   const Id = await context.query.id;
-  const logged = JSON.parse(context.query.login);
+  let logged = false;
+
+  try {
+    logged = JSON.parse(context.query.login);
+  } catch (err) {
+    console.log(err.message);
+  }
 
   if (logged) {
     const q = query(
@@ -152,6 +158,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
     commentSortClickState
   );
   const [likeState, setLikeState] = useRecoilState(likePartState);
+  const [likeList, setLikeList] = useState([]);
 
   useEffect(() => {
     setCommunity("agenda");
@@ -174,13 +181,14 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
     likeComment.forEach((doc) => {
       const like = {
         id: doc.id,
+        like: doc.like,
         dislike: false,
         isClicked: false,
       };
       a.push(like);
     });
+    setLikeList(a);
     setLikeState(a);
-    console.log(likeState);
   };
 
   const checkIn = () => {
@@ -221,14 +229,14 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
               agree={agreeFetchData}
               alter={alternativeFetchData}
               disagree={disagreeFetchData}
-              likeList={likeState}
+              likeList={likeList}
             />
             <Vote agenda={agenda} />
             <Comment
               agreeData={JSON.parse(agreeData)}
               alternativeData={JSON.parse(alternativeData)}
               disagreeData={JSON.parse(disagreeData)}
-              likeList={likeState}
+              likeList={likeList}
             />
             {clickCount ? <LogInModal /> : null}
           </div>

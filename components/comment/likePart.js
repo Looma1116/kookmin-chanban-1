@@ -34,7 +34,6 @@ const Like = ({ data, op, likeList }) => {
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const [likeState, setLikeState] = useRecoilState(likePartState);
 
-  const [likedComment, setLikedComment] = useState(likeState);
   let comment = [...likeState];
   console.log(likeState);
 
@@ -46,16 +45,18 @@ const Like = ({ data, op, likeList }) => {
 
   const updateLike = () => {
     likeState.forEach((doc) => {
-      if ((doc.id === data.id) & !doc.dislike) {
-        setIsClicked(true);
-        if (doc.isClicked) {
-          setLike(data.like + 1);
-        } else {
-          setLike(data.like);
-        }
-      } else if ((doc.id === data.id) & doc.dislike) {
+      if ((doc.id === data.id) & doc.dislike) {
         setIsClicked(false);
         if (doc.isClicked) {
+          setLike(data.like);
+        } else {
+          setLike(data.like - 1);
+        }
+      } else if ((doc.id === data.id) & !doc.dislike) {
+        setIsClicked(true);
+        if (doc.isClicked) {
+          setLike(doc.like);
+        } else {
           setLike(data.like);
         }
       }
@@ -86,25 +87,46 @@ const Like = ({ data, op, likeList }) => {
   };
 
   const pushComment = () => {
-    comment.push({
-      id: data.id,
-      dislike: false,
-      isClicked: true,
-    });
+    let com = {};
+    if (likeList.some((doc) => doc.id === data.id)) {
+      com = {
+        id: data.id,
+        like: data.like,
+        dislike: false,
+        isClicked: true,
+      };
+    } else {
+      com = {
+        id: data.id,
+        like: data.like + 1,
+        dislike: false,
+        isClicked: true,
+      };
+    }
+    comment = comment.filter((doc) => doc.id !== data.id);
+    comment.push(com);
     setLikeState(comment);
   };
 
   const removeComment = () => {
-    // comment.forEach((doc) =>
-    //   doc.id === data.id ? { ...likeState, dislike: !doc.dislike } : doc
-    // );
-    // console.log(comment);
+    let com = {};
+    if (likeList.some((doc) => doc.id === data.id)) {
+      com = {
+        id: data.id,
+        like: data.like - 1,
+        dislike: true,
+        isClicked: false,
+      };
+    } else {
+      com = {
+        id: data.id,
+        like: data.like,
+        dislike: true,
+        isClicked: true,
+      };
+    }
     comment = comment.filter((doc) => doc.id !== data.id);
-    comment.push({
-      id: data.id,
-      dislike: true,
-      isClicked: true,
-    });
+    comment.push(com);
     setLikeState(comment);
   };
 
