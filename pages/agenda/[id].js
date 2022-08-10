@@ -174,8 +174,8 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
     likeComment.forEach((doc) => {
       const like = {
         id: doc.id,
-        like: doc.like,
-        isClicked: true,
+        dislike: false,
+        isClicked: false,
       };
       a.push(like);
     });
@@ -221,14 +221,14 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
               agree={agreeFetchData}
               alter={alternativeFetchData}
               disagree={disagreeFetchData}
-              likeList={likeComment}
+              likeList={likeState}
             />
             <Vote agenda={agenda} />
             <Comment
               agreeData={JSON.parse(agreeData)}
               alternativeData={JSON.parse(alternativeData)}
               disagreeData={JSON.parse(disagreeData)}
-              likeList={likeComment}
+              likeList={likeState}
             />
             {clickCount ? <LogInModal /> : null}
           </div>

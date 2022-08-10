@@ -23,7 +23,6 @@ const CommentPart = ({
   }, [isSubmit]);
 
   function Author({ level }) {
-    console.log(level);
     if (commentS === "agreeComment") {
       return (
         <span
