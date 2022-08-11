@@ -18,6 +18,7 @@ import styles from "../bestComment/Bestcomments.module.css";
 import {
   clickCountState,
   communityState,
+  idState,
   likePartState,
   loginState,
 } from "../recoil/recoil";
@@ -33,15 +34,43 @@ const Like = ({ data, op, likeList }) => {
   const commentList = ["agreeComment", "alternativeComment", "disagreeComment"];
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const [likeState, setLikeState] = useRecoilState(likePartState);
+  const [isFetched, setIsFetched] = useState(false);
+  const id = useRecoilValue(idState);
+  console.log(likeState);
 
   let comment = [...likeState];
-  console.log(likeState);
+
+  useEffect(() => {
+    if (id) {
+      initializeLike();
+      if (!login) {
+        newLike();
+      }
+    }
+  }, [id, isFetched]);
 
   useEffect(() => {
     if (login) {
       updateLike();
     }
   }, [login]);
+
+  const initializeLike = async () => {
+    const q = collection(db, "user", id, "likeComment");
+    const snapShot = await getDocs(q);
+    snapShot.docs.forEach((doc) => {
+      const like = {
+        id: doc.id,
+        like: doc.like,
+        dislike: false,
+        isClicked: false,
+      };
+      comment.push(like);
+    });
+    if (!isFetched) {
+      setIsFetched(true);
+    }
+  };
 
   const updateLike = () => {
     likeState.forEach((doc) => {

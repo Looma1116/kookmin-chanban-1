@@ -16,10 +16,12 @@ import {
   commentSortClickState,
   commentState,
   communityState,
+  idState,
   isVotedState,
   isWrotedState,
   likePartState,
   loadingState,
+  loginState,
   voteState,
 } from "../../components/recoil/recoil";
 import Title from "../../components/title";
@@ -31,6 +33,7 @@ import Comment from "../../components/comment";
 import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
 import Loading from "../../components/modal/loading";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export async function getServerSideProps(context) {
   const db = getFirestore();
@@ -136,6 +139,7 @@ export async function getServerSideProps(context) {
 const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
   const router = useRouter();
   const db = getFirestore();
+  const auth = getAuth();
 
   const [isFetched, setIsFetched] = useState(false);
   const clickCount = useRecoilValue(clickCountState);
@@ -159,6 +163,8 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
   );
   const [likeState, setLikeState] = useRecoilState(likePartState);
   const [likeList, setLikeList] = useState([]);
+  const [login, setLogin] = useRecoilState(loginState);
+  const [userId, setUserId] = useRecoilState(idState);
 
   useEffect(() => {
     setCommunity("agenda");
@@ -169,6 +175,17 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
     setIsWroted(false);
     checkIn();
     updateLike();
+  }, []);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+        setLogin(true);
+      } else {
+        console.log("NO");
+      }
+    });
   }, []);
 
   useEffect(() => {
