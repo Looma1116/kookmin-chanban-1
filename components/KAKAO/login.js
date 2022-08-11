@@ -59,7 +59,7 @@ const KakaoLogin = () => {
       }
     }
   }, []);
-  const loginWithKakao = async () => {
+  const loginWithKakao = () => {
     const db = getFirestore();
     const apiServer =
       "https://asia-northeast1-peoplevoice-fcea9.cloudfunctions.net/app/login";
@@ -83,7 +83,6 @@ const KakaoLogin = () => {
           await signInWithCustomToken(auth, comunication.data.firebase_token);
           setLogin(true);
           setClickCount(false);
-
           // const d = await getDoc(doc(db, "user", auth.currentUser.uid));
           // level = d.data().level;
           // exp = d.data().exp;

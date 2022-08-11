@@ -13,6 +13,7 @@
 }
 .overlay {
   position: absolute;
+  z-index: 80;
   top: 0;
   left: 0;
   width: 100%;
@@ -29,7 +30,7 @@
   height: 40%;
   border-radius: 15px;
   padding: 20px;
-  z-index: 100;
+  z-index: 199;
   overflow-y: scroll;
 }
 .modalAgainLogin::-webkit-scrollbar {

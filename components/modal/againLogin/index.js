@@ -5,6 +5,7 @@ import { getAuth, signInWithCustomToken } from "firebase/auth";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import {
+  clickCountState,
   loadingState,
   loginInterfaceState,
   loginState,
@@ -31,6 +32,7 @@ const AgainLogin = ({ uid, user, token }) => {
   const [login, setLogin] = useRecoilState(loginState);
   const [showModal, setShowModal] = useState(true);
   const [loading, setLoading] = useRecoilState(loadingState);
+  const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const auth = getAuth();
   const db = getFirestore();
   const handleDelete = async () => {
@@ -56,6 +58,7 @@ const AgainLogin = ({ uid, user, token }) => {
     console.log(token);
     setLogin(true);
     setShowModal(false);
+    setClickCount(false);
   };
   const recoverAll = async (uid) => {
     const fetchRecoverData = async (document, story, where, commentId) => {
