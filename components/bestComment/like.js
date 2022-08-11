@@ -15,7 +15,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../bestComment/Bestcomments.module.css";
-import { clickCountState, communityState, loginState } from "../recoil/recoil";
+import {
+  clickCountState,
+  communityState,
+  idState,
+  loginState,
+} from "../recoil/recoil";
 
 const Like = ({ data, op }) => {
   const login = useRecoilValue(loginState);
@@ -28,15 +33,16 @@ const Like = ({ data, op }) => {
   const commentList = ["agreeComment", "alternativeComment", "disagreeComment"];
   const [isFetched, setIsFetched] = useState(false);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
+  const id = useRecoilValue(idState);
 
   useEffect(() => {
-    if (login) {
+    if (id) {
       initializeLike();
     }
   }, [login, isFetched]);
 
   const initializeLike = async () => {
-    const q = collection(db, "user", auth.currentUser.uid, "likeComment");
+    const q = collection(db, "user", id, "likeComment");
     const snapShot = await getDocs(q);
     snapShot.docs.forEach((doc) => {
       if (doc.id === data.id) {
@@ -64,10 +70,7 @@ const Like = ({ data, op }) => {
         item.id
       );
       await updateDoc(newLike, { like: increment(1) });
-      await setDoc(
-        doc(db, "user", auth.currentUser.uid, "likeComment", item.id),
-        data
-      );
+      await setDoc(doc(db, "user", id, "likeComment", item.id), data);
     });
   };
 
@@ -87,9 +90,7 @@ const Like = ({ data, op }) => {
         item.id
       );
       await updateDoc(newLike, { like: increment(-1) });
-      await deleteDoc(
-        doc(db, "user", auth.currentUser.uid, "likeComment", item.id)
-      );
+      await deleteDoc(doc(db, "user", id, "likeComment", item.id));
     });
   };
 

@@ -112,3 +112,7 @@ export const likePartState = atom({
   key: "likePartState",
   default: [],
 });
+export const idState = atom({
+  key: "idState",
+  default: null,
+});

@@ -29,6 +29,7 @@ import {
   isVotedState,
   isWrotedState,
   voteChangeClickState,
+  idState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
 
@@ -58,9 +59,10 @@ const UserVote = ({
   const [voteChangeClick, setVoteChangeClick] =
     useRecoilState(voteChangeClickState); //투표 바꾸기를 누르면 댓글 삭제를 위해 상태를 comment/index로 보냄
   const iam = ["", "찬성을", "중립을", "반대를"];
+  const userId = useRecoilValue(idState);
 
   useEffect(() => {
-    if (login) {
+    if (userId) {
       initializeVote();
       setLoading(false);
     }
@@ -68,7 +70,7 @@ const UserVote = ({
 
   useEffect(() => {
     voteId();
-    if (login) {
+    if (userId) {
       initializeVote();
     }
   }, [login]);
@@ -89,21 +91,21 @@ const UserVote = ({
   const agreeCount = async () => {
     const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
     await updateDoc(q, {
-      agreeUser: arrayUnion(`${auth.currentUser.uid}`),
+      agreeUser: arrayUnion(userId),
     });
   };
 
   const alterCount = async () => {
     const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
     await updateDoc(q, {
-      alternative: arrayUnion(auth.currentUser.uid),
+      alternative: arrayUnion(userId),
     });
   };
 
   const disagreeCount = async () => {
     const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
     await updateDoc(q, {
-      disagreeUser: arrayUnion(auth.currentUser.uid),
+      disagreeUser: arrayUnion(userId),
     });
   };
 
@@ -117,13 +119,7 @@ const UserVote = ({
       voteWhere = "alternative";
     }
     await setDoc(
-      doc(
-        db,
-        "user",
-        `${auth.currentUser.uid}`,
-        "joinedAgenda",
-        router.query.id
-      ),
+      doc(db, "user", `${userId}`, "joinedAgenda", router.query.id),
       {
         category: category,
         joined: new Date(),
@@ -131,7 +127,7 @@ const UserVote = ({
         title: title,
         vote: `${voteWhere}`,
         hide: false,
-        document : `${community}`,
+        document: community,
       }
     );
     setIsVoted(true);
@@ -176,15 +172,15 @@ const UserVote = ({
   };
 
   const initializeVote = () => {
-    if (agree?.indexOf(auth.currentUser.uid) >= 0) {
+    if (agree?.indexOf(userId) >= 0) {
       setVotewhere(1);
       setIsVoted(true);
       setVote("agreeComment");
-    } else if (alternative?.indexOf(auth.currentUser.uid) >= 0) {
+    } else if (alternative?.indexOf(userId) >= 0) {
       setVotewhere(2);
       setIsVoted(true);
       setVote("alternativeComment");
-    } else if (disagree?.indexOf(auth.currentUser.uid) >= 0) {
+    } else if (disagree?.indexOf(userId) >= 0) {
       setVotewhere(3);
       setIsVoted(true);
       setVote("disagreeComment");
@@ -258,21 +254,21 @@ const UserVote = ({
     if (votewhere === 1) {
       const q = query(doc(db, community, router.query.id, "vote", docId));
       await updateDoc(q, {
-        agreeUser: arrayRemove(auth.currentUser.uid),
+        agreeUser: arrayRemove(userId),
       });
       updateAgenda(-1);
       setNAgree(nAgree - 1);
     } else if (votewhere === 2) {
       const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
       await updateDoc(q, {
-        alternative: arrayRemove(`${auth.currentUser.uid}`),
+        alternative: arrayRemove(`${userId}`),
       });
       updateAgenda(-2);
       setNAlter(nAlter - 1);
     } else if (votewhere === 3) {
       const q = query(doc(db, community, `${router.query.id}`, "vote", docId));
       await updateDoc(q, {
-        disagreeUser: arrayRemove(`${auth.currentUser.uid}`),
+        disagreeUser: arrayRemove(`${userId}`),
       });
       updateAgenda(-3);
       setNDisagree(nDisagree - 1);
@@ -281,9 +277,7 @@ const UserVote = ({
   };
 
   const deleteComment = async () => {
-    await deleteDoc(
-      doc(db, "user", auth.currentUser.uid, "wroteComment", router.query.id)
-    );
+    await deleteDoc(doc(db, "user", userId, "wroteComment", router.query.id));
     if (vote === "agreeComment") {
       const agreeCommentRef = collection(
         db,
@@ -292,10 +286,7 @@ const UserVote = ({
         "agreeComment"
       );
 
-      const q = query(
-        agreeCommentRef,
-        where("author", "==", `${auth.currentUser.uid}`)
-      );
+      const q = query(agreeCommentRef, where("author", "==", `${userId}`));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (document) => {
@@ -310,18 +301,12 @@ const UserVote = ({
         await updateDoc(commentRef, { hide: true });
       });
       const userRef = query(
-        collection(db, "user", auth.currentUser.uid, "wroteComment"),
+        collection(db, "user", userId, "wroteComment"),
         where("story", "==", router.query.id)
       );
       const userSnapshot = await getDocs(userRef);
       userSnapshot.forEach(async (item) => {
-        const userTime = doc(
-          db,
-          "user",
-          auth.currentUser.uid,
-          "wroteComment",
-          item.id
-        );
+        const userTime = doc(db, "user", userId, "wroteComment", item.id);
         await updateDoc(userTime, { hide: true });
       });
     } else if (vote === "alternativeComment") {
@@ -332,10 +317,7 @@ const UserVote = ({
         "alternativeComment"
       );
 
-      const q = query(
-        agreeCommentRef,
-        where("author", "==", `${auth.currentUser.uid}`)
-      );
+      const q = query(agreeCommentRef, where("author", "==", `${userId}`));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (document) => {
@@ -351,18 +333,12 @@ const UserVote = ({
       });
 
       const userRef = query(
-        collection(db, "user", auth.currentUser.uid, "wroteComment"),
+        collection(db, "user", userId, "wroteComment"),
         where("story", "==", router.query.id)
       );
       const userSnapshot = await getDocs(userRef);
       userSnapshot.forEach(async (item) => {
-        const userTime = doc(
-          db,
-          "user",
-          auth.currentUser.uid,
-          "wroteComment",
-          item.id
-        );
+        const userTime = doc(db, "user", userId, "wroteComment", item.id);
         await updateDoc(userTime, { hide: true });
       });
     } else if (vote === "disagreeComment") {
@@ -373,10 +349,7 @@ const UserVote = ({
         "disagreeComment"
       );
 
-      const q = query(
-        agreeCommentRef,
-        where("author", "==", `${auth.currentUser.uid}`)
-      );
+      const q = query(agreeCommentRef, where("author", "==", `${userId}`));
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (document) => {
@@ -391,18 +364,12 @@ const UserVote = ({
         await updateDoc(commentRef, { hide: true });
       });
       const userRef = query(
-        collection(db, "user", auth.currentUser.uid, "wroteComment"),
+        collection(db, "user", userId, "wroteComment"),
         where("story", "==", router.query.id)
       );
       const userSnapshot = await getDocs(userRef);
       userSnapshot.forEach(async (item) => {
-        const userTime = doc(
-          db,
-          "user",
-          auth.currentUser.uid,
-          "wroteComment",
-          item.id
-        );
+        const userTime = doc(db, "user", userId, "wroteComment", item.id);
         await updateDoc(userTime, { hide: true });
       });
     }
@@ -411,9 +378,7 @@ const UserVote = ({
   };
 
   const deleteUserinfo = async () => {
-    await deleteDoc(
-      doc(db, "user", auth.currentUser.uid, "joinedAgenda", router.query.id)
-    );
+    await deleteDoc(doc(db, "user", userId, "joinedAgenda", router.query.id));
   };
 
   const voteChangeHandler = () => {
