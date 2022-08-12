@@ -23,6 +23,7 @@ import {
   onSnapshot,
   where,
   docu,
+  getDocs,
 } from "firebase/firestore";
 import "firebase/firestore";
 import styles from "./Login.module.css";
@@ -76,8 +77,24 @@ const KakaoLogin = () => {
         const comunication = await axios.post(apiServer, data);
         let level = 1;
         let exp = 0;
+        let use = [];
         console.log(comunication.data);
-        if (comunication.data.first === false) {
+        const checkUserRef = collection(db, "user");
+        const checkUserQuery = query(
+          checkUserRef,
+          where(documentId(), "==", comunication.data.uid)
+        );
+        const checkUser = await getDocs(checkUserQuery);
+        if (checkUser.docs.length > 0) {
+          await Promise.all(
+            checkUser.docs.map(async (element) => {
+              use.push(element.data());
+            })
+          );
+        } else {
+          use.push({ deleted: false, age: "", gender: "", nickname: "" });
+        }
+        if (comunication.data.first === false && use[0].deleted === false) {
           setLoading(true);
           console.log("sadasdasdsa");
           await signInWithCustomToken(auth, comunication.data.firebase_token);
@@ -90,6 +107,12 @@ const KakaoLogin = () => {
           //   level = level + 1;
           //   exp = exp - 100;
           // }
+        } else if (
+          use[0].age === "" ||
+          use[0].gender === "" ||
+          use[0].nickname === ""
+        ) {
+          setShow(false);
         } else {
           console.log("hi2");
           setUid(comunication.data.uid);

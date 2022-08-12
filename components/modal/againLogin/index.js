@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./againLogin";
 import Logout from "../deleteUser/index";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
@@ -27,6 +27,7 @@ import styles from "./AgainLogin.module.css";
 import Image from "next/image";
 import icon from "../../../public/ICON.ico";
 import Card from "../../../ui/Card/Card";
+import { Router } from "next/router";
 const AgainLogin = ({ uid, user, token }) => {
   const [show, setShow] = useRecoilState(loginInterfaceState);
   const [login, setLogin] = useRecoilState(loginState);
@@ -103,6 +104,22 @@ const AgainLogin = ({ uid, user, token }) => {
       })
     );
   };
+
+  // useEffect(() => {
+  //   const warningText =
+  //     "You have unsaved changes - are you sure you wish to leave this page?";
+  //   const handleWindowClose = async (e) => {
+  //     await handleDelete();
+  //   };
+  //   const handleBrowseAway = () => {};
+  //   window.addEventListener("beforeunload", handleWindowClose);
+  //   Router.events.on("routeChangeStart", handleBrowseAway);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleWindowClose);
+  //     Router.events.off("routeChangeStart", handleBrowseAway);
+  //   };
+  // }, []);
+
   return (
     <div>
       <Modal show={showModal}>
