@@ -3,11 +3,12 @@ import { useEffect } from "react";
 import talk from "../../public/talk.png";
 import Image from "next/image";
 import { useRecoilState } from "recoil";
-import { loginState } from "../recoil/recoil";
+import { loginInterfaceState, loginState } from "../recoil/recoil";
 import { getAuth } from "firebase/auth";
 import styles from "./Logout.module.css";
 const KakaoLogout = () => {
   const auth = getAuth();
+  const [show, setShow] = useRecoilState(loginInterfaceState);
   const [login, setLogin] = useRecoilState(loginState);
   useEffect(() => {
     if (window.Kakao) {
@@ -32,6 +33,7 @@ const KakaoLogout = () => {
     }
     await auth.signOut();
     setLogin(false);
+    setShow(true);
   };
   return (
     <span onClick={handleLogout} className={styles.image}>
