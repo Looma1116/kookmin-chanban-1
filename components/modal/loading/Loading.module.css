@@ -25,6 +25,9 @@
   animation: spin 1s ease-in-out infinite;
   background-color: white;
 }
+.string {
+  font-size: 3rem;
+}
 @keyframes spin {
   to {
     transform: rotate(360deg);

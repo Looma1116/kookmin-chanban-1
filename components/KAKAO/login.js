@@ -29,10 +29,11 @@ import "firebase/firestore";
 import styles from "./Login.module.css";
 import DetailModal from "../modal/detailModal/index";
 import DeletedLogin from "../modal/againLogin/index";
+import Loading from "../modal/loading";
 const KakaoLogin = () => {
   const [show, setShow] = useRecoilState(loginInterfaceState);
   const [login, setLogin] = useRecoilState(loginState);
-  const [loading, setLoading] = useRecoilState(loadingState);
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [nick, setNick] = useState("");
   const [age, setAge] = useState("");
@@ -74,6 +75,7 @@ const KakaoLogin = () => {
         };
         console.log(data);
         console.log("로그인 완료!");
+        setLoading(true);
         const comunication = await axios.post(apiServer, data);
         let level = 1;
         let exp = 0;
@@ -113,6 +115,8 @@ const KakaoLogin = () => {
           use[0].nickname === ""
         ) {
           setShow(false);
+          setLoading(false);
+          console.log("h3");
         } else {
           console.log("hi2");
           setUid(comunication.data.uid);
@@ -123,23 +127,38 @@ const KakaoLogin = () => {
             checkDeletedUserRef,
             where(documentId(), "==", comunication.data.uid)
           );
-          await onSnapshot(checkDeletedUserQuery, (snapshot) => {
-            const { length } = snapshot.docs;
-            console.log(length);
-            if (length > 0) {
-              setUser(snapshot.docs.map((str) => str.data()));
+          const checkDeletedUser = await getDocs(checkDeletedUserQuery);
+          if (checkDeletedUser.docs.length > 0) {
+            {
+              setUser(checkDeletedUser.docs.map((str) => str.data()));
               setDeleted(true);
             }
             setShow(false);
-          });
+            setLoading(false);
+          }
+          // await onSnapshot(checkDeletedUserQuery, (snapshot) => {
+          //   const { length } = snapshot.docs;
+          //   console.log(length);
+          //   if (length > 0) {
+          //     setUser(snapshot.docs.map((str) => str.data()));
+          //     setDeleted(true);
+          //   }
+          //   setShow(false);
+          //   setLoading(false);
+          // });
         }
+
+        console.log("sls");
       },
       fail: function (err) {
         alert(JSON.stringify(err));
       },
     });
   };
+  console.log(show);
+  console.log(loading);
   console.log("hi");
+  if (loading) return <Loading value="확인중~~" />;
   return (
     <>
       {show ? (
