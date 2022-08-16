@@ -113,7 +113,7 @@ const DeleteUser = ({ onClick }) => {
         회원 탈퇴
       </div>
       <Modal show={showModal} onClose={handleClick}>
-        <h3 className={styles.title}>정말로 삭제하시겠습니까?</h3>
+        <div className={styles.title}>정말로 삭제하시겠습니까?</div>
         <div className={styles.memo}>
           회원 탈퇴시 여태까지 기록되었던 글과 댓글들이 영구 삭제됩니다.
           <br /> 그러나 레벨과 경험치의 경우에는 7일이내 재로그인시 복구시킬

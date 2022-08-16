@@ -28,11 +28,12 @@ import Image from "next/image";
 import icon from "../../../public/ICON.ico";
 import Card from "../../../ui/Card/Card";
 import { Router } from "next/router";
+import Loading from "../loading";
 const AgainLogin = ({ uid, user, token }) => {
   const [show, setShow] = useRecoilState(loginInterfaceState);
   const [login, setLogin] = useRecoilState(loginState);
   const [showModal, setShowModal] = useState(true);
-  const [loading, setLoading] = useRecoilState(loadingState);
+  const [loading, setLoading] = useState(false);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const auth = getAuth();
   const db = getFirestore();
@@ -50,6 +51,7 @@ const AgainLogin = ({ uid, user, token }) => {
     setShow(true);
   };
   const handleRecovery = async () => {
+    setLoading(true);
     await updateDoc(doc(db, "user", uid), {
       deleted: false,
       deletedTime: null,
@@ -119,7 +121,8 @@ const AgainLogin = ({ uid, user, token }) => {
   //     Router.events.off("routeChangeStart", handleBrowseAway);
   //   };
   // }, []);
-
+  console.log(loading);
+  if (loading) return <Loading value="복원중~~" />;
   return (
     <div>
       <Modal show={showModal}>
