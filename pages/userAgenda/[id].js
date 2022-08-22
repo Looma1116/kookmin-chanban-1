@@ -21,6 +21,8 @@ import {
   voteChangeClickState,
   voteState,
   commentSortClickState,
+  idState,
+  loginState,
 } from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
@@ -30,6 +32,8 @@ import Modal from "react-modal";
 import Comment from "../../components/comment";
 import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
+import { BsPrinterFill } from "react-icons/bs";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export async function getServerSideProps(context) {
   const db = getFirestore();
@@ -38,8 +42,15 @@ export async function getServerSideProps(context) {
   let alternativeComment = [];
   let disagreeComment = [];
   const Id = await context.query;
-  let agenda = JSON.parse(Id.agenda);
-  let writerUid = JSON.stringify(agenda.uid);
+  console.log(Id);
+
+  let agenda = "";
+  let writerUid = JSON.stringify("");
+
+  if (Id.agenda != null) {
+    agenda = JSON.parse(Id.agenda);
+    writerUid = JSON.stringify(agenda.uid);
+  }
 
   const agreeRef = query(
     // 찬성 댓글
@@ -55,9 +66,9 @@ export async function getServerSideProps(context) {
       agreeComment.push({ ...doc.data(), id: doc.id });
     });
   }
-  agreeComment.sort((x,y)=>{
+  agreeComment.sort((x, y) => {
     return y.wrote.seconds - x.wrote.seconds;
-  })
+  });
 
   const alternativeRef = query(
     // 중립 댓글
@@ -113,9 +124,10 @@ export async function getServerSideProps(context) {
 
 // HpwvymAsOmqwAPEuTrIs
 
-const Agenda = ({ agreeData, disagreeData, alternativeData ,writerUid }) => {
+const Agenda = ({ agreeData, disagreeData, alternativeData, writerUid }) => {
   const router = useRouter();
   const db = getFirestore();
+  const auth = getAuth();
   const [agenda, setAgenda] = useState(null);
   const [isFetched, setIsFetched] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -132,12 +144,24 @@ const Agenda = ({ agreeData, disagreeData, alternativeData ,writerUid }) => {
   const [alternativeFetchData, setAlternativeFetchData] = useState(
     JSON.parse(alternativeData)
   );
-  const [voteChangeClick, setVoteChangeClick] = useRecoilState(voteChangeClickState);
-    const [commentSortClick, setCommentSortClick] = useRecoilState(
-      commentSortClickState
-    );
+  const [voteChangeClick, setVoteChangeClick] =
+    useRecoilState(voteChangeClickState);
+  const [commentSortClick, setCommentSortClick] = useRecoilState(
+    commentSortClickState
+  );
+  const [logIn, setLogInState] = useRecoilState(loginState);
+  const [userId, setUserId] = useRecoilState(idState);
 
   useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(idState);
+        setLogInState(true);
+      } else {
+        setLogInState(false);
+        console.log("로그인 상태 아님");
+      }
+    });
     setCommunity("userAgenda");
     setIsVoted(false);
     setComment("alternativeComment");
@@ -180,8 +204,8 @@ const Agenda = ({ agreeData, disagreeData, alternativeData ,writerUid }) => {
             title={agenda.title}
             subTitle={agenda.subTitle}
             imageUrl={agenda.imageUrl}
-            agendaId = {`${router.query.id}`}
-            writerUid = {JSON.parse(writerUid)}
+            agendaId={`${router.query.id}`}
+            writerUid={JSON.parse(writerUid)}
           />
           <Article article={agenda.article} />
           {/* <News /> */}

@@ -56,7 +56,7 @@ const Like = ({ data, op, likeList }) => {
   }, [login]);
 
   const initializeLike = async () => {
-    const q = collection(db, "user", id, "likeComment");
+    const q = collection(db, "user", `${id}`, "likeComment");
     const snapShot = await getDocs(q);
     snapShot.docs.forEach((doc) => {
       const like = {

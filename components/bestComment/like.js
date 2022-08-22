@@ -42,7 +42,7 @@ const Like = ({ data, op }) => {
   }, [login, isFetched]);
 
   const initializeLike = async () => {
-    const q = collection(db, "user", id, "likeComment");
+    const q = collection(db, "user", `${id}`, "likeComment");
     const snapShot = await getDocs(q);
     snapShot.docs.forEach((doc) => {
       if (doc.id === data.id) {
