@@ -15,7 +15,7 @@ import {
   searchState,
 } from "../recoil/recoil";
 import { useRecoilValue } from "recoil";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import styles from "./styles.module.css";
 import Link from "next/link";
 import AgendaCard from "../agendaCard";
@@ -29,7 +29,7 @@ const FetchData = ({ fetchedData }) => {
   const search = useRecoilValue(searchState);
   let data = [];
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     console.log(fetchedData);
     data = [];
     console.log(category);
@@ -41,11 +41,11 @@ const FetchData = ({ fetchedData }) => {
     const timeStamp = new Date();
     //console.log(timeStamp.getTime()); //현재 시간을 초단위로 출력 => 나노초 단위로 출력된다.
     //console.log(document.data().created.seconds); //게시물이 만들어진 시간을 초단위로 출력
-    for (let i= 0; i < fetchedData.length; i++) {
+    for (let i = 0; i < fetchedData.length; i++) {
       const diffDate =
         timeStamp.getTime() - fetchedData[i].created.seconds * 1000;
       const dateDays = parseInt(Math.abs(diffDate / (1000 * 3600 * 24))); // 차이 일수 계산
-      if ((category == "전체")) {
+      if (category == "전체") {
         if (dateDays <= sort) {
           // console.log(dateDays);
           // console.log(sort);
@@ -53,8 +53,8 @@ const FetchData = ({ fetchedData }) => {
             data.push({ ...fetchedData[i], id: fetchedData[i].id });
           } else {
             if (
-              fetchedData[i]
-                .title.replace(/ /gi, "")
+              fetchedData[i].title
+                .replace(/ /gi, "")
                 .includes(search.replace(/ /gi, ""))
             ) {
               data.push({ ...fetchedData[i], id: fetchedData[i].id });
