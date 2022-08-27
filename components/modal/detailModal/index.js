@@ -94,8 +94,8 @@ const Detail = ({ nick, age, gender, token, level, exp, secondTry }) => {
       }
     }
     setName(nicks);
-    setClickCount(false);
     setLogin(true);
+    setClickCount(false);
     if (secondTry) {
       setChange(!change);
     }

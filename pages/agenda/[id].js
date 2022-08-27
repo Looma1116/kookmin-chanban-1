@@ -16,10 +16,12 @@ import {
   commentSortClickState,
   commentState,
   communityState,
+  idState,
   isVotedState,
   isWrotedState,
   likePartState,
   loadingState,
+  loginState,
   voteState,
 } from "../../components/recoil/recoil";
 import Title from "../../components/title";
@@ -31,6 +33,7 @@ import Comment from "../../components/comment";
 import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
 import Loading from "../../components/modal/loading";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export async function getServerSideProps(context) {
   const db = getFirestore();
@@ -42,7 +45,13 @@ export async function getServerSideProps(context) {
   let disagreeComment = [];
   let likeComment = [];
   const Id = await context.query.id;
-  const logged = JSON.parse(context.query.login);
+  let logged = false;
+
+  try {
+    logged = JSON.parse(context.query.login);
+  } catch (err) {
+    console.log(err.message);
+  }
 
   if (logged) {
     const q = query(
@@ -130,6 +139,7 @@ export async function getServerSideProps(context) {
 const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
   const router = useRouter();
   const db = getFirestore();
+  const auth = getAuth();
 
   const [isFetched, setIsFetched] = useState(false);
   const clickCount = useRecoilValue(clickCountState);
@@ -152,6 +162,9 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
     commentSortClickState
   );
   const [likeState, setLikeState] = useRecoilState(likePartState);
+  const [likeList, setLikeList] = useState([]);
+  const [login, setLogin] = useRecoilState(loginState);
+  const [userId, setUserId] = useRecoilState(idState);
 
   useEffect(() => {
     setCommunity("agenda");
@@ -165,6 +178,17 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
   }, []);
 
   useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+        setLogin(true);
+      } else {
+        console.log("NO");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     fetchData();
   }, [isFetched, clickCount]);
 
@@ -174,13 +198,14 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
     likeComment.forEach((doc) => {
       const like = {
         id: doc.id,
+        like: doc.like,
         dislike: false,
         isClicked: false,
       };
       a.push(like);
     });
+    setLikeList(a);
     setLikeState(a);
-    console.log(likeState);
   };
 
   const checkIn = () => {
@@ -221,14 +246,14 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
               agree={agreeFetchData}
               alter={alternativeFetchData}
               disagree={disagreeFetchData}
-              likeList={likeState}
+              likeList={likeList}
             />
             <Vote agenda={agenda} />
             <Comment
               agreeData={JSON.parse(agreeData)}
               alternativeData={JSON.parse(alternativeData)}
               disagreeData={JSON.parse(disagreeData)}
-              likeList={likeState}
+              likeList={likeList}
             />
             {clickCount ? <LogInModal /> : null}
           </div>

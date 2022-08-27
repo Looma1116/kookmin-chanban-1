@@ -18,10 +18,10 @@ import WroteAgenda from "../components/modal/wroteAgenda";
 import WroteComment from "../components/modal/wroteComment";
 import UserInfo from "../components/modal/userInfo";
 import styles from "../styles/User.module.css";
-
+import Test from "../components/modal/joinedAgenda/test";
 export default function User() {
   const [change, setChange] = useRecoilState(changeState);
-  const [loading, setLoading] = useRecoilState(loadingState);
+  const [loading, setLoading] = useState(false);
   const [login, setLogin] = useRecoilState(loginState);
   const [nickname, setNickname] = useRecoilState(nickState);
   const [level, setLevel] = useRecoilState(levelState);
@@ -73,9 +73,14 @@ export default function User() {
   console.log(login);
   console.log(change);
   console.log(nickname);
+  // return (
+  //   <>
+  //     <Test></Test>
+  //   </>
+  // );
   if (firstface) return null;
   if (loading) return <Loading />;
-  // if (deleted) return </>
+  // if (deleted) return <></>;
   return (
     <div>
       {auth.currentUser === null ? (

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./againLogin";
 import Logout from "../deleteUser/index";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import {
+  clickCountState,
   loadingState,
   loginInterfaceState,
   loginState,
@@ -26,11 +27,14 @@ import styles from "./AgainLogin.module.css";
 import Image from "next/image";
 import icon from "../../../public/ICON.ico";
 import Card from "../../../ui/Card/Card";
+import { Router } from "next/router";
+import Loading from "../loading";
 const AgainLogin = ({ uid, user, token }) => {
   const [show, setShow] = useRecoilState(loginInterfaceState);
   const [login, setLogin] = useRecoilState(loginState);
   const [showModal, setShowModal] = useState(true);
-  const [loading, setLoading] = useRecoilState(loadingState);
+  const [loading, setLoading] = useState(false);
+  const [clickCount, setClickCount] = useRecoilState(clickCountState);
   const auth = getAuth();
   const db = getFirestore();
   const handleDelete = async () => {
@@ -47,6 +51,7 @@ const AgainLogin = ({ uid, user, token }) => {
     setShow(true);
   };
   const handleRecovery = async () => {
+    setLoading(true);
     await updateDoc(doc(db, "user", uid), {
       deleted: false,
       deletedTime: null,
@@ -56,6 +61,7 @@ const AgainLogin = ({ uid, user, token }) => {
     console.log(token);
     setLogin(true);
     setShowModal(false);
+    setClickCount(false);
   };
   const recoverAll = async (uid) => {
     const fetchRecoverData = async (document, story, where, commentId) => {
@@ -100,6 +106,23 @@ const AgainLogin = ({ uid, user, token }) => {
       })
     );
   };
+
+  // useEffect(() => {
+  //   const warningText =
+  //     "You have unsaved changes - are you sure you wish to leave this page?";
+  //   const handleWindowClose = async (e) => {
+  //     await handleDelete();
+  //   };
+  //   const handleBrowseAway = () => {};
+  //   window.addEventListener("beforeunload", handleWindowClose);
+  //   Router.events.on("routeChangeStart", handleBrowseAway);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleWindowClose);
+  //     Router.events.off("routeChangeStart", handleBrowseAway);
+  //   };
+  // }, []);
+  console.log(loading);
+  if (loading) return <Loading value="복원중~~" />;
   return (
     <div>
       <Modal show={showModal}>

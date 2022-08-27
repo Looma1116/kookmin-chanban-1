@@ -5,6 +5,7 @@
   border-radius: 15px;
   padding: 20px;
   z-index: 100;
+  overflow:hidden;
   overflow-y: scroll;
 }
 .modal::-webkit-scrollbar {

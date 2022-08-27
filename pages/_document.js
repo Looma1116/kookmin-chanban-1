@@ -22,6 +22,7 @@ export default function Document() {
         <div id="modal-againLogin"></div>
         <div id="modal-Loading"></div>
         <div id="root"></div>
+        <div id="anotherLogin-root"></div>
       </body>
     </Html>
   );
