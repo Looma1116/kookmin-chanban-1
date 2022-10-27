@@ -1,29 +1,48 @@
-import axios from "axios";
+// import axios from "axios";
+// import { useEffect, useState } from "react";
 
-const test = () => {
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    const response = await axios.post(
-      "https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
-      {
-        headers: {
-          "X-NCP-APIGW-API-KEY-ID": "hyxh942y2j",
-          "X-NCP-APIGW-API-KEY": "FhH4HHNw12z9aQ5i0iL9f2bADkfkTPiEDWM2KRNF",
-          "Content-Type": "application/json",
-        },
-        content: `${e.target.value}`,
-      }
-    );
-    console.log(response);
-  };
-  return (
-    <div>
-      <form onSubmit={submitHandler}>
-        <input placeholder="문장을 입력하세요."></input>
-        <button>감정분석</button>
-      </form>
-    </div>
-  );
-};
+// const test = () => {
+//   const [text, setText] = useState("");
+//   const changeHandler = (e) => {
+//     setText(e.target.value);
+//   };
+//   const submitHandler = async (e) => {
+//     e.preventDefault();
+//     console.log(text);
+//     var axios = require("axios");
+//     var data = JSON.stringify({
+//       text: `${text}`,
+//     });
 
-export default test;
+//     var config = {
+//       method: "post",
+//       url: "https://bert-flask-uvqwc.run.goorm.io/bert",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       data: data,
+//     };
+
+//     axios(config)
+//       .then(function (response) {
+//         console.log(JSON.stringify(response.data));
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   };
+//   return (
+//     <div>
+//       <form onSubmit={submitHandler}>
+//         <input
+//           placeholder="문장을 입력하세요."
+//           onChange={changeHandler}
+//           value={text}
+//         ></input>
+//         <button>감정분석</button>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default test;
