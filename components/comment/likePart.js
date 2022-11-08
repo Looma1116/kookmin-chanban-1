@@ -36,24 +36,17 @@ const Like = ({ data, op, likeList }) => {
   const [likeState, setLikeState] = useRecoilState(likePartState);
   const [isFetched, setIsFetched] = useState(false);
   const id = useRecoilValue(idState);
-  console.log(likeState);
 
   let comment = [...likeState];
 
   useEffect(() => {
     if (id) {
       initializeLike();
-      if (!login) {
-        newLike();
-      }
     }
-  }, [id, isFetched]);
-
-  useEffect(() => {
     if (login) {
       updateLike();
     }
-  }, [login]);
+  }, [id]);
 
   const initializeLike = async () => {
     const q = collection(db, "user", `${id}`, "likeComment");
@@ -67,9 +60,10 @@ const Like = ({ data, op, likeList }) => {
       };
       comment.push(like);
     });
-    if (!isFetched) {
-      setIsFetched(true);
-    }
+    // console.log(isFetched);
+    // if (!isFetched) {
+    //   setIsFetched(true);
+    // }
   };
 
   const updateLike = () => {
@@ -93,6 +87,7 @@ const Like = ({ data, op, likeList }) => {
   };
 
   const uploadLike = async () => {
+    console.log("3");
     const q = query(
       collection(db, community, router.query.id, commentList[op - 1]),
       where("hide", "==", false),
@@ -116,6 +111,7 @@ const Like = ({ data, op, likeList }) => {
   };
 
   const pushComment = () => {
+    console.log("4");
     let com = {};
     if (likeList.some((doc) => doc.id === data.id)) {
       com = {
@@ -138,6 +134,7 @@ const Like = ({ data, op, likeList }) => {
   };
 
   const removeComment = () => {
+    console.log("5");
     let com = {};
     if (likeList.some((doc) => doc.id === data.id)) {
       com = {
@@ -160,6 +157,7 @@ const Like = ({ data, op, likeList }) => {
   };
 
   const cancelLike = async () => {
+    console.log("6");
     const q = query(
       collection(db, community, router.query.id, commentList[op - 1]),
       where("hide", "==", false),
