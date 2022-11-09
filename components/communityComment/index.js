@@ -32,16 +32,21 @@ import CommentPart from "./commentPart";
 import { useRouter } from "next/router";
 import styles from "./comment.module.css";
 
-const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
+const CommunityComment = ({
+  agreeData,
+  alternativeData,
+  disagreeData,
+  likeList,
+}) => {
   const auth = getAuth();
   const router = useRouter();
   const db = getFirestore();
   const [comment, setComment] = useState("");
-  const [commentSort, setCommentSort] = useRecoilState(commentState);
+  const commentSort = useRecoilValue(commentState);
   const logIn = useRecoilValue(loginState);
   const [user, setUser] = useRecoilState(userState);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
-  const [vote, setVote] = useRecoilState(voteState);
+  const vote = useRecoilValue(voteState);
   const community = useRecoilValue(communityState);
   const [submit, setSubmit] = useState(false);
   const isVoted = useRecoilValue(isVotedState);
@@ -57,7 +62,6 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
     commentSortClickState
   );
   let a = [];
-  let sentimentData = "";
   let sortEmpty = [];
   let agreeEmpty = [...agreeData];
   let alternativeEmpty = [...alternativeData];
@@ -80,7 +84,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
     if (logIn) {
       userFetch();
     }
-  }, [isVoted, submit]);
+  }, [commentSort, isVoted, submit]);
 
   useEffect(() => {
     deleteComment();
@@ -147,8 +151,6 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   };
 
   const commentSend = async () => {
-    console.log("commentSend");
-    console.log(commentSort);
     if (logIn) {
       const agendaQ = await addDoc(
         // 파이어베이스 아젠다부분에 댓글 추가
@@ -185,54 +187,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     alert("댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?");
-    //bert 적용
-    var axios = require("axios");
-    var data = JSON.stringify({
-      text: `${comment}`,
-    });
 
-    var config = {
-      method: "post",
-      url: "https://bert-flask-uvqwc.run.goorm.io/bert",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    await axios(config)
-      .then(function (response) {
-        sentimentData = response.data["document"]["sentiment"];
-        console.log(JSON.stringify(response.data));
-        console.log(sentimentData);
-        if (sentimentData == "positive") {
-          setCommentSort("agreeComment");
-          commentSort = "agreeComment";
-          setVote("agreeComment");
-          alert("AI분석 결과 찬성측에 의견이 저장되었습니다.");
-          console.log("바뀌나");
-          console.log(commentSort);
-        } else if (sentimentData == "negative") {
-          setCommentSort("disagreeComment");
-          commentSort = "disagreeComment";
-          setVote("disagreeComment");
-          alert("AI분석 결과 반대측에 의견이 저장되었습니다.");
-          console.log("바뀌나");
-          console.log(commentSort);
-        } else {
-          setCommentSort("alternativeComment");
-          commentSort = "alternativeComment";
-          setVote("alternativeComment");
-          alert("AI분석 결과 중립측에 의견이 저장되었습니다.");
-          console.log("바뀌나");
-          console.log(commentSort);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    console.log(commentSort);
     setSubmit((prev) => !prev);
     commentSend();
     setIsWroted(true);
@@ -274,8 +229,8 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
     setUser(a);
 
     let CQ = query(
-      collection(db, "user", auth.currentUser.uid, "wroteComment"),
-      where("story", "==", `${router.query.id}`),
+      collection(db, community, router.query.id, commentSort),
+      where("author", "==", `${auth.currentUser.uid}`),
       where("hide", "==", false)
     );
     let CSnapShot = await getDocs(CQ);
@@ -382,8 +337,12 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
               placeholder={
                 logIn
                   ? isWroted
-                    ? `${user.name}님은 이미 댓글을 1회 작성하셨습니다.`
-                    : `${user.name}님의 소중한 의견이 필요합니다!`
+                    ? `${auth.currentUser.displayName}님은 이미 댓글을 1회 작성하셨습니다.`
+                    : isVoted
+                    ? vote == commentSort
+                      ? `${auth.currentUser.displayName}님의 소중한 의견이 필요합니다!`
+                      : `${auth.currentUser.displayName}님은 다른 입장에 투표를 하였습니다!`
+                    : `${auth.currentUser.displayName}님, 먼저 투표를 진행해주세요!`
                   : "로그인을 해주세요."
               }
               onChange={onChangeHandler}
@@ -391,7 +350,15 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
               onKeyUp={onKeyPress}
               onFocus={clickHandler}
               disabled={
-                logIn ? (isWroted ? true : false) : false //로그인을 안했을 때
+                logIn
+                  ? isWroted
+                    ? true
+                    : isVoted
+                    ? vote == commentSort
+                      ? false
+                      : true //투표상태랑 내가 작성하려는 comment부분이랑 다를 때
+                    : true // 투표를 안했을 때
+                  : false //로그인을 안했을 때
               }
             />
           </div>
@@ -404,7 +371,15 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
                 : styles.disagree
             }
             disabled={
-              logIn ? (isWroted ? true : false) : false //로그인을 안했을 때
+              logIn
+                ? isWroted
+                  ? true
+                  : isVoted
+                  ? vote == commentSort
+                    ? false
+                    : true //투표상태랑 내가 작성하려는 comment부분이랑 다를 때
+                  : true // 투표를 안했을 때
+                : false //로그인을 안했을 때
             }
           >
             게시
@@ -415,4 +390,4 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   );
 };
 
-export default Comment;
+export default CommunityComment;

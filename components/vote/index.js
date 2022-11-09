@@ -62,7 +62,7 @@ const UserVote = ({
   const userId = useRecoilValue(idState);
 
   useEffect(() => {
-      setLoading(false);
+    setLoading(false);
     if (userId) {
       initializeVote();
     }
