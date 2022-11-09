@@ -29,7 +29,7 @@ import BestComment from "../../components/bestComment";
 import Vote from "../../components/vote";
 import News from "../../components/modal/news";
 import Modal from "react-modal";
-import Comment from "../../components/comment";
+import Comment from "../../components/communityComment";
 import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
 import { BsPrinterFill } from "react-icons/bs";
