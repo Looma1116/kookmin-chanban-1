@@ -45,7 +45,7 @@ const UserVote = ({
   const [alternative, setAlternative] = useState([]);
   const [disagree, setDisagree] = useState([]);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
-  const [votewhere, setVotewhere] = useState(0);
+  const [votewhere, setVotewhere] = useState(5);
   const [ivoted, setIvoted] = useState(false);
   const community = useRecoilValue(communityState);
   const [loading, setLoading] = useState(true);
@@ -62,9 +62,9 @@ const UserVote = ({
   const userId = useRecoilValue(idState);
 
   useEffect(() => {
+      setLoading(false);
     if (userId) {
       initializeVote();
-      setLoading(false);
     }
   }, [agree, alternative, disagree]);
 
@@ -414,7 +414,6 @@ const UserVote = ({
       ) : (
         <div>
           <div className={styles.statistic}>
-            <h2 className={styles.title}>{iam[votewhere]} 선택 하셨습니다!</h2>
             <Statistic
               agree={nAgree}
               alternative={nAlter}
