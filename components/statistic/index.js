@@ -123,11 +123,13 @@ const Statistic = (props) => {
             <span>{props.disagree}명</span>
           </div>
         </div>
+        {/*
         <div className={styles.button}>
           <button className={styles.change} onClick={props.onClick}>
             바꾸기
           </button>
         </div>
+  */}
       </div>
     </div>
   );
