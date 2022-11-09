@@ -1,2 +1,0 @@
-clientId=hyxh942y2j
-secretKey=FhH4HHNw12z9aQ5i0iL9f2bADkfkTPiEDWM2KRNF
