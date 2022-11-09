@@ -45,7 +45,7 @@ const UserVote = ({
   const [alternative, setAlternative] = useState([]);
   const [disagree, setDisagree] = useState([]);
   const [clickCount, setClickCount] = useRecoilState(clickCountState);
-  const [votewhere, setVotewhere] = useState(5);
+  const [votewhere, setVotewhere] = useState(0);
   const [ivoted, setIvoted] = useState(false);
   const community = useRecoilValue(communityState);
   const [loading, setLoading] = useState(true);
@@ -74,6 +74,16 @@ const UserVote = ({
       initializeVote();
     }
   }, [login]);
+
+  useEffect(()=>{
+    if (vote == "agreeComment") {
+      agreeHandler();
+    } else if (vote == "disagreeComment") {
+      disagreeHandler();
+    } else {
+      alterHandler();
+    }
+  },[isWroted])
 
   const voteId = async () => {
     const q = query(collection(db, community, `${router.query.id}`, "vote"));
@@ -398,23 +408,26 @@ const UserVote = ({
 
   return (
     <div className={styles.voting}>
-      {votewhere === 0 ? (
-        <div>
-          <h2 className={styles.title}>사람들은 어떻게 생각할까요?</h2>
-          <div className={styles.vote}>
-            <AgreeBtn onClick={agreeHandler} />
-            <AlternativeBtn onClick={alterHandler} />
-            <DisagreeBtn onClick={disagreeHandler} />
-          </div>
-        </div>
-      ) : loading ? (
+      {loading ? (
         <div>
           <h2 className={styles.title}>투표 결과를 불러오는 중입니다...</h2>
+        </div>
+      ) : votewhere === 0 ? (
+        <div>
+          <div className={styles.statistic}>
+            <Statistic
+              agree={nAgree}
+              alternative={nAlter}
+              disagree={nDisagree}
+              onClick={voteChangeHandler}
+            />
+          </div>
         </div>
       ) : (
         <div>
           <div className={styles.statistic}>
-            <Statistic
+            <h2 className={styles.title}>{iam[votewhere]} 선택 하셨습니다!</h2>
+            <CitizenStatistic
               agree={nAgree}
               alternative={nAlter}
               disagree={nDisagree}
