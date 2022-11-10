@@ -1,13 +1,12 @@
 import AgreeBtn from "../../ui/button/agreeBtn";
 import AlternativeBtn from "../../ui/button/alternativeBtn";
 import DisagreeBtn from "../../ui/button/disagreeBtn";
-import styles from "./Vote.module.css";
+import styles from "./CitizenVote.module.css";
 import { getAuth } from "firebase/auth";
 import {
   arrayRemove,
   arrayUnion,
   collection,
-  connectFirestoreEmulator,
   deleteDoc,
   doc,
   getDocs,
@@ -30,10 +29,10 @@ import {
   isWrotedState,
   voteChangeClickState,
   idState,
-} from "../../components/recoil/recoil";
-import Statistic from "../statistic";
+} from "../recoil/recoil";
+import CitizenStatistic from "../citizenStatistic";
 
-const UserVote = ({
+const CitizenVote = ({
   agenda: { category, id, title, numAgree, numAlternative, numDisagree },
 }) => {
   const auth = getAuth();
@@ -61,10 +60,11 @@ const UserVote = ({
   const iam = ["", "찬성을", "중립을", "반대를"];
   const userId = useRecoilValue(idState);
 
+  console.log("멸망")
   useEffect(() => {
-    setLoading(false);
     if (userId) {
       initializeVote();
+      setLoading(false);
     }
   }, [agree, alternative, disagree]);
 
@@ -74,16 +74,6 @@ const UserVote = ({
       initializeVote();
     }
   }, [login]);
-
-  useEffect(()=>{
-    if (vote == "agreeComment") {
-      agreeHandler();
-    } else if (vote == "disagreeComment") {
-      disagreeHandler();
-    } else {
-      alterHandler();
-    }
-  },[isWroted])
 
   const voteId = async () => {
     const q = query(collection(db, community, `${router.query.id}`, "vote"));
@@ -287,7 +277,8 @@ const UserVote = ({
   };
 
   const deleteComment = async () => {
-    await deleteDoc(doc(db, "user", userId, "wroteComment", router.query.id));
+    if (isWroted){
+await deleteDoc(doc(db, "user", userId, "wroteComment", router.query.id));
     if (vote === "agreeComment") {
       const agreeCommentRef = collection(
         db,
@@ -385,10 +376,13 @@ const UserVote = ({
     }
 
     setIsWroted(false);
+    }
   };
 
   const deleteUserinfo = async () => {
-    await deleteDoc(doc(db, "user", userId, "joinedAgenda", router.query.id));
+    if (isWroted){
+      await deleteDoc(doc(db, "user", userId, "joinedAgenda", router.query.id));
+    }
   };
 
   const voteChangeHandler = () => {
@@ -408,20 +402,18 @@ const UserVote = ({
 
   return (
     <div className={styles.voting}>
-      {loading ? (
+      {votewhere === 0 ? (
+        <div>
+          <h2 className={styles.title}>사람들은 어떻게 생각할까요?</h2>
+          <div className={styles.vote}>
+            <AgreeBtn onClick={agreeHandler} />
+            <AlternativeBtn onClick={alterHandler} />
+            <DisagreeBtn onClick={disagreeHandler} />
+          </div>
+        </div>
+      ) : loading ? (
         <div>
           <h2 className={styles.title}>투표 결과를 불러오는 중입니다...</h2>
-        </div>
-      ) : votewhere === 0 ? (
-        <div>
-          <div className={styles.statistic}>
-            <Statistic
-              agree={nAgree}
-              alternative={nAlter}
-              disagree={nDisagree}
-              onClick={voteChangeHandler}
-            />
-          </div>
         </div>
       ) : (
         <div>
@@ -440,4 +432,4 @@ const UserVote = ({
   );
 };
 
-export default UserVote;
+export default CitizenVote;

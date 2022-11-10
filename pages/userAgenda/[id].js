@@ -26,7 +26,7 @@ import {
 } from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
-import Vote from "../../components/vote";
+import  CitizenVote from "../../components/citizenVote";
 import News from "../../components/modal/news";
 import Modal from "react-modal";
 import Comment from "../../components/communityComment";
@@ -214,7 +214,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, writerUid }) => {
             alter={JSON.parse(alternativeData)}
             disagree={JSON.parse(disagreeData)}
           />
-          <Vote agenda={agenda} />
+          <CitizenVote agenda={agenda} />
           <Comment
             agreeData={JSON.parse(agreeData)}
             alternativeData={JSON.parse(alternativeData)}
