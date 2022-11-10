@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const test = () => {
+const Test = () => {
   const [text, setText] = useState("");
   let a = "";
   const changeHandler = (e) => {
@@ -48,4 +48,4 @@ const test = () => {
   );
 };
 
-export default test;
+export default Test;
