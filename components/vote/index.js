@@ -77,12 +77,14 @@ const UserVote = ({
   }, [login]);
 
   useEffect(()=>{
-    if (vote == "agreeComment") {
+    if (isWroted){
+if (vote == "agreeComment") {
       agreeHandler();
     } else if (vote == "disagreeComment") {
       disagreeHandler();
     } else {
       alterHandler();
+    }
     }
   },[isWroted])
 
