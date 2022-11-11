@@ -32,7 +32,7 @@ import {
   idState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
-import CitizenStatistic from "../citizenStatistic"
+import CitizenStatistic from "../citizenStatistic";
 
 const UserVote = ({
   agenda: { category, id, title, numAgree, numAlternative, numDisagree },
@@ -76,7 +76,7 @@ const UserVote = ({
     }
   }, [login]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (vote == "agreeComment") {
       agreeHandler();
     } else if (vote == "disagreeComment") {
@@ -84,7 +84,7 @@ const UserVote = ({
     } else {
       alterHandler();
     }
-  },[isWroted])
+  }, [isWroted]);
 
   const voteId = async () => {
     const q = query(collection(db, community, `${router.query.id}`, "vote"));
