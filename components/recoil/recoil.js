@@ -1,118 +1,119 @@
 import { atom } from "recoil";
+import { v1 } from "uuid";
 export const loginState = atom({
-  key: "loginState",
+  key: `loginState/${v1()}`,
   default: false,
 });
 export const levelState = atom({
-  key: "levelState",
+  key: `levelState/${v1()}`,
   default: 1,
 });
 export const nickState = atom({
-  key: "nickState",
-  default: "",
+  key: `nickState/${v1()}`,
+  default: ``,
 });
 export const categoryState = atom({
-  key: "categoryState",
-  default: "전체",
+  key: `categoryState/${v1()}`,
+  default: `전체`,
 });
 
 export const agendaState = atom({
-  key: "agenda",
+  key: `agenda/${v1()}`,
   default: [],
 });
 
 export const sortState = atom({
-  key: "sortState",
+  key: `sortState/${v1()}`,
   default: 7,
 });
 export const searchState = atom({
-  key: "searchState",
-  default: "",
+  key: `searchState/${v1()}`,
+  default: ``,
 });
 export const searchIsClicked = atom({
-  key: "serachIsClicked",
+  key: `serachIsClicked/${v1()}`,
   default: false,
 });
 export const submitState = atom({
-  key: "submitState",
+  key: `submitState/${v1()}`,
   default: false,
 });
 export const commentState = atom({
-  key: "commentState",
-  default: "alternativeComment",
+  key: `commentState/${v1()}`,
+  default: `alternativeComment`,
 });
 export const commentDataState = atom({
-  key: "commentDataState",
+  key: `commentDataState/${v1()}`,
   default: [],
 });
 export const userState = atom({
-  key: "userState",
+  key: `userState/${v1()}`,
   default: [{ age: "0", gender: "남", level: 1, name: "국민찬반" }],
 });
 export const clickCountState = atom({
-  key: "clickCountState",
+  key: `clickCountState/${v1()}`,
   default: false,
 });
 export const voteState = atom({
-  key: "voteState",
-  default: "",
+  key: `voteState/${v1()}`,
+  default: ``,
 });
 
 export const changeState = atom({
-  key: "change",
+  key: `change/${v1()}`,
   default: false,
 });
 export const loadingState = atom({
-  key: "load",
+  key: `load/${v1()}`,
   default: false,
 });
 export const likeClickState = atom({
-  key: "likeClickState",
+  key: `likeClickState/${v1()}`,
   default: false,
 });
 export const categoryIsClickedState = atom({
-  key: "categoryIsClickedState",
+  key: `categoryIsClickedState/${v1()}`,
   default: false,
 });
 export const communityState = atom({
-  key: "communityState",
-  default: "agenda",
+  key: `communityState/${v1()}`,
+  default: `agenda`,
 });
 export const hideState = atom({
-  key: "hideState",
+  key: `hideState/${v1()}`,
   default: false,
 });
 
 export const isVotedState = atom({
-  key: "isVotedState",
+  key: `isVotedState/${v1()}`,
   default: false,
 });
 export const isWrotedState = atom({
-  key: "isWrotedState",
+  key: `isWrotedState/${v1()}`,
   default: false,
 });
 export const loginInterfaceState = atom({
-  key: "loginInterfaceState",
+  key: `loginInterfaceState/${v1()}`,
   default: true,
 });
 export const onceState = atom({
-  key: "onceState",
+  key: `onceState/${v1()}`,
   default: false,
 });
 
 export const voteChangeClickState = atom({
-  key: "voteChangeClickState",
+  key: `voteChangeClickState/${v1()}`,
   default: false,
 });
 export const commentSortClickState = atom({
-  key: "commentSortClickState",
-  default: "latest",
+  key: `commentSortClickState/${v1()}`,
+  default: `latest`,
 });
 export const likePartState = atom({
-  key: "likePartState",
+  key: `likePartState/${v1()}`,
   default: [],
 });
 export const idState = atom({
-  key: "idState",
+  key: `idState/${v1()}`,
   default: null,
 });
