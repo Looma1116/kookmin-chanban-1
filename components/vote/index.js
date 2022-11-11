@@ -32,7 +32,7 @@ import {
   idState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
-import CitizenStatistic from "../citizenStatistic"
+import CitizenStatistic from "../citizenStatistic";
 
 const UserVote = ({
   agenda: { category, id, title, numAgree, numAlternative, numDisagree },
@@ -75,6 +75,7 @@ const UserVote = ({
       initializeVote();
     }
   }, [login]);
+
 
   useEffect(()=>{
     if (isWroted){
