@@ -60,7 +60,9 @@ const CitizenVote = ({
   const iam = ["", "찬성을", "중립을", "반대를"];
   const userId = useRecoilValue(idState);
 
-  console.log("멸망")
+  console.log(userId)
+  console.log(loginState)
+  console.log(community)
   useEffect(() => {
     if (userId) {
       initializeVote();
