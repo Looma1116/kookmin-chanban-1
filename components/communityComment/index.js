@@ -31,6 +31,7 @@ import CommentSec from "./commentSec";
 import CommentPart from "./commentPart";
 import { useRouter } from "next/router";
 import styles from "./comment.module.css";
+import txt from "raw-loader!../../filtering2.txt";
 
 const CommunityComment = ({
   agreeData,
@@ -66,6 +67,8 @@ const CommunityComment = ({
   let agreeEmpty = [...agreeData];
   let alternativeEmpty = [...alternativeData];
   let disagreeEmpty = [...disagreeData];
+  let txt2 = txt.split("\r\n");
+  let slang = false;
 
   console.log(agreeEmpty);
   console.log(agreeData);
@@ -186,20 +189,31 @@ const CommunityComment = ({
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    alert("댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?");
+    for (let value of txt2) {
+      if (comment.includes(value)) {
+        slang = true;
+        alert(
+          "욕설이 감지되었습니다. 댓글을 다시 작성해주세요.\n여러번 반복시 패널티가 부과됩니다."
+        );
+        break;
+      }
+    }
+    if (slang == false) {
+      alert("댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?");
 
-    setSubmit((prev) => !prev);
-    commentSend();
-    setIsWroted(true);
+      setSubmit((prev) => !prev);
+      commentSend();
+      setIsWroted(true);
 
-    setAddComment({
-      article: `${comment}`,
-      author: auth.currentUser.uid,
-      authorLevel: user.level,
-      authorName: user.name,
-      hide: false,
-      like: 0,
-    });
+      setAddComment({
+        article: `${comment}`,
+        author: auth.currentUser.uid,
+        authorLevel: user.level,
+        authorName: user.name,
+        hide: false,
+        like: 0,
+      });
+    }
 
     // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
   };

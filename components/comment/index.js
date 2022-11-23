@@ -31,6 +31,7 @@ import CommentSec from "./commentSec";
 import CommentPart from "./commentPart";
 import { useRouter } from "next/router";
 import styles from "./comment.module.css";
+import txt from "raw-loader!../../filtering2.txt";
 
 const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   const auth = getAuth();
@@ -62,6 +63,8 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   let agreeEmpty = [...agreeData];
   let alternativeEmpty = [...alternativeData];
   let disagreeEmpty = [...disagreeData];
+  let txt2 = txt.split("\r\n");
+  let slang = false;
 
   console.log(agreeEmpty);
   console.log(agreeData);
@@ -184,67 +187,78 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    alert("댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?");
-    //bert 적용
-    var axios = require("axios");
-    var data = JSON.stringify({
-      text: `${comment}`,
-    });
-
-    var config = {
-      method: "post",
-      url: "https://bert-flask-uvqwc.run.goorm.io/bert",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    await axios(config)
-      .then(function (response) {
-        sentimentData = response.data["document"]["sentiment"];
-        console.log(JSON.stringify(response.data));
-        console.log(sentimentData);
-        if (sentimentData == "positive") {
-          setCommentSort("agreeComment");
-          commentSort = "agreeComment";
-          setVote("agreeComment");
-          alert("AI분석 결과 찬성측에 의견이 저장되었습니다.");
-          console.log("바뀌나");
-          console.log(commentSort);
-        } else if (sentimentData == "negative") {
-          setCommentSort("disagreeComment");
-          commentSort = "disagreeComment";
-          setVote("disagreeComment");
-          alert("AI분석 결과 반대측에 의견이 저장되었습니다.");
-          console.log("바뀌나");
-          console.log(commentSort);
-        } else {
-          setCommentSort("alternativeComment");
-          commentSort = "alternativeComment";
-          setVote("alternativeComment");
-          alert("AI분석 결과 중립측에 의견이 저장되었습니다.");
-          console.log("바뀌나");
-          console.log(commentSort);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
+    for (let value of txt2) {
+      if (comment.includes(value)) {
+        slang = true;
+        alert(
+          "욕설이 감지되었습니다. 댓글을 다시 작성해주세요.\n 여러번 반복시 패널티가 부과됩니다."
+        );
+        break;
+      }
+    }
+    if (slang == false) {
+      alert("댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?");
+      //bert 적용
+      var axios = require("axios");
+      var data = JSON.stringify({
+        text: `${comment}`,
       });
 
-    console.log(commentSort);
-    setSubmit((prev) => !prev);
-    commentSend();
-    setIsWroted(true);
+      var config = {
+        method: "post",
+        url: "https://bert-flask-uvqwc.run.goorm.io/bert",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
 
-    setAddComment({
-      article: `${comment}`,
-      author: auth.currentUser.uid,
-      authorLevel: user.level,
-      authorName: user.name,
-      hide: false,
-      like: 0,
-    });
+      await axios(config)
+        .then(function (response) {
+          sentimentData = response.data["document"]["sentiment"];
+          console.log(JSON.stringify(response.data));
+          console.log(sentimentData);
+          if (sentimentData == "positive") {
+            setCommentSort("agreeComment");
+            commentSort = "agreeComment";
+            setVote("agreeComment");
+            alert("AI분석 결과 찬성측에 의견이 저장되었습니다.");
+            console.log("바뀌나");
+            console.log(commentSort);
+          } else if (sentimentData == "negative") {
+            setCommentSort("disagreeComment");
+            commentSort = "disagreeComment";
+            setVote("disagreeComment");
+            alert("AI분석 결과 반대측에 의견이 저장되었습니다.");
+            console.log("바뀌나");
+            console.log(commentSort);
+          } else {
+            setCommentSort("alternativeComment");
+            commentSort = "alternativeComment";
+            setVote("alternativeComment");
+            alert("AI분석 결과 중립측에 의견이 저장되었습니다.");
+            console.log("바뀌나");
+            console.log(commentSort);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      console.log(commentSort);
+      setSubmit((prev) => !prev);
+      commentSend();
+      setIsWroted(true);
+
+      setAddComment({
+        article: `${comment}`,
+        author: auth.currentUser.uid,
+        authorLevel: user.level,
+        authorName: user.name,
+        hide: false,
+        like: 0,
+      });
+    }
 
     // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
   };
