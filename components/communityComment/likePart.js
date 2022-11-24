@@ -39,6 +39,8 @@ const Like = ({ data, op, likeList }) => {
 
   let comment = [...likeState];
 
+  console.log(likeList);
+
   useEffect(() => {
     if (id) {
       initializeLike();

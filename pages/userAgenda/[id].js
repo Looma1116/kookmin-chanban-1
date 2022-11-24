@@ -23,10 +23,11 @@ import {
   commentSortClickState,
   idState,
   loginState,
+  likePartState,
 } from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
-import  CitizenVote from "../../components/citizenVote";
+import CitizenVote from "../../components/citizenVote";
 import News from "../../components/modal/news";
 import Modal from "react-modal";
 import Comment from "../../components/communityComment";
@@ -41,8 +42,16 @@ export async function getServerSideProps(context) {
   let agreeComment = [];
   let alternativeComment = [];
   let disagreeComment = [];
+  let likeComment = [];
   const Id = await context.query;
   console.log(Id);
+  let logged = false;
+
+  try {
+    logged = JSON.parse(context.query.login);
+  } catch (err) {
+    console.log(err.message);
+  }
 
   let agenda = "";
   let writerUid = JSON.stringify("");
@@ -50,6 +59,17 @@ export async function getServerSideProps(context) {
   if (Id.agenda != null) {
     agenda = JSON.parse(Id.agenda);
     writerUid = JSON.stringify(agenda.uid);
+  }
+
+  if (logged) {
+    const q = query(
+      collection(db, "user", context.query.uid, "likeComment"),
+      where("hide", "==", false)
+    );
+    const snapShot = await getDocs(q);
+    snapShot.docs.forEach((doc) => {
+      likeComment.push({ ...doc.data(), id: doc.id });
+    });
   }
 
   const agreeRef = query(
@@ -111,6 +131,7 @@ export async function getServerSideProps(context) {
   const agreeData = JSON.stringify(agreeComment);
   const alternativeData = JSON.stringify(alternativeComment);
   const disagreeData = JSON.stringify(disagreeComment);
+  const commentList = JSON.stringify(likeComment);
 
   return {
     props: {
@@ -118,13 +139,20 @@ export async function getServerSideProps(context) {
       disagreeData,
       alternativeData,
       writerUid,
+      commentList,
     },
   };
 }
 
 // HpwvymAsOmqwAPEuTrIs
 
-const Agenda = ({ agreeData, disagreeData, alternativeData, writerUid }) => {
+const Agenda = ({
+  agreeData,
+  disagreeData,
+  alternativeData,
+  writerUid,
+  commentList,
+}) => {
   const router = useRouter();
   const db = getFirestore();
   const auth = getAuth();
@@ -149,13 +177,16 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, writerUid }) => {
   const [commentSortClick, setCommentSortClick] = useRecoilState(
     commentSortClickState
   );
+  const [likeComment, setLikeComment] = useState(JSON.parse(commentList));
+  const [likeState, setLikeState] = useRecoilState(likePartState);
+  const [likeList, setLikeList] = useState([]);
   const [logIn, setLogInState] = useRecoilState(loginState);
   const [userId, setUserId] = useRecoilState(idState);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(auth)
+        console.log(auth);
         setUserId(user.uid);
         setLogInState(true);
       } else {
@@ -175,6 +206,22 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, writerUid }) => {
   useEffect(() => {
     fetchData();
   }, [isFetched, clickCount]);
+
+  let a = [];
+
+  const updateLike = () => {
+    likeComment.forEach((doc) => {
+      const like = {
+        id: doc.id,
+        like: doc.like,
+        dislike: false,
+        isClicked: false,
+      };
+      a.push(like);
+    });
+    setLikeList(a);
+    setLikeState(a);
+  };
 
   const checkIn = () => {
     if (router.query.agenda === undefined) {
@@ -214,12 +261,14 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, writerUid }) => {
             agree={JSON.parse(agreeData)}
             alter={JSON.parse(alternativeData)}
             disagree={JSON.parse(disagreeData)}
+            likeList={likeList}
           />
           <CitizenVote agenda={agenda} />
           <Comment
             agreeData={JSON.parse(agreeData)}
             alternativeData={JSON.parse(alternativeData)}
             disagreeData={JSON.parse(disagreeData)}
+            likeList={likeList}
           />
           {clickCount ? <LogInModal /> : null}
         </div>
