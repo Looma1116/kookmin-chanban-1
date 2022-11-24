@@ -155,7 +155,8 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, writerUid }) => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUserId(idState);
+        console.log(auth)
+        setUserId(user.uid);
         setLogInState(true);
       } else {
         setLogInState(false);
