@@ -14,8 +14,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { List, AutoSizer } from "react-virtualized";
-import "react-virtualized/styles.css";
 const WroteAgenda = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
   const [wroteAgenda, setWroteAgenda] = useState([]);
@@ -31,7 +29,7 @@ const WroteAgenda = ({ user }) => {
       orderBy("wrote", "desc"),
       where("wrote", "<", time),
       where("hide", "==", false),
-      limit(20)
+      limit(100)
     );
     wroteAgendaUnsubscribe.current = await onSnapshot(
       wroteAgendaQuery,
@@ -101,7 +99,7 @@ const WroteAgenda = ({ user }) => {
           <BiAddToQueue size="2.5rem" color="#FFC700" />
           <div className={styles.title}>제시한 찬반</div>
         </div>
-        <AutoSizer>
+        {/* <AutoSizer>
           {({ width }) => (
             <List
               width={width}
@@ -114,8 +112,8 @@ const WroteAgenda = ({ user }) => {
               className={styles.scroll}
             />
           )}
-        </AutoSizer>
-        {/* <div className={styles.card}>
+        </AutoSizer> */}
+        <div className={styles.card}>
           {wroteAgenda?.map((agenda, index) => (
             <Card key={index} story={agenda?.story}>
               <h3 key={index}>{agenda?.title}</h3>
@@ -125,7 +123,7 @@ const WroteAgenda = ({ user }) => {
               </div>
             </Card>
           ))}
-        </div> */}
+        </div>
       </Modal>
     </div>
   );

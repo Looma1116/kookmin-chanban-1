@@ -4,7 +4,6 @@ import Card from "../../../ui/Card/Card";
 import Image from "next/image";
 import Images from "../../../public/comment.png";
 import styles from "./WroteComment.module.css";
-import { List, AutoSizer } from "react-virtualized";
 import { v4 as uuidv4 } from "uuid";
 import {
   collection,
@@ -34,7 +33,7 @@ const WroteComment = ({ user }) => {
       orderBy("wrote", "desc"),
       where("wrote", "<", time),
       where("hide", "==", false),
-      limit(20)
+      limit(100)
     );
     wroteCommentUnsubsribe.current = await onSnapshot(
       wroteCommentQuery,
@@ -106,7 +105,7 @@ const WroteComment = ({ user }) => {
           <BiCommentDetail size="2.5rem" color="#FF0000" />
           <div className={styles.title}>남긴 목소리</div>
         </div>
-        <AutoSizer>
+        {/* <AutoSizer>
           {({ width }) => (
             <List
               width={width}
@@ -119,7 +118,20 @@ const WroteComment = ({ user }) => {
               className={styles.scroll}
             />
           )}
-        </AutoSizer>
+        </AutoSizer> */}
+        <div className={styles.card}>
+          {wroteComment?.map((agenda, index) => (
+            <Card cla="Comment" story={agenda.story} sort={agenda.document}>
+              <div className={styles.line}>
+                <div className={styles.date}>
+                  {agenda?.wrote.toDate().toLocaleDateString()}
+                </div>
+                <div>👍{agenda?.like}</div>
+              </div>
+              <div>{agenda?.article}</div>
+            </Card>
+          ))}
+        </div>
       </Modal>
     </div>
   );
