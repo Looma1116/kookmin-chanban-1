@@ -15,8 +15,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { List, AutoSizer } from "react-virtualized";
-import "react-virtualized/styles.css";
 const JoinedAgenda = ({ user }) => {
   let [joinedAgenda, setJoinedAgenda] = useState([]);
   const joinedAgendaUnsubsribe = useRef([]);
@@ -33,7 +31,7 @@ const JoinedAgenda = ({ user }) => {
       orderBy("joined", "desc"),
       where("joined", "<", time),
       where("hide", "==", false),
-      limit(20)
+      limit(100)
     );
     joinedAgendaUnsubsribe.current = await onSnapshot(
       joinedAgendaQuery,
@@ -116,7 +114,7 @@ const JoinedAgenda = ({ user }) => {
           <div className={styles.title}>참여한 찬반</div>
         </div>
 
-        <AutoSizer>
+        {/* <AutoSizer>
           {({ width }) => (
             <List
               width={width}
@@ -129,10 +127,15 @@ const JoinedAgenda = ({ user }) => {
               className={styles.scroll}
             />
           )}
-        </AutoSizer>
-        {/* <div className={styles.card}>
+        </AutoSizer> */}
+        <div className={styles.card}>
           {joinedAgenda?.map((agenda, index) => (
-            <Card key={index} story={agenda.story} sort={agenda.agenda} data={agenda}>
+            <Card
+              key={index}
+              story={agenda.story}
+              sort={agenda.agenda}
+              data={agenda}
+            >
               <h3 key={index}>{agenda?.title}</h3>
               <p key={index}>{agenda?.category}</p>
               <div key={index}>
@@ -140,7 +143,7 @@ const JoinedAgenda = ({ user }) => {
               </div>
             </Card>
           ))}
-        </div> */}
+        </div>
       </Modal>
     </div>
   );
