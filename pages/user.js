@@ -18,7 +18,6 @@ import WroteAgenda from "../components/modal/wroteAgenda";
 import WroteComment from "../components/modal/wroteComment";
 import UserInfo from "../components/modal/userInfo";
 import styles from "../styles/User.module.css";
-import Test from "../components/modal/joinedAgenda/test";
 export default function User() {
   const [change, setChange] = useRecoilState(changeState);
   const [loading, setLoading] = useState(false);

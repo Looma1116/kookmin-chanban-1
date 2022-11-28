@@ -121,14 +121,19 @@ const WroteComment = ({ user }) => {
         </AutoSizer> */}
         <div className={styles.card}>
           {wroteComment?.map((agenda, index) => (
-            <Card cla="Comment" story={agenda.story} sort={agenda.document}>
-              <div className={styles.line}>
-                <div className={styles.date}>
+            <Card
+              key={index}
+              cla="Comment"
+              story={agenda.story}
+              sort={agenda.document}
+            >
+              <div key={index} className={styles.line}>
+                <div key={index} className={styles.date}>
                   {agenda?.wrote.toDate().toLocaleDateString()}
                 </div>
-                <div>👍{agenda?.like}</div>
+                <div key={index}>👍{agenda?.like}</div>
               </div>
-              <div>{agenda?.article}</div>
+              <div key={index}>{agenda?.article}</div>
             </Card>
           ))}
         </div>
