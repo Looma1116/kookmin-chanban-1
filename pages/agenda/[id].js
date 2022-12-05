@@ -7,6 +7,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Article from "../../components/article";
@@ -36,6 +37,15 @@ import Loading from "../../components/modal/loading";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export async function getServerSideProps(context) {
+  initializeApp({
+    apiKey: process.env.apiKey,
+    authDomain: process.env.authDomain,
+    projectId: process.env.projectId,
+    storageBucket: process.env.storageBucket,
+    messagingSenderId: process.env.messagingSenderId,
+    appId: process.env.appId,
+    measurementId: process.env.measurementId,
+  });
   const db = getFirestore();
 
   console.log(context.query.uid);
