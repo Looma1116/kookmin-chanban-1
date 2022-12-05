@@ -8,6 +8,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Article from "../../components/article";
