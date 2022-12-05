@@ -197,67 +197,74 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
       }
     }
     if (slang == false) {
-      alert("댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?");
-      //bert 적용
-      var axios = require("axios");
-      var data = JSON.stringify({
-        text: `${comment}`,
-      });
-
-      var config = {
-        method: "post",
-        url: "https://bert-flask-uvqwc.run.goorm.io/bert",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: data,
-      };
-
-      await axios(config)
-        .then(function (response) {
-          sentimentData = response.data["document"]["sentiment"];
-          console.log(JSON.stringify(response.data));
-          console.log(sentimentData);
-          if (sentimentData == "positive") {
-            setCommentSort("agreeComment");
-            commentSort = "agreeComment";
-            setVote("agreeComment");
-            alert("AI분석 결과 찬성측에 의견이 저장되었습니다.");
-            console.log("바뀌나");
-            console.log(commentSort);
-          } else if (sentimentData == "negative") {
-            setCommentSort("disagreeComment");
-            commentSort = "disagreeComment";
-            setVote("disagreeComment");
-            alert("AI분석 결과 반대측에 의견이 저장되었습니다.");
-            console.log("바뀌나");
-            console.log(commentSort);
-          } else {
-            setCommentSort("alternativeComment");
-            commentSort = "alternativeComment";
-            setVote("alternativeComment");
-            alert("AI분석 결과 중립측에 의견이 저장되었습니다.");
-            console.log("바뀌나");
-            console.log(commentSort);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+      if (
+        confirm(
+          "댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?"
+        ) == true
+      ) {
+        //bert 적용
+        var axios = require("axios");
+        var data = JSON.stringify({
+          text: `${comment}`,
         });
 
-      console.log(commentSort);
-      setSubmit((prev) => !prev);
-      commentSend();
-      setIsWroted(true);
+        var config = {
+          method: "post",
+          url: "https://bert-flask-uvqwc.run.goorm.io/bert",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: data,
+        };
 
-      setAddComment({
-        article: `${comment}`,
-        author: auth.currentUser.uid,
-        authorLevel: user.level,
-        authorName: user.name,
-        hide: false,
-        like: 0,
-      });
+        await axios(config)
+          .then(function (response) {
+            sentimentData = response.data["document"]["sentiment"];
+            console.log(JSON.stringify(response.data));
+            console.log(sentimentData);
+            if (sentimentData == "positive") {
+              setCommentSort("agreeComment");
+              commentSort = "agreeComment";
+              setVote("agreeComment");
+              alert("AI분석 결과 찬성측에 의견이 저장되었습니다.");
+              console.log("바뀌나");
+              console.log(commentSort);
+            } else if (sentimentData == "negative") {
+              setCommentSort("disagreeComment");
+              commentSort = "disagreeComment";
+              setVote("disagreeComment");
+              alert("AI분석 결과 반대측에 의견이 저장되었습니다.");
+              console.log("바뀌나");
+              console.log(commentSort);
+            } else {
+              setCommentSort("alternativeComment");
+              commentSort = "alternativeComment";
+              setVote("alternativeComment");
+              alert("AI분석 결과 중립측에 의견이 저장되었습니다.");
+              console.log("바뀌나");
+              console.log(commentSort);
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+        console.log(commentSort);
+        setSubmit((prev) => !prev);
+        commentSend();
+        setIsWroted(true);
+
+        setAddComment({
+          article: `${comment}`,
+          author: auth.currentUser.uid,
+          authorLevel: user.level,
+          authorName: user.name,
+          hide: false,
+          like: 0,
+        });
+      } else {
+        alert("취소 되었습니다.");
+      }
     }
 
     // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
