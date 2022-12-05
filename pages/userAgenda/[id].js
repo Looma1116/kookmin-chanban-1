@@ -37,6 +37,15 @@ import { BsPrinterFill } from "react-icons/bs";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export async function getServerSideProps(context) {
+  initializeApp({
+    apiKey: process.env.apiKey,
+    authDomain: process.env.authDomain,
+    projectId: process.env.projectId,
+    storageBucket: process.env.storageBucket,
+    messagingSenderId: process.env.messagingSenderId,
+    appId: process.env.appId,
+    measurementId: process.env.measurementId,
+  });
   const db = getFirestore();
 
   let agreeComment = [];
