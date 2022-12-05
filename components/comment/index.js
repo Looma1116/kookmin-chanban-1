@@ -63,7 +63,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   let agreeEmpty = [...agreeData];
   let alternativeEmpty = [...alternativeData];
   let disagreeEmpty = [...disagreeData];
-  let txt2 = txt.split("\r\n");
+  let txt2 = txt.split("\n");
   let slang = false;
 
   console.log(agreeEmpty);
