@@ -186,9 +186,12 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   };
 
   const submitHandler = async (e) => {
+    console.log("submitHandler SLANG");
     e.preventDefault();
     for (let value of txt2) {
+      console.log(`${value}`);
       if (comment.includes(value)) {
+        console.log("submitHandler SLANG!!!!!");
         slang = true;
         alert(
           "욕설이 감지되었습니다. 댓글을 다시 작성해주세요.\n 여러번 반복시 패널티가 부과됩니다."
