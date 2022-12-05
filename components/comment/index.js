@@ -191,6 +191,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
     console.log(comment);
     for (let value of txt2) {
       console.log(value);
+      console.log(value.length);
       if (comment.includes(value)) {
         console.log("submitHandler SLANG!!!!!");
         slang = true;
