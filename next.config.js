@@ -10,6 +10,9 @@ const nextConfig = {
     appId: "1:1081065997313:web:e542c43f8f09f1c4166c00",
     measurementId: "G-PXYT3B4M4Z",
     Kakao: "18647889c10275cb15e3718a64e04b7f",
+    LOGTAIL_SOURCE_TOKEN: "8yvWVbMmyDoYEtdHGWxdohk5",
+    NEXT_PUBLIC_LOGTAIL_SOURCE_TOKEN: "8yvWVbMmyDoYEtdHGWxdohk5",
+    NEXTAUTH_URL: "https://chanban.kr",
   },
 };
 
