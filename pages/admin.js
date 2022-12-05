@@ -28,6 +28,9 @@ const Admin = () => {
       author: "국민찬반",
       category: "정치",
       created: new Date(),
+      hide: false,
+      imageUrl:
+        "https://firebasestorage.googleapis.com/v0/b/peoplevoice-fcea9.appspot.com/o/7c9ca2d2-015e-40bf-bd18-9c85da52308f.jpg?alt=media&token=f81f7f41-04b5-4a61-8afc-97940e527818",
       numAgree: 0,
       numAlternative: 0, // 나중에 반응형으로 교체해야함
       numComment: 0,
