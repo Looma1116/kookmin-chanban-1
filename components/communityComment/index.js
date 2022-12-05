@@ -199,20 +199,26 @@ const CommunityComment = ({
       }
     }
     if (slang == false) {
-      alert("댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?");
+      if (
+        confirm(
+          "댓글은 안건당 하나만 작성할 수 있습니다. 정말 작성하시겠습니까?"
+        ) == true
+      ) {
+        setSubmit((prev) => !prev);
+        commentSend();
+        setIsWroted(true);
 
-      setSubmit((prev) => !prev);
-      commentSend();
-      setIsWroted(true);
-
-      setAddComment({
-        article: `${comment}`,
-        author: auth.currentUser.uid,
-        authorLevel: user.level,
-        authorName: user.name,
-        hide: false,
-        like: 0,
-      });
+        setAddComment({
+          article: `${comment}`,
+          author: auth.currentUser.uid,
+          authorLevel: user.level,
+          authorName: user.name,
+          hide: false,
+          like: 0,
+        });
+      } else {
+        alert("취소되었습니다.");
+      }
     }
 
     // await setDoc(doc(db, "user", `${auth.currentUser.uid}`, ),{})
