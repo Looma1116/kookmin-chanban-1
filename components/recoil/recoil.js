@@ -117,3 +117,7 @@ export const idState = atom({
   key: `idState/${v1()}`,
   default: null,
 });
+export const wroteHereState = atom({
+  key: `wroteHereState/${v1()}`,
+  default: false,
+});
