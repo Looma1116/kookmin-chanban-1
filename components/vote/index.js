@@ -30,6 +30,7 @@ import {
   isWrotedState,
   voteChangeClickState,
   idState,
+  wroteHereState,
 } from "../../components/recoil/recoil";
 import Statistic from "../statistic";
 import CitizenStatistic from "../citizenStatistic";
@@ -61,6 +62,7 @@ const UserVote = ({
     useRecoilState(voteChangeClickState); //투표 바꾸기를 누르면 댓글 삭제를 위해 상태를 comment/index로 보냄
   const iam = ["", "찬성을", "중립을", "반대를"];
   const userId = useRecoilValue(idState);
+  const [wroteHere, setWroteHere] = useRecoilState(wroteHereState);
 
   useEffect(() => {
     setLoading(false);
@@ -76,18 +78,29 @@ const UserVote = ({
     }
   }, [login]);
 
+  useEffect(() => {
+    if (isWroted && !wroteHere) {
+      if (vote == "agreeComment") {
+        agreeHandler2();
+      } else if (vote == "disagreeComment") {
+        disagreeHandler2();
+      } else {
+        alterHandler2();
+      }
+    }
+  }, [isWroted]);
 
-  useEffect(()=>{
-    if (isWroted){
-if (vote == "agreeComment") {
-      agreeHandler();
-    } else if (vote == "disagreeComment") {
-      disagreeHandler();
-    } else {
-      alterHandler();
+  useEffect(() => {
+    if (wroteHere) {
+      if (vote == "agreeComment") {
+        agreeHandler();
+      } else if (vote == "disagreeComment") {
+        disagreeHandler();
+      } else {
+        alterHandler();
+      }
     }
-    }
-  },[isWroted])
+  }, [wroteHere]);
 
   const voteId = async () => {
     const q = query(collection(db, community, `${router.query.id}`, "vote"));
@@ -232,6 +245,16 @@ if (vote == "agreeComment") {
     }
   };
 
+  const agreeHandler2 = () => {
+    setVote("agreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
+    if (login) {
+      setVotewhere(1);
+      setIvoted(true);
+    } else {
+      setClickCount(true);
+    }
+  };
+
   const alterHandler = () => {
     setVote("alternativeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
@@ -248,6 +271,16 @@ if (vote == "agreeComment") {
     }
   };
 
+  const alterHandler2 = () => {
+    setVote("alternativeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
+    if (login) {
+      setVotewhere(2);
+      setIvoted(true);
+    } else {
+      setClickCount(true);
+    }
+  };
+
   const disagreeHandler = () => {
     setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
     if (login) {
@@ -259,6 +292,16 @@ if (vote == "agreeComment") {
       disagreeCount();
       updateVote();
       updateAgenda(3);
+    } else {
+      setClickCount(true);
+    }
+  };
+
+  const disagreeHandler2 = () => {
+    setVote("disagreeComment"); // agreeComment로 한 이유는 채팅 칠 때 vote값이랑 comment값 비교하기 편하게 하기 위해서
+    if (login) {
+      setVotewhere(3);
+      setIvoted(true);
     } else {
       setClickCount(true);
     }
@@ -389,6 +432,7 @@ if (vote == "agreeComment") {
     }
 
     setIsWroted(false);
+    setWroteHere(false);
   };
 
   const deleteUserinfo = async () => {

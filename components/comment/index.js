@@ -23,6 +23,7 @@ import {
   voteChangeSubmitState,
   voteChangeClickState,
   commentSortClickState,
+  wroteHereState,
 } from "../recoil/recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
 import LogInModal from "../modal/login";
@@ -57,6 +58,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   const [commentSortClick, setCommentSortClick] = useRecoilState(
     commentSortClickState
   );
+  const [wroteHere, setWroteHere] = useRecoilState(wroteHereState);
   let a = [];
   let sentimentData = "";
   let sortEmpty = [];
@@ -255,6 +257,7 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
         setSubmit((prev) => !prev);
         commentSend();
         setIsWroted(true);
+        setWroteHere(true);
 
         setAddComment({
           article: `${comment}`,
