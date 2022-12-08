@@ -8,6 +8,11 @@ export default function Document() {
           src="https://developers.kakao.com/sdk/js/kakao.js"
           async
         ></script>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4570568285556364"
+          crossOrigin="anonymous"
+        ></script>
       </Head>
       <body>
         <Main />
