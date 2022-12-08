@@ -8,7 +8,7 @@ const Article = ({ article, title, subTitle }) => {
       <div className={styles.title}>{title}</div>
       <div className={styles.subTitle}>{subTitle}</div>
       {/* <hr /> */}
-      <p>{article}</p>
+      <p>{article.toString().replaceAll("\\n", "\n")}</p>
     </div>
   );
 };
