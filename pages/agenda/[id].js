@@ -246,7 +246,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
 
   return (
     <>
-      <NextSEO
+      {/* <NextSEO
         title="123"
         description="123"
         openGraph={{
@@ -261,7 +261,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
           //   },
           // ],
         }}
-      />
+      /> */}
       <div className={styles.container}>
         <div className={styles.agenda}>
           {agenda ? (
