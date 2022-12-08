@@ -103,8 +103,8 @@ const Title = ({ title, subTitle, imageUrl, agendaId, writerUid }) => {
         <button onClick={closeModal}>취소</button>
       </Modal>
       <div className={styles.content}>
-        <h2>{title}</h2>
-        <h3>{subTitle}</h3>
+        {/* <h2>{title}</h2>
+        <h3>{subTitle}</h3> */}
       </div>
     </div>
   );
