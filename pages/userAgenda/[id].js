@@ -2,11 +2,13 @@ import { useRouter } from "next/router";
 import {
   collection,
   documentId,
+  getDoc,
   getDocs,
   getFirestore,
   orderBy,
   query,
   where,
+  doc,
 } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
@@ -36,7 +38,7 @@ import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
 import { BsPrinterFill } from "react-icons/bs";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
+import Head from "next/head";
 export async function getServerSideProps(context) {
   initializeApp({
     apiKey: process.env.apiKey,
@@ -53,8 +55,7 @@ export async function getServerSideProps(context) {
   let alternativeComment = [];
   let disagreeComment = [];
   let likeComment = [];
-  const Id = await context.query;
-  console.log(Id);
+  const Id = await context.query.id;
   let logged = false;
 
   try {
@@ -84,7 +85,7 @@ export async function getServerSideProps(context) {
 
   const agreeRef = query(
     // 찬성 댓글
-    collection(db, "userAgenda", `${Id.id}`, "agreeComment"),
+    collection(db, "userAgenda", `${Id}`, "agreeComment"),
     where("hide", "==", false)
   );
   const agreeSnapShot = await getDocs(agreeRef);
@@ -102,7 +103,7 @@ export async function getServerSideProps(context) {
 
   const alternativeRef = query(
     // 중립 댓글
-    collection(db, "userAgenda", `${Id.id}`, "alternativeComment"),
+    collection(db, "userAgenda", `${Id}`, "alternativeComment"),
     where("hide", "==", false)
   );
   const alternativeSnapShot = await getDocs(alternativeRef);
@@ -121,7 +122,7 @@ export async function getServerSideProps(context) {
 
   const disagreeRef = query(
     // 반대 댓글
-    collection(db, "userAgenda", `${Id.id}`, "disagreeComment"),
+    collection(db, "userAgenda", `${Id}`, "disagreeComment"),
     where("hide", "==", false)
   );
   const disagreeSnapShot = await getDocs(disagreeRef);
@@ -142,7 +143,9 @@ export async function getServerSideProps(context) {
   const alternativeData = JSON.stringify(alternativeComment);
   const disagreeData = JSON.stringify(disagreeComment);
   const commentList = JSON.stringify(likeComment);
-
+  const agendaData = JSON.stringify(
+    (await getDoc(doc(db, "userAgenda", `${Id}`))).data()
+  );
   return {
     props: {
       agreeData,
@@ -150,6 +153,7 @@ export async function getServerSideProps(context) {
       alternativeData,
       writerUid,
       commentList,
+      agendaData,
     },
   };
 }
@@ -162,11 +166,13 @@ const Agenda = ({
   alternativeData,
   writerUid,
   commentList,
+  agendaData,
 }) => {
-  const router = useRouter();
-  const db = getFirestore();
   const auth = getAuth();
-  const [agenda, setAgenda] = useState(null);
+  const agendaProp = JSON.parse(agendaData);
+  const db = getFirestore();
+  const [agenda, setAgenda] = useState(agendaProp);
+  const router = useRouter();
   const [isFetched, setIsFetched] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const clickCount = useRecoilValue(clickCountState);
@@ -233,14 +239,6 @@ const Agenda = ({
     setLikeState(a);
   };
 
-  const checkIn = () => {
-    if (router.query.agenda === undefined) {
-      fetchData();
-    } else {
-      setAgenda(JSON.parse(router.query.agenda));
-    }
-  };
-
   const fetchData = async () => {
     const q = query(
       collection(db, "userAgenda"),
@@ -255,39 +253,47 @@ const Agenda = ({
     setIsFetched(true);
   };
   return (
-    <div className={styles.container}>
-      {agenda ? (
-        <div className={styles.agenda}>
-          <Title
-            title={agenda.title}
-            subTitle={agenda.subTitle}
-            imageUrl={agenda.imageUrl}
-            agendaId={`${router.query.id}`}
-            writerUid={JSON.parse(writerUid)}
-          />
-          <Article
-            article={agenda.article}
-            title={agenda.title}
-            subTitle={agenda.subTitle}
-          />
-          {/* <News /> */}
-          <BestComment
-            agree={JSON.parse(agreeData)}
-            alter={JSON.parse(alternativeData)}
-            disagree={JSON.parse(disagreeData)}
-            likeList={likeList}
-          />
-          <CitizenVote agenda={agenda} />
-          <Comment
-            agreeData={JSON.parse(agreeData)}
-            alternativeData={JSON.parse(alternativeData)}
-            disagreeData={JSON.parse(disagreeData)}
-            likeList={likeList}
-          />
-          {clickCount ? <LogInModal /> : null}
-        </div>
-      ) : null}
-    </div>
+    <>
+      <Head>
+        <title>{agendaProp.title}</title>
+        <meta name="description" content={agendaProp.subTitle} />
+        <meta property="og:title" content={agendaProp.title} />
+        <meta property="og:description" content={agendaProp.subTitle} />
+        <meta property="og:image" content={agendaProp.imageUrl} />
+      </Head>
+      <div className={styles.container}>
+        {agenda ? (
+          <div className={styles.agenda}>
+            <Title
+              title={agenda.title}
+              subTitle={agenda.subTitle}
+              imageUrl={agenda.imageUrl}
+              agendaId={`${router.query.id}`}
+              writerUid={JSON.parse(writerUid)}
+            />
+            <Article 
+              article={agenda.article}
+              title={agenda.title}
+              subTitle={agenda.subTitle}/>
+            {/* <News /> */}
+            <BestComment
+              agree={JSON.parse(agreeData)}
+              alter={JSON.parse(alternativeData)}
+              disagree={JSON.parse(disagreeData)}
+              likeList={likeList}
+            />
+            <CitizenVote agenda={agenda} />
+            <Comment
+              agreeData={JSON.parse(agreeData)}
+              alternativeData={JSON.parse(alternativeData)}
+              disagreeData={JSON.parse(disagreeData)}
+              likeList={likeList}
+            />
+            {clickCount ? <LogInModal /> : null}
+          </div>
+        ) : null}
+      </div>
+    </>
   );
 };
 
