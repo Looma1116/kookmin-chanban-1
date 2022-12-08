@@ -122,7 +122,7 @@ const AgainLogin = ({ uid, user, token }) => {
   //   };
   // }, []);
   console.log(loading);
-  if (loading) return <Loading value="복원중~~" />;
+  if (loading) return <Loading value="복원중" />;
   return (
     <div>
       <Modal show={showModal}>

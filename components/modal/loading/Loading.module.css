@@ -17,11 +17,11 @@
 .shit {
   margin-top: 4rem;
   display: inline-block;
-  width: 10rem;
-  height: 10rem;
-  border: 10px solid black;
+  width: 5rem;
+  height: 5rem;
+  border: 5px solid rgb(212, 212, 212);
   border-radius: 50%;
-  border-top-color: tomato;
+  border-top-color: rgb(124, 124, 124);
   animation: spin 1s ease-in-out infinite;
   background-color: white;
 }
