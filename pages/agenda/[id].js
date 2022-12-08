@@ -24,6 +24,7 @@ import {
   loadingState,
   loginState,
   voteState,
+  wroteHereState,
 } from "../../components/recoil/recoil";
 import Title from "../../components/title";
 import BestComment from "../../components/bestComment";
@@ -175,6 +176,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
   const [likeList, setLikeList] = useState([]);
   const [login, setLogin] = useRecoilState(loginState);
   const [userId, setUserId] = useRecoilState(idState);
+  const [wroteHere, setWroteHere] = useRecoilState(wroteHereState);
 
   useEffect(() => {
     setCommunity("agenda");
@@ -183,6 +185,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
     setVote("alternativeComment");
     setCommentSortClick("latest");
     setIsWroted(false);
+    setWroteHere(false);
     checkIn();
     updateLike();
   }, []);
