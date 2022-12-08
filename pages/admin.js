@@ -18,6 +18,9 @@ const Admin = () => {
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
   const [article, setArticle] = useState("");
+  const [agendaId, setAgendaId] = useState("");
+  const [comment, setComment] = useState("");
+  const [agreeState, setAgreeState] = useState("");
   const auth = getAuth();
   const router = useRouter();
   const db = getFirestore();
@@ -41,6 +44,21 @@ const Admin = () => {
       title: `${title}`,
     });
   };
+  const agreeCommentSubmitHandler = async (e) => {
+    e.preventDefault();
+    const agendaQ = await addDoc(
+      collection(db, `agenda`, `${agendaId}`, `${agreeState}`),
+      {
+        article: `${comment}`,
+        author: "admin",
+        authorLevel: 1,
+        authorName: "이름 넣어",
+        hide: false,
+        like: 0,
+        wrote: new Date(),
+      }
+    );
+  };
   const onChangeHandler = (e) => {
     setArticle(e.target.value);
   };
@@ -49,6 +67,15 @@ const Admin = () => {
   };
   const onChangeHandler3 = (e) => {
     setTitle(e.target.value);
+  };
+  const onChangeHandler4 = (e) => {
+    setAgendaId(e.target.value);
+  };
+  const onChangeHandler5 = (e) => {
+    setComment(e.target.value);
+  };
+  const onChangeHandler6 = (e) => {
+    setAgreeState(e.target.value);
   };
 
   return (
@@ -65,6 +92,25 @@ const Admin = () => {
           onChange={onChangeHandler2}
         />
         <input placeholder="title" value={title} onChange={onChangeHandler3} />
+        <button>클릭</button>
+      </form>
+      <div>댓글</div>
+      <form onSubmit={agreeCommentSubmitHandler}>
+        <input
+          placeholder="agreeComment,alternativeComment,disagreeComment"
+          value={agreeState}
+          onChange={onChangeHandler6}
+        ></input>
+        <input
+          placeholder="agendaId"
+          value={agendaId}
+          onChange={onChangeHandler4}
+        ></input>
+        <input
+          placeholder="댓글"
+          value={comment}
+          onChange={onChangeHandler5}
+        ></input>
         <button>클릭</button>
       </form>
     </div>
