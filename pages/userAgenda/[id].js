@@ -271,7 +271,10 @@ const Agenda = ({
               agendaId={`${router.query.id}`}
               writerUid={JSON.parse(writerUid)}
             />
-            <Article article={agenda.article} />
+            <Article 
+              article={agenda.article}
+              title={agenda.title}
+              subTitle={agenda.subTitle}/>
             {/* <News /> */}
             <BestComment
               agree={JSON.parse(agreeData)}

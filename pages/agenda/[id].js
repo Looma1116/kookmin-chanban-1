@@ -262,7 +262,11 @@ const Agenda = ({
                 subTitle={agenda.subTitle}
                 imageUrl={agenda.imageUrl}
               />
-              <Article article={agenda.article} />
+              <Article
+                article={agenda.article}
+                title={agenda.title}
+                subTitle={agenda.subTitle}
+              />
               {/* <News /> */}
               <BestComment
                 agree={agreeFetchData}
