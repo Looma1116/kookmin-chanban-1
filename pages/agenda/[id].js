@@ -247,19 +247,19 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
   return (
     <>
       <NextSEO
-        title={agenda.title}
-        description={agenda.subTitle}
+        title="123"
+        description="123"
         openGraph={{
-          title: `${agenda.title}`,
-          description: `${agenda.subTitle}`,
-          images: [
-            {
-              url: `${agenda.imageUrl}`,
-              width: 800,
-              height: 600,
-              alt: "Og Image Alt",
-            },
-          ],
+          title: `123`,
+          description: `123`,
+          // images: [
+          //   {
+          //     url: `${agenda.imageUrl}`,
+          //     width: 800,
+          //     height: 600,
+          //     alt: "Og Image Alt",
+          //   },
+          // ],
         }}
       />
       <div className={styles.container}>
