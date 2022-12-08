@@ -81,7 +81,7 @@ const Admin = () => {
   return (
     <div>
       <form onSubmit={submitHandler}>
-        <input
+        <textarea
           placeholder="article"
           value={article}
           onChange={onChangeHandler}
