@@ -15,8 +15,8 @@
 }
 
 .line {
-  border-bottom: 3px solid darkgray;
-  margin: 1rem;
+  border-bottom: 0.3rem solid darkgray;
+  margin: 0.5rem;
 
   text-align: center;
 }
