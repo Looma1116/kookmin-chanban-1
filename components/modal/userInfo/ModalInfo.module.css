@@ -4,7 +4,7 @@
   background-color: white;
   width: 50%;
   height: 30%;
-  border-radius: 0.5rem;
+  border-radius: 0.3rem;
   padding: 0.1rem;
   overflow: hidden;
   overflow: scroll;
@@ -18,14 +18,14 @@
   height: 30%; /* 스크롤바의 길이 */
   background: #61676e; /* 스크롤바의 색상 */
 
-  border-radius: 10px;
+  border-radius: 0.1rem;
 }
 
 .modal::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0); /*스크롤바 뒷 배경 색상*/
 }
 .body {
-  padding-top: 1rem;
+  padding-top: 0.3rem;
 }
 
 .overlay {
