@@ -21,7 +21,9 @@
 }
 .title {
   text-align: center;
-  color: #00cd52;
+  color: #19bb5a;
+  font-size: 3rem;
+  margin: 10px;
 }
 .topMenu {
   display: flex;
