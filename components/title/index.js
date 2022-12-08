@@ -1,5 +1,10 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { agendaState, likePartState, loginState } from "../recoil/recoil";
+import {
+  agendaState,
+  communityState,
+  likePartState,
+  loginState,
+} from "../recoil/recoil";
 import Router, { useRouter } from "next/router";
 import styles from "./Title.module.css";
 import { useEffect, useState } from "react";
@@ -14,6 +19,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import Modal from "react-modal";
+import Link from "next/link";
 
 const Title = ({ title, subTitle, imageUrl, agendaId, writerUid }) => {
   const agenda = useRecoilValue(agendaState);
@@ -23,6 +29,9 @@ const Title = ({ title, subTitle, imageUrl, agendaId, writerUid }) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [likeState, setLikeState] = useRecoilState(likePartState);
+  const community = useRecoilValue(communityState);
+
+  console.log(community);
 
   const openModal = () => {
     setModalOpen(true);
@@ -74,15 +83,15 @@ const Title = ({ title, subTitle, imageUrl, agendaId, writerUid }) => {
       className={styles.title}
     >
       <div className={styles.container}>
-        <span
-          className={styles.button}
-          onClick={() => {
-            Router.back();
-            setLikeState([]);
-          }}
-        >
-          뒤로
-        </span>
+        {community === "agenda" ? (
+          <Link href={"/"}>
+            <a>뒤로</a>
+          </Link>
+        ) : (
+          <Link href={"/community"}>
+            <a>뒤로</a>
+          </Link>
+        )}
         {match() ? (
           <span className={styles.button} onClick={openModal}>
             삭제
