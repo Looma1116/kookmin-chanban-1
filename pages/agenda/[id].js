@@ -2,10 +2,12 @@ import { useRouter } from "next/router";
 import {
   collection,
   documentId,
+  getDoc,
   getDocs,
   getFirestore,
   query,
   where,
+  doc,
 } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { useEffect, useState } from "react";
@@ -36,8 +38,8 @@ import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
 import Loading from "../../components/modal/loading";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { NextSEO } from "next-seo";
 
+import Head from "next/head";
 export async function getServerSideProps(context) {
   initializeApp({
     apiKey: process.env.apiKey,
@@ -49,8 +51,6 @@ export async function getServerSideProps(context) {
     measurementId: process.env.measurementId,
   });
   const db = getFirestore();
-
-  console.log(context.query.uid);
 
   let agreeComment = [];
   let alternativeComment = [];
@@ -138,20 +138,31 @@ export async function getServerSideProps(context) {
   const disagreeData = JSON.stringify(disagreeComment);
   const commentList = JSON.stringify(likeComment);
 
+  const agendaData = JSON.stringify(
+    (await getDoc(doc(db, "agenda", `${Id}`))).data()
+  );
+
   return {
     props: {
       agreeData,
       disagreeData,
       alternativeData,
       commentList,
+      agendaData,
     },
   };
 }
 
-const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
-  const router = useRouter();
-  const db = getFirestore();
+const Agenda = ({
+  agreeData,
+  disagreeData,
+  alternativeData,
+  commentList,
+  agendaData,
+}) => {
   const auth = getAuth();
+  const agendaProp = JSON.parse(agendaData);
+  console.log(agendaProp);
 
   const [isFetched, setIsFetched] = useState(false);
   const clickCount = useRecoilValue(clickCountState);
@@ -161,7 +172,7 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
   const [comment, setComment] = useRecoilState(commentState);
   const [isWroted, setIsWroted] = useRecoilState(isWrotedState);
 
-  const [agenda, setAgenda] = useState(null);
+  const [agenda, setAgenda] = useState(agendaProp);
   const [agreeFetchData, setAgreeFetchData] = useState(JSON.parse(agreeData));
   const [disagreeFetchData, setDisagreeFetchData] = useState(
     JSON.parse(disagreeData)
@@ -187,7 +198,6 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
     setCommentSortClick("latest");
     setIsWroted(false);
     setWroteHere(false);
-    checkIn();
     updateLike();
   }, []);
 
@@ -201,10 +211,6 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
       }
     });
   }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [isFetched, clickCount]);
 
   let a = [];
 
@@ -222,44 +228,29 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
     setLikeState(a);
   };
 
-  const checkIn = () => {
-    if (router.query.agenda === undefined) {
-      fetchData();
-    } else {
-      setAgenda(JSON.parse(router.query.agenda));
-    }
-  };
-
-  const fetchData = async () => {
-    const q = query(
-      collection(db, "agenda"),
-      where(documentId(), "==", `${router.query.id}`)
-    );
-    const snapshot = await getDocs(q);
-    let data = [];
-    snapshot.docs.forEach((doc) => {
-      data.push({ ...doc.data(), id: doc.id });
-    });
-    setAgenda(data[0]);
-    setIsFetched(true);
-  };
-
   return (
     <>
+      <Head>
+        <title>{agendaProp.title}</title>
+        <meta name="description" content={agendaProp.subTitle} />
+        <meta property="og:title" content={agendaProp.title} />
+        <meta property="og:description" content={agendaProp.subTitle} />
+        <meta property="og:image" content={agendaProp.imageUrl} />
+      </Head>
       {/* <NextSEO
-        title="123"
-        description="123"
+        title={agendaProp.title}
+        description={agendaProp.subTitle}
         openGraph={{
-          title: `123`,
-          description: `123`,
-          // images: [
-          //   {
-          //     url: `${agenda.imageUrl}`,
-          //     width: 800,
-          //     height: 600,
-          //     alt: "Og Image Alt",
-          //   },
-          // ],
+          title: `${agendaProp.title}`,
+          description: `${agendaProp.subTitle}`,
+          images: [
+            {
+              url: `${agendaProp.imageUrl}`,
+              width: 800,
+              height: 600,
+              alt: "Og Image Alt",
+            },
+          ],
         }}
       /> */}
       <div className={styles.container}>
