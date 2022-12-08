@@ -36,6 +36,7 @@ import styles from "../../styles/Agenda.module.css";
 import LogInModal from "../../components/modal/login";
 import Loading from "../../components/modal/loading";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { NextSEO } from "next-seo";
 
 export async function getServerSideProps(context) {
   initializeApp({
@@ -244,35 +245,53 @@ const Agenda = ({ agreeData, disagreeData, alternativeData, commentList }) => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.agenda}>
-        {agenda ? (
-          <div>
-            <Title
-              title={agenda.title}
-              subTitle={agenda.subTitle}
-              imageUrl={agenda.imageUrl}
-            />
-            <Article article={agenda.article} />
-            {/* <News /> */}
-            <BestComment
-              agree={agreeFetchData}
-              alter={alternativeFetchData}
-              disagree={disagreeFetchData}
-              likeList={likeList}
-            />
-            <Vote agenda={agenda} />
-            <Comment
-              agreeData={JSON.parse(agreeData)}
-              alternativeData={JSON.parse(alternativeData)}
-              disagreeData={JSON.parse(disagreeData)}
-              likeList={likeList}
-            />
-            {clickCount ? <LogInModal /> : null}
-          </div>
-        ) : null}
+    <>
+      <NextSEO
+        title={agenda.title}
+        description={agenda.subTitle}
+        openGraph={{
+          title: `${agenda.title}`,
+          description: `${agenda.subTitle}`,
+          images: [
+            {
+              url: `${agenda.imageUrl}`,
+              width: 800,
+              height: 600,
+              alt: "Og Image Alt",
+            },
+          ],
+        }}
+      />
+      <div className={styles.container}>
+        <div className={styles.agenda}>
+          {agenda ? (
+            <div>
+              <Title
+                title={agenda.title}
+                subTitle={agenda.subTitle}
+                imageUrl={agenda.imageUrl}
+              />
+              <Article article={agenda.article} />
+              {/* <News /> */}
+              <BestComment
+                agree={agreeFetchData}
+                alter={alternativeFetchData}
+                disagree={disagreeFetchData}
+                likeList={likeList}
+              />
+              <Vote agenda={agenda} />
+              <Comment
+                agreeData={JSON.parse(agreeData)}
+                alternativeData={JSON.parse(alternativeData)}
+                disagreeData={JSON.parse(disagreeData)}
+                likeList={likeList}
+              />
+              {clickCount ? <LogInModal /> : null}
+            </div>
+          ) : null}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
