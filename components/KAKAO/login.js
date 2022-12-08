@@ -158,7 +158,7 @@ const KakaoLogin = () => {
   console.log(show);
   console.log(loading);
   console.log("hi");
-  if (loading) return <Loading value="확인중~~" />;
+  if (loading) return <Loading value="" />;
   return (
     <>
       {show ? (
