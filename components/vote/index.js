@@ -150,7 +150,7 @@ const UserVote = ({
       {
         category: category,
         joined: new Date(),
-        story: id,
+        story: router.query.id,
         title: title,
         vote: `${voteWhere}`,
         hide: false,
