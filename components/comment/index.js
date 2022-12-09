@@ -33,6 +33,7 @@ import CommentPart from "./commentPart";
 import { useRouter } from "next/router";
 import styles from "./comment.module.css";
 import txt from "raw-loader!../../filtering2.txt";
+import swal from "sweetalert2";
 
 const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
   const auth = getAuth();
@@ -150,6 +151,15 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
       setClickCount(true);
     }
   };
+  const inputOptions = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        agreeComment: "찬성",
+        alternativeComment: "중립",
+        disagreeComment: "반대",
+      });
+    }, 1000);
+  });
 
   const commentSend = async () => {
     console.log("commentSend");
@@ -227,26 +237,179 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
             console.log(JSON.stringify(response.data));
             console.log(sentimentData);
             if (sentimentData == "positive") {
-              setCommentSort("agreeComment");
-              commentSort = "agreeComment";
-              setVote("agreeComment");
-              alert("AI분석 결과 찬성측에 의견이 저장되었습니다.");
-              console.log("바뀌나");
-              console.log(commentSort);
+              if (
+                confirm(
+                  "AI분석 결과 찬성측에 의견이 저장되었습니다.\n다른의견이면 취소를 눌러주세요."
+                ) == true
+              ) {
+                commentSort = "agreeComment";
+                setCommentSort("agreeComment");
+                setVote("agreeComment");
+                console.log("바뀌나");
+                console.log(commentSort);
+                setSubmit((prev) => !prev);
+                commentSend();
+                setIsWroted(true);
+                setWroteHere(true);
+
+                setAddComment({
+                  article: `${comment}`,
+                  author: auth.currentUser.uid,
+                  authorLevel: user.level,
+                  authorName: user.name,
+                  hide: false,
+                  like: 0,
+                });
+              } else {
+                swal
+                  .fire({
+                    text: "자신이 생각한 의견을 골라주세요",
+                    input: "radio",
+                    inputOptions: inputOptions,
+                    inputValidator: (value) => {
+                      if (!value) {
+                        return "의견을 선택해주세요!";
+                      }
+                    },
+                    buttons: {
+                      cancel: "닫기",
+                    },
+                  })
+                  .then((result) => {
+                    swal.fire("소중한 의견 감사합니다!");
+                    commentSort = `${result.value}`;
+                    setCommentSort(`${result.value}`);
+                    setVote(`${result.value}`);
+                    setSubmit((prev) => !prev);
+                    commentSend();
+                    setIsWroted(true);
+                    setWroteHere(true);
+                    setAddComment({
+                      article: `${comment}`,
+                      author: auth.currentUser.uid,
+                      authorLevel: user.level,
+                      authorName: user.name,
+                      hide: false,
+                      like: 0,
+                    });
+                  });
+              }
             } else if (sentimentData == "negative") {
-              setCommentSort("disagreeComment");
-              commentSort = "disagreeComment";
-              setVote("disagreeComment");
-              alert("AI분석 결과 반대측에 의견이 저장되었습니다.");
-              console.log("바뀌나");
-              console.log(commentSort);
+              if (
+                confirm(
+                  "AI분석 결과 반대측에 의견이 저장되었습니다.\n다른의견이면 취소를 눌러주세요."
+                ) == true
+              ) {
+                setCommentSort("disagreeComment");
+                commentSort = "disagreeComment";
+                setVote("disagreeComment");
+                console.log("바뀌나");
+                console.log(commentSort);
+                setSubmit((prev) => !prev);
+                commentSend();
+                setIsWroted(true);
+                setWroteHere(true);
+
+                setAddComment({
+                  article: `${comment}`,
+                  author: auth.currentUser.uid,
+                  authorLevel: user.level,
+                  authorName: user.name,
+                  hide: false,
+                  like: 0,
+                });
+              } else {
+                swal
+                  .fire({
+                    text: "자신이 생각한 의견을 골라주세요",
+                    input: "radio",
+                    inputOptions: inputOptions,
+                    inputValidator: (value) => {
+                      if (!value) {
+                        return "의견을 선택해주세요!";
+                      }
+                    },
+                    buttons: {
+                      cancel: "닫기",
+                    },
+                  })
+                  .then((result) => {
+                    swal.fire("소중한 의견 감사합니다!");
+                    commentSort = `${result.value}`;
+                    setCommentSort(`${result.value}`);
+                    setVote(`${result.value}`);
+                    setSubmit((prev) => !prev);
+                    commentSend();
+                    setIsWroted(true);
+                    setWroteHere(true);
+                    setAddComment({
+                      article: `${comment}`,
+                      author: auth.currentUser.uid,
+                      authorLevel: user.level,
+                      authorName: user.name,
+                      hide: false,
+                      like: 0,
+                    });
+                  });
+              }
             } else {
-              setCommentSort("alternativeComment");
-              commentSort = "alternativeComment";
-              setVote("alternativeComment");
-              alert("AI분석 결과 중립측에 의견이 저장되었습니다.");
-              console.log("바뀌나");
-              console.log(commentSort);
+              if (
+                confirm(
+                  "AI분석 결과 중립측에 의견이 저장되었습니다.\n다른의견이면 취소를 눌러주세요."
+                ) == true
+              ) {
+                setCommentSort("alternativeComment");
+                commentSort = "alternativeComment";
+                setVote("alternativeComment");
+                console.log("바뀌나");
+                console.log(commentSort);
+                setSubmit((prev) => !prev);
+                commentSend();
+                setIsWroted(true);
+                setWroteHere(true);
+
+                setAddComment({
+                  article: `${comment}`,
+                  author: auth.currentUser.uid,
+                  authorLevel: user.level,
+                  authorName: user.name,
+                  hide: false,
+                  like: 0,
+                });
+              } else {
+                swal
+                  .fire({
+                    text: "자신이 생각한 의견을 골라주세요",
+                    input: "radio",
+                    inputOptions: inputOptions,
+                    inputValidator: (value) => {
+                      if (!value) {
+                        return "의견을 선택해주세요!";
+                      }
+                    },
+                    buttons: {
+                      cancel: "닫기",
+                    },
+                  })
+                  .then((result) => {
+                    swal.fire("소중한 의견 감사합니다!");
+                    commentSort = `${result.value}`;
+                    setCommentSort(`${result.value}`);
+                    setVote(`${result.value}`);
+                    setSubmit((prev) => !prev);
+                    commentSend();
+                    setIsWroted(true);
+                    setWroteHere(true);
+                    setAddComment({
+                      article: `${comment}`,
+                      author: auth.currentUser.uid,
+                      authorLevel: user.level,
+                      authorName: user.name,
+                      hide: false,
+                      like: 0,
+                    });
+                  });
+              }
             }
           })
           .catch(function (error) {
@@ -254,19 +417,6 @@ const Comment = ({ agreeData, alternativeData, disagreeData, likeList }) => {
           });
 
         console.log(commentSort);
-        setSubmit((prev) => !prev);
-        commentSend();
-        setIsWroted(true);
-        setWroteHere(true);
-
-        setAddComment({
-          article: `${comment}`,
-          author: auth.currentUser.uid,
-          authorLevel: user.level,
-          authorName: user.name,
-          hide: false,
-          like: 0,
-        });
       } else {
         alert("취소 되었습니다.");
       }
