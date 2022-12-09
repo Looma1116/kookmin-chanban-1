@@ -357,12 +357,12 @@ const CommunityComment = ({
               placeholder={
                 logIn
                   ? isWroted
-                    ? `${auth.currentUser.displayName}님은 이미 댓글을 1회 작성하셨습니다.`
+                    ? `${user.name}님은 이미 댓글을 1회 작성하셨습니다.`
                     : isVoted
                     ? vote == commentSort
-                      ? `${auth.currentUser.displayName}님의 소중한 의견이 필요합니다!`
-                      : `${auth.currentUser.displayName}님은 다른 입장에 투표를 하였습니다!`
-                    : `${auth.currentUser.displayName}님, 먼저 투표를 진행해주세요!`
+                      ? `${user.name}님의 소중한 의견이 필요합니다!`
+                      : `${user.name}님은 다른 입장에 투표를 하였습니다!`
+                    : `${user.name}님, 먼저 투표를 진행해주세요!`
                   : "로그인을 해주세요."
               }
               onChange={onChangeHandler}
